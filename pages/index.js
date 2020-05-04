@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Layout, { siteTitle } from '../components/layout'
 import utilStyles from '../styles/utils.module.css'
+import styles from './index.module.scss'
 import { getSortedPostsData } from '../lib/posts'
 
 export async function getStaticProps() {
@@ -19,26 +20,45 @@ export default function Home({ allPostsData }) {
       <Head>
         <title>{siteTitle}</title>
       </Head>
-      <section className={utilStyles.headingMd}>
-        <p>[Your Self Introduction]</p>
-        <p>
-          (This is a sample website - you’ll be building a site like this on{' '}
-          <a href="https://nextjs.org/learn">our Next.js tutorial</a>.)
-        </p>
+      <section className={styles.banner}>
+        <img src="/images/banner.jpg" alt="banner"/>
       </section>
-      <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
-        <h2 className={utilStyles.headingLg}>Blog</h2>
-        <ul className={utilStyles.list}>
-          {allPostsData.map(({ id, date, title }) => (
-            <li className={utilStyles.listItem} key={id}>
-              {title}
-              <br />
-              {id}
-              <br />
-              {date}
+      <section className={styles.catches}>
+        <div className={styles.advantage}>
+          <h5>Advantages</h5>
+          <p>An exceedingly logical and user friendly methodology that provides:  Government Agencies  /  Individuals  / Business / with:</p>
+          <ul>
+            <li>
+              No Registration format
             </li>
-          ))}
-        </ul>
+            <li>
+            Very high degree of privacy
+            </li>
+            <li>
+            Keyboard venue (anytime / anywhere)
+            </li>
+          </ul>
+        </div>
+        <div className={styles.document}>
+        <h5>Document Reduction</h5>
+          <p>This system has been formatted to effectually minimize the requirement for paperwork frequently associated with dispute resolution.</p>
+          <p>Our Non-Binding Recommendation (NBR) is facilitated as a concluding resolution for each case.</p>
+        </div>
+        <div className={styles.expedition}>
+        <h5>Expeditious</h5>
+          <p>A procedure offering an efficient 3 step process.Results are obtained in less then one hour.</p>
+          <ul>
+            <li>
+              ENTER the numeric amount of the claims
+            </li>
+            <li>
+              CLICK through a display of generated sums
+            </li>
+            <li>
+              VIEW the Application based recommendation
+            </li>
+          </ul>
+        </div>
       </section>
     </Layout>
   )

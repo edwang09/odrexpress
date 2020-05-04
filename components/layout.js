@@ -1,66 +1,65 @@
 import Head from 'next/head'
-import styles from './layout.module.css'
-import utilStyles from '../styles/utils.module.css'
+import style from './layout.module.scss'
 import Link from 'next/link'
+import Navbar from './navbar'
 
-const name = 'Your Name'
-export const siteTitle = 'Next.js Sample Website'
-
-export default function Layout({ children, home }) {
+export const siteTitle = "DRO Express"
+export default function Layout({ children, page }) {
   return (
-    <div className={styles.container}>
+    <div className={style.container}>
       <Head>
         <link rel="icon" href="/favicon.ico" />
         <meta
           name="description"
-          content="Learn how to build a personal website using Next.js"
+          content="The mediation App"
         />
-        <meta
+        <link href="/fontawesome/css/all.css" rel="styleheet"></link>
+        {/* <meta
           property="og:image"
           content={`https://og-image.now.sh/${encodeURI(
             siteTitle
           )}.png?theme=light&md=0&fontSize=75px&images=https%3A%2F%2Fassets.zeit.co%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fnextjs-black-logo.svg`}
         />
-        <meta name="og:title" content={siteTitle} />
-        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="og:title" content={siteTitle} /> */}
+        {/* <meta name="twitter:card" content="summary_large_image" /> */}
       </Head>
-      <header className={styles.header}>
-        {home ? (
-          <>
-            <img
-              src="/images/banner.jpg"
-              className={`${styles.headerHomeImage} ${utilStyles.borderCircle}`}
-              alt={name}
-            />
-            <h1 className={utilStyles.heading2Xl}>{name}</h1>
-          </>
-        ) : (
-          <>
+      <header className={style.header}>
+          <div className={style.logo}>
             <Link href="/">
-              <a>
-                <img
-                  src="/images/banner.jpg"
-                  className={`${styles.headerImage} ${utilStyles.borderCircle}`}
-                  alt={name}
-                />
-              </a>
+                <div className={style.main}>DRO <b>EXPRESS</b></div>
             </Link>
-            <h2 className={utilStyles.headingLg}>
-              <Link href="/">
-                <a className={utilStyles.colorInherit}>{name}</a>
-              </Link>
-            </h2>
-          </>
-        )}
+            <div className={style.secondary}>The Mediation App</div>
+          </div>
+          <Navbar/>
       </header>
       <main>{children}</main>
-      {!home && (
-        <div className={styles.backToHome}>
-          <Link href="/">
-            <a>← Back to home</a>
-          </Link>
-        </div>
-      )}
+      <footer className={style.footer}>
+        <hr></hr>
+        <ul>
+          <li>
+            <Link href="/privacy">
+              <a >Privacy</a>
+            </Link>
+          </li>
+          <li>
+            <Link href="/contact">
+              <a >Contact</a>
+            </Link>
+          </li>
+          <li>
+            <Link href="/links">
+              <a >Links</a>
+            </Link>
+          </li>
+          <li>
+            <Link href="/termofuse">
+              <a >Term of Use</a>
+            </Link>
+          </li>
+          <li>&copy; 2020 ODR EXPRESS Corporation
+          </li>
+        </ul>
+      </footer>
     </div>
   )
 }

@@ -1,0 +1,31 @@
+.banner{
+    height: 300px;
+    img{
+      object-fit: cover;
+      height: 100%;
+      width:100%;
+    }
+  }
+  .catches{
+      margin-top:20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      justify-content: space-between;
+      div{
+          max-width:320px;
+          padding: 20px 10px;
+          margin: 20px 10px;
+          transition: all 0.2s;
+          background-color: rgb(228, 228, 228);
+          h5{
+              font-weight: normal;
+              font-size:150%;
+              margin:0 0;
+              color: rgb(48, 48, 121);
+          }
+          &:hover{
+              box-shadow: 2px 2px 5px grey;
+          }
+      }
+  }
