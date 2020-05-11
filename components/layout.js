@@ -13,7 +13,9 @@ export default function Layout({ children, page }) {
           name="description"
           content="The mediation App"
         />
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet"></link>
         <link href="/fontawesome/css/all.css" rel="styleheet"></link>
+
         {/* <meta
           property="og:image"
           content={`https://og-image.now.sh/${encodeURI(
