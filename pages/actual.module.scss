@@ -1,27 +1,17 @@
-$darkNavy: #213140;
-$teal1: #66B3FB;
-$teal2: #4B9DEA;
-$charcoal: #555555;
-$gold: #B6985A;
-
-$activeShadow: 0 0 10px rgba($teal1, .5);
-
-@mixin breakpoint($point) {
-	@if $point == 1100 {
-		@media (max-width: 1100px) { @content ; }
-	}
-	@else if $point == 800 {
-		@media (max-width: 800px) { @content ; }
-	}
+.errorMessage{
+    color: red;
+    font-weight: bold;
+    
 }
+
+
 .actual{
     margin-top: 20px;
-    .errorMessage{
-        color: red;
-    }
+    
     .topform{
         display: flex;
         justify-content: space-between;
+        flex-wrap: wrap;
         .toggle {
             margin: 0 0 1.5rem; 
             font-size: 0;
@@ -67,10 +57,10 @@ $activeShadow: 0 0 10px rgba($teal1, .5);
                 border-color: #213140;
             }
             input.checked + label {
-                background-color: $teal2;
+                background-color: #4B9DEA;
                 color: #FFF;
-                box-shadow: $activeShadow;
-                border-color: $teal2;
+                box-shadow: 0 0 10px rgba(#66B3FB, .5);
+                border-color: #4B9DEA;
                 z-index: 1;
             }
         }
@@ -88,12 +78,17 @@ $activeShadow: 0 0 10px rgba($teal1, .5);
         margin-bottom: 20px;
         display: flex;
         justify-content: space-between;
+        flex-wrap: wrap;
+        & > div{
+            max-width: 400px;
+        }
     }
     .bottomform{
         margin-top: 20px;
         margin-bottom: 20px;
         .formgroup{
             display: flex;
+            flex-wrap: wrap;
             margin: 2px 0;
             font-size: 1.1rem;
             label{
@@ -103,7 +98,7 @@ $activeShadow: 0 0 10px rgba($teal1, .5);
             input, select{
                 display: block;
                 flex-grow: 1;    
-                width: 100%;
+                max-width: 600px;
                 padding: 8px;
                 border: 1px solid #ccc;
                 border-radius: 4px;
@@ -164,30 +159,177 @@ $activeShadow: 0 0 10px rgba($teal1, .5);
 
 
 .verification{
-    table {
-        border-collapse: collapse;
+    .tablecontainer{
+        overflow: auto;
         width: 100%;
-      }
-      
-      table td, table th {
-        border: 1px solid #ddd;
-        padding: 3px 8px;
-      }
-      
-      table tr:nth-child(even){background-color: #f2f2f2;}
-      
-      
-      table th {
-        padding-top: 8px;
-        padding-bottom: 8px;
-        text-align: left;
-        background-color: #4CAF50;
-        color: white;
-        &.title{
-            background:none;
-            color: rgb(61, 61, 61);
-            text-align: center;
-            font-size: 120%;
+        table {
+            border-collapse: collapse;
+          }
+          
+          table td, table th {
+            border: 1px solid #ddd;
+            padding: 3px 8px;
+          }
+          
+          table tr:nth-child(even){background-color: #f2f2f2;}
+          
+          
+          table th {
+            padding-top: 8px;
+            padding-bottom: 8px;
+            text-align: left;
+            background-color: #4CAF50;
+            color: white;
+            &.title{
+                background:none;
+                color: rgb(61, 61, 61);
+                text-align: center;
+                font-size: 120%;
+            }
+          }
+    }
+
+}
+
+
+.negotiation{
+    margin: 20px auto;
+    max-width: 1000px;
+    .progressbar{
+        margin: 20px auto;
+        overflow: hidden;
+        border-radius: 5px;
+        display: flex;
+        justify-content: stretch;
+        flex-wrap: wrap;
+        .progress {
+            text-decoration: none;
+            flex-grow:1;
+            outline: none;
+            display: flex;
+            align-items: center;
+            font-size: 90%;
+            height:56px;
+            color: #bbb;
+            /*need more margin on the left of links to accomodate the numbers*/
+            padding: 0 10px 0 40px;
+            background: #eee;
+            position: relative;
+            &:first-child {
+                padding-left: 20px;
+                border-radius: 5px 0 0 5px; /*to match with the parent's radius*/
+                &:before {
+                    left: 14px;
+                }
+            }
+            &:last-child {
+                border-radius: 0 5px 5px 0; /*this was to prevent glitches on hover*/
+                padding-right: 20px;
+                &:after{
+                    content: none;
+                }
+            }
+            &.active{
+                background: #5562eb;
+                color: white;
+                &:after{
+                    background: #5562eb;
+                }
+            }
+            &:after {
+                content: '';
+                position: absolute;
+                top: 0; 
+                right: -28px; /*half of square's length*/
+                width: 56px; 
+                height: 56px;
+                transform: scale(0.707) rotate(45deg);
+                z-index: 1;
+                background: #eee;
+                box-shadow: 
+                    3px -3px 0 1px white;
+                border-radius: 0 5px 0 50px;
+            }
         }
-      }
+    }
+
+    .timerbar{
+        display:flex;
+        justify-content: space-between;
+        margin: 20px auto;
+        .timer{
+            flex-grow:1;
+            text-align: center;
+        }
+    }
+
+}
+
+
+.pending{
+    box-shadow: 2px 2px 5px #ddd;
+    margin: 20vh auto;
+    background-color: rgb(220, 239, 247);
+    padding: 20px 40px;
+    h3{
+        text-align: center;
+        color: rgb(1, 124, 1);
+    }
+}
+.analysis{
+    .info{
+        background-color: #ddd;
+        padding: 5px 10px;
+    }
+    .columns{
+        margin:20px auto;
+        font-size: 80%;
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        & > div{
+            width: 400px;
+        }
+        p{
+            margin:10px;
+        }
+    }
+    .generatenbr{
+        margin:20px auto;
+        background-color: lightgreen;
+        .condition{
+            padding: 20px 40px;
+            h4{
+                text-align: center;
+            }
+        }
+        button{
+            display: block;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            padding: 10px 10px;
+            background-color: black;
+            color: red;
+            border: none;
+            box-shadow: none;
+        }
+    }
+}
+
+.nbr{
+    border: 1px solid #333;
+    padding: 20px 40px;
+    background-color: rgb(248, 255, 190);
+    font-size: 80%;
+    .condition{
+        font-weight: bold;
+    }
+    & > p{
+        margin:15px 0;
+    }
+    span{
+        font-weight: bold;
+        color:red;
+    }
 }
