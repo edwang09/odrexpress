@@ -43,7 +43,7 @@ handler.get(async (req, res) => {
             res.json({result: "succeed", content: fileContents});
         } catch (error) {
             console.log(error)
-            res.json({result: "failed", path:fullPath, error});
+            res.json({result: "failed",  error});
         }
     }
     res.json(req.query);
