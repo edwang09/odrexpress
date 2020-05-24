@@ -40,6 +40,7 @@ handler.get(async (req, res) => {
         try {
             // const fullPath = path.join(process.cwd(), 'admin', page)
             const fullPath = path.join(__dirname, '..', '..', 'admin', page)
+            res.json({result: "failed",  fullPath});
             const fileContents = fs.readFileSync(fullPath, "utf8")
             res.json({result: "succeed", content: fileContents});
         } catch (error) {
