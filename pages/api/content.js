@@ -37,9 +37,9 @@ handler.post(async (req, res) => {
 handler.get(async (req, res) => {
     const {page} = req.query
     if (page && page!==""){
+        const fullPath = path.join(postsDirectory, page)
+        const fileContents = fs.readFileSync(fullPath, "utf8")
         try {
-            const fullPath = path.join(postsDirectory, page)
-            const fileContents = fs.readFileSync(fullPath, "utf8")
             res.json({result: "succeed", content: fileContents});
         } catch (error) {
             console.log(error)
