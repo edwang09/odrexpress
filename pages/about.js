@@ -4,16 +4,16 @@ import styles from './about.module.scss'
 import React from 'react';
 import axios from 'axios'
 const APIendpoint = process.env.APIendpoint
-import fs from 'fs'
-import path from 'path'
+// import fs from 'fs'
+// import path from 'path'
 
 export async function getStaticProps() {
   // const content = await (await axios.get(`${APIendpoint}/content?page=about`)).data.content
   // const fullPath = path.join(process.cwd(), "admin", "about")
   // const fileContents = fs.readFileSync(fullPath, "utf8")
   
-  const content = await req.db.collection('content').findOne({name:"about"}).content
-  return {props:{ content }}
+  const result = await axios.get(`${APIendpoint}/content?page=about`)
+  return {props:{ content: result.data.content }}
 }
 export default function About({ content }) {
   return (

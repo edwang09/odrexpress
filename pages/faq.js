@@ -4,15 +4,17 @@ import styles from './faq.module.scss'
 import React from 'react';
 import axios from 'axios'
 const APIendpoint = process.env.APIendpoint
-import fs from 'fs'
-import path from 'path'
+// import fs from 'fs'
+// import path from 'path'
 
 export async function getStaticProps() {
   // const content = await (await axios.get(`${APIendpoint}/content?page=faq`)).data.content
   
-  const fullPath = path.join(process.cwd(), "admin", "faq")
-  const fileContents = fs.readFileSync(fullPath, "utf8")
-  return {props:{ content: fileContents }}
+  // const fullPath = path.join(process.cwd(), "admin", "faq")
+  // const fileContents = fs.readFileSync(fullPath, "utf8")
+  // return {props:{ content: fileContents }}
+  const result = await axios.get(`${APIendpoint}/content?page=faq`)
+  return {props:{ content: result.data.content }}
 }
 export default function Faq({ content }) {
   return (

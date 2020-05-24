@@ -19,12 +19,12 @@ handler.post(async (req, res) => {
             if (page && content){
                 try {
                     
-                await req.db.collection('content').updateOne({name:page},
+                const modify = await req.db.collection('content').updateOne({name:page},
                     [
                         { $set: {content} }
                     ]
                 )
-                    res.json("succeed");
+                res.json(modify);
                 } catch (error) {
                     res.json({result:"failed", error});
                 }
@@ -40,15 +40,16 @@ handler.post(async (req, res) => {
 
 handler.get(async (req, res) => {
     const { page } = req.query
-    // if (page && page!==""){
-    if (true){
+    if (page && page!==""){
+    // if (true){
         try {
             // const fullPath = path.join(process.cwd(),page)
             // const fileContents = fs.readFileSync(fullPath, "utf8")
-            const content = await req.db.collection('content').findOne({name:page}).content
-            res.json({result: "succeed", content});
+            const result = await req.db.collection('content').findOne({name:page})
+            // console.log(result.content)
+            res.json({result: "succeed", content:result.content});
         } catch (error) {
-            console.log(error)
+            // console.log(error)
             res.json({result: "failed",  error});
         }
     }
