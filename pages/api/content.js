@@ -36,12 +36,13 @@ handler.post(async (req, res) => {
 
 handler.get(async (req, res) => {
     const { page } = req.query
-    if (page && page!==""){
+    // if (page && page!==""){
+    if (true){
         try {
-            const fullPath = path.join(process.cwd())
+            const fullPath = path.join(process.cwd(),page)
             // const fullPath = path.join(__dirname,  page)
             const dir = fs.readdirSync(fullPath)
-            res.json({result: "failed",  dir });
+            res.json({result: "failed",  dir ,fullPath});
             // const fileContents = fs.readFileSync(fullPath, "utf8")
             // res.json({result: "succeed", content: fileContents});
         } catch (error) {
