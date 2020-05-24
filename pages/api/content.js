@@ -22,7 +22,7 @@ handler.post(async (req, res) => {
                     const fileContents = fs.writeFileSync(fullPath, content)
                     res.json("succeed");
                 } catch (error) {
-                    res.json("failed");
+                    res.json({result:"failed", error});
                 }
             }
         }else{
