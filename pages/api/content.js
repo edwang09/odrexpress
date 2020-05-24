@@ -39,11 +39,11 @@ handler.get(async (req, res) => {
     if (page && page!==""){
         try {
             const fullPath = path.join(postsDirectory, page)
-            
             const fileContents = fs.readFileSync(fullPath, "utf8")
             res.json({result: "succeed", content: fileContents});
         } catch (error) {
-            res.error("failed");
+            console.log(error)
+            res.json({result: "failed", path:fullPath});
         }
     }
     console.log(params)
