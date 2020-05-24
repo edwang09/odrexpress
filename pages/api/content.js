@@ -38,11 +38,12 @@ handler.get(async (req, res) => {
     const { page } = req.query
     if (page && page!==""){
         try {
-            // const fullPath = path.join(process.cwd(), 'admin', page)
-            const fullPath = path.join(__dirname, '..', '..', 'admin', page)
-            res.json({result: "failed",  fullPath});
-            const fileContents = fs.readFileSync(fullPath, "utf8")
-            res.json({result: "succeed", content: fileContents});
+            const fullPath = path.join(process.cwd())
+            // const fullPath = path.join(__dirname,  page)
+            const dir = fs.readdirSync(fullPath)
+            res.json({result: "failed",  dir });
+            // const fileContents = fs.readFileSync(fullPath, "utf8")
+            // res.json({result: "succeed", content: fileContents});
         } catch (error) {
             console.log(error)
             res.json({result: "failed",  error});
