@@ -46,7 +46,7 @@ handler.get(async (req, res) => {
             res.json({result: "failed", path:fullPath, error});
         }
     }
-    console.log(params)
+    res.json(req.query);
 });
 
 
