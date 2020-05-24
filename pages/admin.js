@@ -5,32 +5,31 @@ import Link from 'next/link'
 import React, {useState} from 'react'
 import axios from 'axios'
 import { Editor } from '@tinymce/tinymce-react'; 
-const TABS = ["about", "faq", "contact", "termofuse", "privacypolicy"]
+// const TABS = ["about", "faq", "contact", "termofuse", "privacypolicy"]
+const APIendpoint = process.env.APIendpoint
 
 export default class Admin extends React.Component {
   state = {
-    APIendpoint : "http://localhost:3000/api",
     username:"",
     password:"",
     verified:false,
     tab: 0,
-    content:"",
+    content:"choose from above tabs",
     error : ""
   }
   setValue = (name, value) =>{
     return this.setState({[name]:value})
   }
   switchTab= (tab) =>{
-    this.setState({tab},()=>{
-      const page = TABS[tab]
-      axios.get(`${this.state.APIendpoint}/content?page=${page}`).then(res => {
-        if (res.data ){
-            console.log(res.data)
-            this.setState({content:res.data.content})
-        }
-      }).catch(err=>{
-        this.setState({content:""})
-      })
+    axios.get(`${APIendpoint}/content?page=${tab}`).then(res => {
+      if (res.data ){
+          console.log(res.data)
+          this.setState({content:res.data.content, tab},()=>{
+            console.log(this.state.content.substr(0,10))
+          })
+      }
+    }).catch(err=>{
+      this.setState({content:""})
     })
   }
   login = () => {
@@ -39,7 +38,7 @@ export default class Admin extends React.Component {
       password : this.state.password
     }
     console.log(body)
-    axios.post(`${this.state.APIendpoint}/login`,body).then((res)=>{
+    axios.post(`${APIendpoint}/login`,body).then((res)=>{
       console.log(res)
       if (res.data.error){
         this.setState({error: res.data.error})
@@ -49,10 +48,12 @@ export default class Admin extends React.Component {
     }).catch(err=>console.log(err))
   }
   handleEditorChange = (e) => {
-      this.setState({content:e.target.getContent()})
+    console.log(this.state.content.substr(0,10))
+    console.log(e.target.getContent().substr(0,10))
+    this.setState({content:e.target.getContent()})
   }
   submitpost = () =>{
-      const page = TABS[this.state.tab]
+      const page = this.state.tab
       const body = {
           username : this.state.username, 
           password : this.state.password,
@@ -60,7 +61,7 @@ export default class Admin extends React.Component {
           content: this.state.content
       }
       console.log(body)
-      axios.post(`${this.state.APIendpoint}/content`,body).then(res => {
+      axios.post(`${APIendpoint}/content`,body).then(res => {
           if (res.data ){
               console.log(res.data)
           }
@@ -87,38 +88,39 @@ export default class Admin extends React.Component {
             <input type="password" name="password" id="password" value={this.state.password} 
             onChange={(e)=>this.setValue("password",e.target.value)}/>
           </div>
-          <button onClick={()=>this.login()}>Submit</button>
+          <button type="submit" default="true" onClick={()=>this.login()}>Submit</button>
         </div>}
         {this.state.verified &&
         <div className={styles.editor}>
           <ul className={styles.navigator}>
             <li>
-              <a onClick={()=>this.switchTab(0)}>About</a>
+              <a onClick={()=>this.switchTab("about")}>About</a>
             </li>
             <li>
-              <a onClick={()=>this.switchTab(1)}>FAQ</a>
+              <a onClick={()=>this.switchTab("faq")}>FAQ</a>
             </li>
             <li>
-              <a disabled onClick={()=>this.switchTab(2)}>Contact</a>
+              <a disabled onClick={()=>this.switchTab("contact")}>Contact</a>
             </li>
             <li>
-              <a onClick={()=>this.switchTab(3)}>Term of Use</a>
+              <a onClick={()=>this.switchTab("termofuse")}>Term of Use</a>
             </li>
             <li>
-              <a disabled={true} onClick={()=>this.switchTab(4)}>Privacy Policy</a>
+              <a disabled={true} onClick={()=>this.switchTab("privacypolicy")}>Privacy Policy</a>
             </li>
             <li>
-              <a disabled={true} onClick={()=>this.switchTab(5)}>Currency</a>
+              <a disabled={true} onClick={()=>this.switchTab("currency")}>Currency</a>
             </li>
             <li>
-              <a disabled={true} onClick={()=>this.switchTab(6)}>Settings</a>
+              <a disabled={true} onClick={()=>this.switchTab("settings")}>Settings</a>
             </li>
           </ul>
-            <div>
+            <div value = {this.state.content}>
             <button className={styles.submitchange} onClick={()=>this.submitpost()}>Submit Change</button>
             <Editor
               apiKey="fpo6y1yt39ze8vwmfh1q36efo0atodl5wfv98vunq39cmz2o"
               value = {this.state.content}
+              initialValue=''
               init={{
                 height: 500,
                 menubar: false,

@@ -29,10 +29,10 @@ nav.navbar{
         color: rgba(31, 28, 28, 0.8);
         font-size: 24px;
         .menubar{
-                width: 30px;
-                height: 3px;
-                background-color: rgb(41, 41, 41);
-                margin: 6px 0;
+            width: 30px;
+            height: 3px;
+            background-color: rgb(41, 41, 41);
+            margin: 6px 0;
         }
         &.shownav{
             display: none;
@@ -43,7 +43,7 @@ nav.navbar{
         &.active{
             width: 75%;
             padding: 90px 20px;
-            li{
+            a{
                 display: block;
             }
         }
@@ -62,13 +62,11 @@ nav.navbar{
         background-color: rgb(241, 241, 241);
         margin: 0 0;
         padding: 0 0;
-        li{
+        a{
             display: none;
             margin: 10px 30px;
-            .navlink{
-                text-decoration: none;
-                color: rgba(14, 1, 1, 0.7);
-            }
+            text-decoration: none;
+            color: rgba(14, 1, 1, 0.7);
         }
     }
 }
@@ -96,14 +94,14 @@ nav.navbar{
             justify-content: flex-end;
             align-items: flex-end;
             background: none;
-            li {
+            a {
                 display: block;
                 padding: 5px 20px;
                 margin-left:0;
                 margin-right:0;
                 margin-bottom: 0;
             }
-            li:hover {
+            a:hover {
                 background-color: rgb(212, 212, 212);
                 cursor: pointer;
             }

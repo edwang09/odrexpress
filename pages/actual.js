@@ -8,20 +8,19 @@ import axios from 'axios'
 
 let ConfirmationInterval
 let CountdownInterval
-
+const APIendpoint = process.env.APIendpoint
 export default class HelloWorld extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            APIendpoint : "http://localhost:3000/api",
             party: "convey",
             caseid: "",
             conveyprice: "",
             receiveprice: "",
             currency: "",
             timed: true,
-            countdowna: "40:20",
-            countdownb: "10:00",
+            countdowna: "",
+            countdownb: "",
             currentquestion:0
             //dummy
             // confirmed:false,
@@ -66,7 +65,7 @@ export default class HelloWorld extends React.Component {
                     timed: this.state.timed
                 }
             }
-            axios.post(`${this.state.APIendpoint}/negotiation`,body).then(res => {
+            axios.post(`${APIendpoint}/negotiation`,body).then(res => {
               if (res.data ){
                 console.log(res.error)
                 if(res.data.error){
@@ -89,7 +88,7 @@ export default class HelloWorld extends React.Component {
                     })
                     ConfirmationInterval = setInterval(async ()=>{
                         console.log("post check confirmation")
-                        const response = await axios.post(`${this.state.APIendpoint}/confirm`,{negotiationid: res.data.negotiationid})
+                        const response = await axios.post(`${APIendpoint}/confirm`,{negotiationid: res.data.negotiationid})
                         if (response.data.confirmed){
                             clearInterval(ConfirmationInterval)
                             this.setState({
@@ -114,7 +113,7 @@ export default class HelloWorld extends React.Component {
         }
     }
     proceedToStages = () =>{
-        axios.post(`${this.state.APIendpoint}/stage`,{negotiationid:this.state.negotiationid})
+        axios.post(`${APIendpoint}/stage`,{negotiationid:this.state.negotiationid})
         .then(res => {
           if (res.data ){
             console.log(res.error)
@@ -174,7 +173,7 @@ export default class HelloWorld extends React.Component {
                     considerationlist: this.state.considerationlist
                 }
             }
-            axios.post(`${this.state.APIendpoint}/consideration`,body).then(res => {
+            axios.post(`${APIendpoint}/consideration`,body).then(res => {
               if (res.data ){
                 if(res.data.error){
                     this.setState({
@@ -195,7 +194,7 @@ export default class HelloWorld extends React.Component {
                 clearInterval(CountdownInterval)
                 ConfirmationInterval = setInterval(async ()=>{
                     console.log("consideration check confirmation")
-                    const response = await axios.post(`${this.state.APIendpoint}/confirm`,{negotiationid: res.data.negotiationid})
+                    const response = await axios.post(`${APIendpoint}/confirm`,{negotiationid: res.data.negotiationid})
                     if (response.data.stage >= 3){
                         clearInterval(ConfirmationInterval)
                         this.setState({
@@ -224,7 +223,7 @@ export default class HelloWorld extends React.Component {
                 negotiationid : this.state.negotiationid,
                 [`${this.state.party}decision`]: this.state.decision
             }
-            axios.post(`${this.state.APIendpoint}/decision`,body)
+            axios.post(`${APIendpoint}/decision`,body)
             .then(res => {
             if (res.data ){
                 if(res.data.error){
@@ -240,7 +239,7 @@ export default class HelloWorld extends React.Component {
                 })
                 ConfirmationInterval = setInterval(async ()=>{
                     console.log("decision check confirmation")
-                    const response = await axios.post(`${this.state.APIendpoint}/confirm`,{negotiationid: res.data.negotiationid})
+                    const response = await axios.post(`${APIendpoint}/confirm`,{negotiationid: res.data.negotiationid})
                     if (response.data.stage === 4){
                         clearInterval(ConfirmationInterval)
                         this.setState({

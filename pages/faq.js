@@ -3,36 +3,27 @@ import Layout, { siteTitle } from '../components/layout'
 import styles from './faq.module.scss'
 import React from 'react';
 import axios from 'axios'
+const APIendpoint = process.env.APIendpoint
+import fs from 'fs'
+import path from 'path'
 
-
-export default class Faq extends React.Component {
-  state = {
-    APIendpoint : "http://localhost:3000/api",
-    content:""
-  }
-
-  componentDidMount(){
-    axios.get(`${this.state.APIendpoint}/content?page=faq`).then(res => {
-        if (res.data ){
-            console.log(res.data)
-            this.setState({content:res.data.content})
-        }
-    }).catch(err=>{
-        console.log(err)
-    })
+export async function getStaticProps() {
+  // const content = await (await axios.get(`${APIendpoint}/content?page=faq`)).data.content
+  
+  const fullPath = path.join(process.cwd(), "admin", "faq")
+  const fileContents = fs.readFileSync(fullPath, "utf8")
+  return {props:{ content: fileContents }}
 }
-  render(){
-    return (
-      <Layout>
+export default function Faq({ content }) {
+  return (
+    <Layout>
         <Head>
           <title>{siteTitle}</title>
         </Head>
       <section className={styles.faq}>
         <h2>Frequently Asked Questions</h2>
-          <div dangerouslySetInnerHTML={{__html: this.state.content}}></div>
-        </section>
-      </Layout>
-    )
-  }
-  
+          <div dangerouslySetInnerHTML={{__html: content}}></div>
+      </section>
+    </Layout>
+  )
 }
