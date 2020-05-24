@@ -38,8 +38,8 @@ handler.get(async (req, res) => {
     const { page } = req.query
     if (page && page!==""){
         try {
-        const fullPath = path.join(process.cwd(), 'admin', page)
-        const fileContents = fs.readFileSync(fullPath, "utf8")
+            const fullPath = path.join(__dirname, 'admin', `${page}.txt`)
+            const fileContents = fs.readFileSync(fullPath, "utf8")
             res.json({result: "succeed", content: fileContents});
         } catch (error) {
             console.log(error)
