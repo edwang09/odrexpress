@@ -37,13 +37,13 @@ handler.post(async (req, res) => {
 handler.get(async (req, res) => {
     const { page } = req.query
     if (page && page!==""){
+        try {
         const fullPath = path.join(process.cwd(), 'admin', page)
         const fileContents = fs.readFileSync(fullPath, "utf8")
-        try {
             res.json({result: "succeed", content: fileContents});
         } catch (error) {
             console.log(error)
-            res.json({result: "failed", path:fullPath});
+            res.json({result: "failed", path:fullPath, error});
         }
     }
     console.log(params)
