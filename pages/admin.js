@@ -25,7 +25,7 @@ export default class Admin extends React.Component {
       if (res.data ){
           console.log(res.data)
           this.setState({content:res.data.content, tab},()=>{
-            console.log(this.state.content.substr(0,10))
+            // console.log(this.state.content.substr(0,10))
           })
       }
     }).catch(err=>{
@@ -48,8 +48,8 @@ export default class Admin extends React.Component {
     }).catch(err=>console.log(err))
   }
   handleEditorChange = (e) => {
-    console.log(this.state.content.substr(0,10))
-    console.log(e.target.getContent().substr(0,10))
+    // console.log(this.state.content.substr(0,10))
+    // console.log(e.target.getContent().substr(0,10))
     this.setState({content:e.target.getContent()})
   }
   submitpost = () =>{
