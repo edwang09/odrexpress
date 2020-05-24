@@ -44,3 +44,9 @@ img {
   h4, h5, p{
     margin: 0 0;
   }
+  button{
+    box-shadow: none;
+    border: none;
+    display: block;
+    padding: 10px 30px;
+  }

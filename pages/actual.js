@@ -3,7 +3,7 @@ import Layout, { siteTitle } from '../components/layout'
 import Considerationbox from '../components/considerationbox'
 import styles from './actual.module.scss'
 import classNames from 'classnames';
-import React, { useState } from 'react';
+import React from 'react';
 import axios from 'axios'
 
 let ConfirmationInterval

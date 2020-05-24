@@ -41,6 +41,11 @@ export default function Navbar(){
                         <a className={style.navlink}>FAQ</a>
                     </Link>
                 </li>
+                <li>
+                    <Link href="/admin">
+                        <a className={style.navlink}>admin</a>
+                    </Link>
+                </li>
             </ul>
         </nav>
         </div>
