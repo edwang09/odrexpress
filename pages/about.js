@@ -9,9 +9,11 @@ import path from 'path'
 
 export async function getStaticProps() {
   // const content = await (await axios.get(`${APIendpoint}/content?page=about`)).data.content
-  const fullPath = path.join(process.cwd(), "admin", "about")
-  const fileContents = fs.readFileSync(fullPath, "utf8")
-  return {props:{ content: fileContents }}
+  // const fullPath = path.join(process.cwd(), "admin", "about")
+  // const fileContents = fs.readFileSync(fullPath, "utf8")
+  
+  const content = await req.db.collection('content').findOne({name:"about"}).content
+  return {props:{ content }}
 }
 export default function About({ content }) {
   return (

@@ -18,8 +18,12 @@ handler.post(async (req, res) => {
         if (result){
             if (page && content){
                 try {
-                    const fullPath = path.join(postsDirectory, page)
-                    const fileContents = fs.writeFileSync(fullPath, content)
+                    
+                await req.db.collection('content').updateOne({name:page},
+                    [
+                        { $set: {content} }
+                    ]
+                )
                     res.json("succeed");
                 } catch (error) {
                     res.json({result:"failed", error});
@@ -39,12 +43,10 @@ handler.get(async (req, res) => {
     // if (page && page!==""){
     if (true){
         try {
-            const fullPath = path.join(process.cwd(),page)
-            // const fullPath = path.join(__dirname,  page)
-            const dir = fs.readdirSync(fullPath)
-            res.json({result: "failed",  dir ,fullPath});
+            // const fullPath = path.join(process.cwd(),page)
             // const fileContents = fs.readFileSync(fullPath, "utf8")
-            // res.json({result: "succeed", content: fileContents});
+            const content = await req.db.collection('content').findOne({name:page}).content
+            res.json({result: "succeed", content});
         } catch (error) {
             console.log(error)
             res.json({result: "failed",  error});
