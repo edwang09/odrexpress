@@ -13,7 +13,7 @@ const client = new MongoClient('mongodb+srv://admin:ti21sNLGy1NuJ5s1@cluster0-8f
 
 
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   // const content = await (await axios.get(`${APIendpoint}/content?page=privacypolicy`)).data.content
   // const fullPath = path.join(process.cwd(), "admin", "privacypolicy")
   // const fileContents = fs.readFileSync(fullPath, "utf8")
