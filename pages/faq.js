@@ -11,7 +11,7 @@ const client = new MongoClient('mongodb+srv://admin:ti21sNLGy1NuJ5s1@cluster0-8f
   useUnifiedTopology: true,
   useNewUrlParser: true
 });
-export async function getServerSideProps() {
+export async function getStaticProps() {
   // const content = await (await axios.get(`${APIendpoint}/content?page=faq`)).data.content
   
   // const fullPath = path.join(process.cwd(), "admin", "faq")
