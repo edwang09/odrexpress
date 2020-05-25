@@ -21,6 +21,7 @@ export default class Admin extends React.Component {
   setValue = (name, value) =>{
     return this.setState({[name]:value})
   }
+  
   switchTab= (tab) =>{
     switch (tab) {
       case "currency":
