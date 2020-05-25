@@ -5,7 +5,11 @@ import axios from 'axios'
 const APIendpoint = process.env.APIendpoint
 // import fs from 'fs'
 // import path from 'path'
-
+import { MongoClient } from 'mongodb';
+const client = new MongoClient('mongodb+srv://admin:ti21sNLGy1NuJ5s1@cluster0-8fgyu.mongodb.net/test?retryWrites=true&w=majority', {
+  useUnifiedTopology: true,
+  useNewUrlParser: true
+});
 
 
 export async function getStaticProps() {
@@ -14,8 +18,13 @@ export async function getStaticProps() {
   // const fileContents = fs.readFileSync(fullPath, "utf8")
   // return {props:{ content: fileContents }}
   
-  const result = await axios.get(`${APIendpoint}/content?page=contacts`)
-  return {props:{ content: result.data.content }}
+  // const result = await axios.get(`${APIendpoint}/content?page=contacts`)
+  
+  if (!client.isConnected()) {
+    await client.connect()
+  };
+  const content = (await client.db('odrexpress').collection('content').findOne({name:"contacts"})).content
+  return {props:{ content }}
 }
 export default function Contacts({ content }) {
   return (
