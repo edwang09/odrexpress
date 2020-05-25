@@ -1,9 +1,13 @@
 .considerationbox{
-    
     max-width: 700px; 
     margin: 10px auto;
-    padding: 10px 20px;
+    padding: 5px 10px;
     box-shadow: 1px 1px 5px #ddd;
+    .considerationlist{
+        position: relative;
+        overflow: hidden;
+        height:350px;
+    }
     .buttons{
         display: flex;
         justify-content: space-between;
@@ -30,5 +34,11 @@
                 }
             }
         }
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .considerationbox{
+        padding: 10px 20px;
     }
 }

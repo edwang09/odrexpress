@@ -39,13 +39,13 @@ export default function Layout({ children, page }) {
         <hr></hr>
         <ul>
           <li>
-            <Link href="/privacy">
-              <a >Privacy</a>
+            <Link href="/privacypolicy">
+              <a >Privacy Policy</a>
             </Link>
           </li>
           <li>
-            <Link href="/contact">
-              <a >Contact</a>
+            <Link href="/contacts">
+              <a >contacts</a>
             </Link>
           </li>
           <li>
@@ -56,6 +56,11 @@ export default function Layout({ children, page }) {
           <li>
             <Link href="/termofuse">
               <a >Term of Use</a>
+            </Link>
+          </li>
+          <li>
+            <Link href="/admin">
+              <a >Admin</a>
             </Link>
           </li>
           <li>&copy; 2020 ODR EXPRESS Corporation

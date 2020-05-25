@@ -13,7 +13,7 @@ handler.post(async (req, res) => {
         const result = await req.db.collection('negotiation').findOne({'negotiationid': negotiationid})
         res.json(result);
     }else{
-        res.json({error: "failed"});
+        res.status(400).json({error: "negotiationid is required"});
     }
 });
 

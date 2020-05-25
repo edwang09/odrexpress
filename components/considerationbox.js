@@ -16,6 +16,8 @@ export default function Considerationbox(props){
         return (
             <Consideration 
                 current = {props.currentquestion === id}
+                previous = {props.currentquestion > id}
+                next = {props.currentquestion < id}
                 choice = {consideration.choice} 
                 onChange={props.onConsiderationChoose}
                 id = {id} 
@@ -28,7 +30,10 @@ export default function Considerationbox(props){
 
     return (
         <div className={style.considerationbox}>
-            {ConsiderationList}
+            
+            <div className={style.considerationlist}>
+                {ConsiderationList}
+            </div>
         <hr/>
         <div className={style.buttons}>
             <button disabled={props.currentquestion===0} onClick={props.onPrevious}>Previous</button>

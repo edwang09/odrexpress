@@ -10,23 +10,21 @@ let ConfirmationInterval
 let CountdownInterval
 const APIendpoint = process.env.APIendpoint
 export default class HelloWorld extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            party: "convey",
-            caseid: "",
-            conveyprice: "",
-            receiveprice: "",
-            currency: "",
-            timed: true,
-            countdowna: "",
-            countdownb: "",
-            currentquestion:0
-            //dummy
-            // confirmed:false,
-            // stage:0,
-            // negotiationid:"285445241188",
-        }
+    state = {
+        party: "convey",
+        caseid: "088470609090",
+        conveyprice: "",
+        receiveprice: "",
+        currency: "",
+        timed: true,
+        countdowna: "",
+        countdownb: "",
+        currentquestion:0,
+        currencylist:[]
+        //dummy
+        // confirmed:false,
+        // stage:0,
+        // negotiationid:"285445241188",
     }
     displayPrice = (x) => {
         x = x.toString();
@@ -48,7 +46,9 @@ export default class HelloWorld extends React.Component {
         // console.log({[name]:value})
         return this.setState({[name]:value})
     }
-    
+    componentDidMount(){
+        axios.get(`${APIendpoint}/currency`).then((res)=> this.setState({currencylist:res.data.currency}))
+    }
     postCase = () =>{
         if(this.state.caseid === "" && (!this.state.currency || this.state.currency==="" || 
         !this.state.conveyprice || this.state.conveyprice==="" || 
@@ -66,47 +66,39 @@ export default class HelloWorld extends React.Component {
                 }
             }
             axios.post(`${APIendpoint}/negotiation`,body).then(res => {
-              if (res.data ){
-                console.log(res.error)
-                if(res.data.error){
-                    this.setState({
-                        error: res.data.error
-                    })
-                }else{
-                    this.setState({
-                        negotiationid: res.data.negotiationid, 
-                        convey: res.data.convey ? res.data.convey : {}, 
-                        receive: res.data.receive ? res.data.receive : {},
-                        confirmed: res.data.confirmed,
-                        stage: res.data.stage,
-                        considerationlist: res.data[this.state.party].considerationlist,
-                        considerationsubmited: res.data[`${this.state.party}consideration`],
-                        final: res.data.final,
-                        result: res.data.result,
-                        confirmtime: res.data.confirmtime,
-                        finaltime: res.data.finaltime
-                    })
-                    ConfirmationInterval = setInterval(async ()=>{
-                        console.log("post check confirmation")
-                        const response = await axios.post(`${APIendpoint}/confirm`,{negotiationid: res.data.negotiationid})
-                        if (response.data.confirmed){
-                            clearInterval(ConfirmationInterval)
-                            this.setState({
-                                convey: response.data.convey,
-                                receive: response.data.receive,
-                                confirmed: response.data.confirmed,
-                                considerationlist: res.data[this.state.party].considerationlist,
-                                considerationsubmited: res.data[`${this.state.party}consideration`],
-                                stage: response.data.stage,
-                                final: response.data.final,
-                                result: response.data.result,
-                                confirmtime: response.data.confirmtime,
-                                finaltime: response.data.finaltime
-                            })
-                        }
-                    },1000)
-                }
-              }
+                console.log(res.data)
+                this.setState({
+                    negotiationid: res.data.negotiationid, 
+                    convey: res.data.convey ? res.data.convey : {}, 
+                    receive: res.data.receive ? res.data.receive : {},
+                    confirmed: res.data.confirmed,
+                    stage: res.data.stage,
+                    considerationlist: res.data[this.state.party].considerationlist,
+                    considerationsubmited: res.data[`${this.state.party}consideration`],
+                    final: res.data.final,
+                    result: res.data.result,
+                    confirmtime: res.data.confirmtime,
+                    finaltime: res.data.finaltime
+                })
+                ConfirmationInterval = setInterval(async ()=>{
+                    console.log("post check confirmation")
+                    const response = await axios.post(`${APIendpoint}/confirm`,{negotiationid: res.data.negotiationid})
+                    if (response.data.confirmed){
+                        clearInterval(ConfirmationInterval)
+                        this.setState({
+                            convey: response.data.convey,
+                            receive: response.data.receive,
+                            confirmed: response.data.confirmed,
+                            considerationlist: res.data[this.state.party].considerationlist,
+                            considerationsubmited: res.data[`${this.state.party}consideration`],
+                            stage: response.data.stage,
+                            final: response.data.final,
+                            result: response.data.result,
+                            confirmtime: response.data.confirmtime,
+                            finaltime: response.data.finaltime
+                        })
+                    }
+                },1000)
             }).catch(err=>{
                 console.log(err)
             })
@@ -258,6 +250,7 @@ export default class HelloWorld extends React.Component {
 
     render(){
         const {party, caseid, currency, conveyprice, receiveprice, timed, error} = this.state
+        const currencylistRender = this.state.currencylist.map((cur)=>{return (<option value={cur.symbol} key={cur.symbol}>{cur.name}</option>)})
         return (
             <Layout>
               <Head>
@@ -323,12 +316,7 @@ export default class HelloWorld extends React.Component {
                             <label htmlFor="currency">1. Currency</label>
                             <select id="currency" name="currency" value = {currency} onChange={(e)=>this.setValue("currency", e.target.value)}   >
                                 <option value="">Please Select ... </option>
-                                <option value="USD">United States dollar </option>
-                                <option value="CAD">Canadia dollar</option>
-                                <option value="EUR">Euro</option>
-                                <option value="JPY">Japan</option>
-                                <option value="GBP">Great Britain pound</option>
-                                <option value="AUD">Australia dollar</option>
+                                {currencylistRender}
                             </select>
                         </div>
                         <div className={styles.formgroup}>

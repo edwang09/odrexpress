@@ -1,7 +1,17 @@
 .consideration{
-  display: none;
+  // display: none;
+  position: absolute;
+  left : 0;
+  top:0;
+  transition: all .3s;
+  &.previous{
+    transform: translateX(-1000px);
+  }
   &.current{
-    display: block;
+    transform: none;
+  }
+  &.next{
+    transform: translateX(1000px);
   }
 .inputGroup {
     background-color: #fff;
@@ -10,7 +20,7 @@
     position: relative;
 
     label {
-      padding: 12px 50px 8px 20px;
+      padding: 12px 30px 8px 5px;
       width: 100%;
       display: block;
       text-align: left;
@@ -85,3 +95,18 @@
 
 
 
+@media screen and (max-width: 768px) {
+  .consideration{
+    .inputGroup {
+      label {
+        padding: 8px 30px 6px 5px;
+        &:after {
+          width: 24px;
+          height: 24px;
+          background-position: 1px 2px;
+        }
+      }
+    }
+      
+  }
+  }

@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Layout, { siteTitle } from '../components/layout'
-import styles from './termofuse.module.scss'
+import styles from './contacts.module.scss'
 import axios from 'axios'
 const APIendpoint = process.env.APIendpoint
 // import fs from 'fs'
@@ -9,22 +9,22 @@ const APIendpoint = process.env.APIendpoint
 
 
 export async function getStaticProps() {
-  // const content = await (await axios.get(`${APIendpoint}/content?page=termofuse`)).data.content
-  // const fullPath = path.join(process.cwd(), "admin", "termofuse")
+  // const content = await (await axios.get(`${APIendpoint}/content?page=contacts`)).data.content
+  // const fullPath = path.join(process.cwd(), "admin", "contacts")
   // const fileContents = fs.readFileSync(fullPath, "utf8")
   // return {props:{ content: fileContents }}
   
-  const result = await axios.get(`${APIendpoint}/content?page=termofuse`)
+  const result = await axios.get(`${APIendpoint}/content?page=contacts`)
   return {props:{ content: result.data.content }}
 }
-export default function Termofuse({ content }) {
+export default function Contacts({ content }) {
   return (
     <Layout>
         <Head>
           <title>{siteTitle}</title>
         </Head>
-      <section className={styles.termofuse}>
-        <h2>Term of Use</h2>
+      <section className={styles.contacts}>
+        <h2>Contacts</h2>
           <div dangerouslySetInnerHTML={{__html: content}}></div>
       </section>
     </Layout>

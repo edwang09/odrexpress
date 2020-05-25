@@ -27,7 +27,7 @@ export default function Navbar(){
                     </Link>
                 </li>
                 <li>
-                    <Link href="/demo">
+                    <Link href="/">
                         <a className={style.navlink}>DEMO</a> 
                     </Link>
                 </li>
@@ -39,11 +39,6 @@ export default function Navbar(){
                 <li>
                     <Link href="/faq">
                         <a className={style.navlink}>FAQ</a>
-                    </Link>
-                </li>
-                <li>
-                    <Link href="/admin">
-                        <a className={style.navlink}>admin</a>
                     </Link>
                 </li>
             </ul>
