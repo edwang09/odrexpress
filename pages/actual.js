@@ -12,7 +12,7 @@ const APIendpoint = process.env.APIendpoint
 export default class HelloWorld extends React.Component {
     state = {
         party: "convey",
-        caseid: "088470609090",
+        caseid: "",
         conveyprice: "",
         receiveprice: "",
         currency: "",
