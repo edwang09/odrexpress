@@ -47,7 +47,7 @@ export default class HelloWorld extends React.Component {
         return this.setState({[name]:value})
     }
     componentDidMount(){
-        axios.get(`${APIendpoint}/currency`).then((res)=> this.setState({currencylist:res.data.currency}))
+        axios.get(`${APIendpoint}/setting`).then((res)=> this.setState({currencylist:res.data.setting.currency}))
     }
     postCase = () =>{
         if(this.state.caseid === "" && (!this.state.currency || this.state.currency==="" || 
