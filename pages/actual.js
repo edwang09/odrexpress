@@ -11,16 +11,20 @@ let CountdownInterval
 const APIendpoint = process.env.APIendpoint
 export default class HelloWorld extends React.Component {
     state = {
-        party: "convey",
+        party: "",
         caseid: "",
-        conveyprice: "",
-        receiveprice: "",
+        negotiationidinput:"",
+        conveyprice: "12000",
+        receiveprice: "14000",
         currency: "",
         timed: true,
         countdowna: "",
         countdownb: "",
         currentquestion:0,
-        currencylist:[]
+        currencylist:[],
+        convey:{},
+        stage:-1,
+        receive:{}
         //dummy
         // confirmed:false,
         // stage:0,
@@ -46,19 +50,57 @@ export default class HelloWorld extends React.Component {
         // console.log({[name]:value})
         return this.setState({[name]:value})
     }
-    componentDidMount(){
+    async componentDidMount(){
         axios.get(`${APIendpoint}/setting`).then((res)=> this.setState({currencylist:res.data.setting.currency}))
+        const party = sessionStorage.getItem('party',null)
+        const negotiationid = sessionStorage.getItem('negotiationid',null)
+        if (party && negotiationid){
+            const response = await axios.post(`${APIendpoint}/confirm`,{negotiationid: sessionStorage.getItem('negotiationid')})
+            console.log(response.data)
+            this.setState({...response.data,
+                party,
+                considerationlist: response.data[party].considerationlist,
+                considerationsubmited: response.data[`${party}consideration`],
+            })
+            if (response.data.stage === 0){
+                ConfirmationInterval = setInterval(async ()=>{
+                    console.log("post check confirmation")
+                    const res = await axios.post(`${APIendpoint}/confirm`,{negotiationid: response.data.negotiationid})
+                    if (res.data.confirmed){
+                        clearInterval(ConfirmationInterval)
+                        this.setState({
+                            convey: res.data.convey,
+                            receive: res.data.receive,
+                            confirmed: res.data.confirmed,
+                            considerationlist: res.data[this.state.party].considerationlist,
+                            considerationsubmited: res.data[`${this.state.party}consideration`],
+                            stage: res.data.stage,
+                            final: res.data.final,
+                            result: res.data.result,
+                            confirmtime: res.data.confirmtime,
+                            finaltime: res.data.finaltime
+                        })
+                    }
+                },1000)
+            }else if (response.data.stage === 1){
+                CountdownInterval = setInterval(()=>{
+                    this.setState({countdowna : this.displayCountdown(response.data.confirmtime, 45)})
+                },1000)
+            }
+        }
     }
     postCase = () =>{
-        if(this.state.caseid === "" && (!this.state.currency || this.state.currency==="" || 
+        if((!this.state.party || this.state.party==="" || !this.state.currency || this.state.currency==="" || 
         !this.state.conveyprice || this.state.conveyprice==="" || 
         !this.state.receiveprice || this.state.receiveprice==="" || 
         !this.state.timed)){
             this.setState({error: "Please complete the above form before preceeding"})
-        }else{
+        }else if (this.state.party === "convey"){
+            this.setState({error: ""})
             const body = {
-                negotiationid : this.state.caseid,
+                party : this.state.party,
                 [this.state.party]: {
+                    caseid : this.state.caseid,
                     currency: this.state.currency,
                     conveyprice: parseInt(this.state.conveyprice),
                     receiveprice: parseInt(this.state.receiveprice),
@@ -79,6 +121,9 @@ export default class HelloWorld extends React.Component {
                     result: res.data.result,
                     confirmtime: res.data.confirmtime,
                     finaltime: res.data.finaltime
+                }, ()=>{
+                    sessionStorage.setItem('negotiationid', res.data.negotiationid)
+                    sessionStorage.setItem('party', this.state.party)
                 })
                 ConfirmationInterval = setInterval(async ()=>{
                     console.log("post check confirmation")
@@ -102,8 +147,70 @@ export default class HelloWorld extends React.Component {
             }).catch(err=>{
                 console.log(err)
             })
+        }else if (this.state.party === "receive"){
+            this.setState({
+                stage: 0,
+                error: "",
+                convey:{
+                    currency: this.state.currency,
+                    conveyprice: this.state.conveyprice,
+                    receiveprice: this.state.receiveprice,
+                    timed: this.state.timed,
+                }
+            })
         }
     }
+    postCaseid = ()=>{
+        const body = {
+            party : this.state.party,
+            negotiationid : this.state.negotiationidinput,
+            [this.state.party]: {
+                caseid : this.state.caseid,
+                currency: this.state.currency,
+                conveyprice: parseInt(this.state.conveyprice),
+                receiveprice: parseInt(this.state.receiveprice),
+                timed: this.state.timed
+            }
+        }
+        axios.post(`${APIendpoint}/negotiation`,body).then(res => {
+            this.setState({
+                negotiationid: res.data.negotiationid, 
+                convey: res.data.convey ? res.data.convey : {}, 
+                receive: res.data.receive ? res.data.receive : {},
+                confirmed: res.data.confirmed,
+                stage: res.data.stage,
+                considerationlist: res.data[this.state.party].considerationlist,
+                considerationsubmited: res.data[`${this.state.party}consideration`],
+                final: res.data.final,
+                result: res.data.result,
+                confirmtime: res.data.confirmtime,
+                finaltime: res.data.finaltime
+            }, ()=>{
+                sessionStorage.setItem('negotiationid', res.data.negotiationid)
+                sessionStorage.setItem('party', this.state.party)
+            })
+            ConfirmationInterval = setInterval(async ()=>{
+                console.log("post check confirmation")
+                const response = await axios.post(`${APIendpoint}/confirm`,{negotiationid: res.data.negotiationid})
+                if (response.data.confirmed){
+                    clearInterval(ConfirmationInterval)
+                    this.setState({
+                        convey: response.data.convey,
+                        receive: response.data.receive,
+                        confirmed: response.data.confirmed,
+                        considerationlist: res.data[this.state.party].considerationlist,
+                        considerationsubmited: res.data[`${this.state.party}consideration`],
+                        stage: response.data.stage,
+                        final: response.data.final,
+                        result: response.data.result,
+                        confirmtime: response.data.confirmtime,
+                        finaltime: response.data.finaltime
+                    })
+                }
+            },1000)
+    })
+    }
+
     proceedToStages = () =>{
         axios.post(`${APIendpoint}/stage`,{negotiationid:this.state.negotiationid})
         .then(res => {
@@ -256,14 +363,18 @@ export default class HelloWorld extends React.Component {
               <Head>
                 <title>{siteTitle}</title>
               </Head>
-                {!this.state.negotiationid && <section className={styles.actual}>
+                {this.state.stage === -1 && <section className={styles.actual}>
                     <div className={styles.topform}>
                         <div className={styles.toggle}>
-                            <p>For this case, I am the: </p>
-                            <input type="radio" name="sizeBy" value="convey" id="convey" className={classNames({[styles.checked]:party==="convey"})}/>
-                            <label htmlFor="convey"onClick={()=>this.setValue("party", "convey")} >Convey Party</label>
-                            <input type="radio" name="sizeBy" value="receive" id="receive" className={classNames({[styles.checked]:party==="receive"})}/>
-                            <label htmlFor="receive" onClick={()=>this.setValue("party", "receive")} >Receive Party</label>
+                            <p><b>For this case, I am the:</b> </p>
+                            <div className={styles.radiobutton}>
+                                <input type="radio" name="sizeBy" value="convey" id="convey" className={classNames({[styles.checked]:party==="convey"})}/>
+                                <label htmlFor="convey"onClick={()=>this.setValue("party", "convey")} >Convey Party</label>
+                            </div>
+                            <div className={styles.radiobutton}>
+                                <input type="radio" name="sizeBy" value="receive" id="receive" className={classNames({[styles.checked]:party==="receive"})}/>
+                                <label htmlFor="receive" onClick={()=>this.setValue("party", "receive")} >Receive Party</label>
+                            </div>
                         </div>
                         <div className={styles.case}>
                             <label htmlFor="caseid">Case ID <span>(optional)</span></label>
@@ -340,10 +451,10 @@ export default class HelloWorld extends React.Component {
                     </div>
                 </section>
                 }        
-                {this.state.negotiationid && this.state.stage === 0 && <section className={styles.verification}>
+                {this.state.stage === 0 && <section className={styles.verification}>
 
                 <h4>Numeric Key: {this.state.negotiationid}</h4>
-                <ul>
+                {this.state.party === "convey" && <ul>
                     <li>
                     Provide the above 12 character Numeric Key to the Receive Party via: text / e-mail / fax
                     </li>
@@ -356,12 +467,26 @@ export default class HelloWorld extends React.Component {
                     <li>
                     As per FAQ number 5, both parties shall abandon this claim currently in progress and shall begin a new case at a time frame that is mutually convenient
                     </li>
-                </ul>
+                </ul>}
+                {this.state.party === "receive" && <ul>
+                    <li>
+                    Await the 12 character Numeric Key from the Convey Party via: text / e-mail / fax
+                    </li>
+                    <li>
+                    Once received, enter the 12 character Numeric Key
+                    <input value = {this.state.negotiationidinput} 
+                            onChange={(e)=>this.setValue("negotiationidinput",e.target.value)} 
+                            type="text" id="negotiationidinput" name="negotiationidinput" />
+                    </li>
+                    <li>
+                    After entering the Numeric Key <a onClick={()=>this.postCaseid()}>CLICK HERE</a> to view the updated Verify column
+                    </li>
+                </ul>}
                 <div className={styles.tablecontainer}>
                     <table>
                     <thead>
                     <tr>
-                        <th className={styles.title} colSpan="4">Convey Party Verification</th>
+                        <th className={styles.title} colSpan="4">{this.state.party.charAt(0).toUpperCase() + this.state.party.slice(1)} Party Verification</th>
                     </tr>
                     </thead>
                     <tbody>

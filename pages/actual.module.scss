@@ -12,60 +12,22 @@
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
-        .toggle {
-            margin: 0 0 1.5rem; 
-            font-size: 0;
-            display: flex; 
-            flex-flow: row nowrap;
-            justify-content: flex-start; 
-            align-items: stretch;
-            p{
-                font-size: 1rem;
-                margin: 0 0;
-                margin-right:20px;
-                padding: 0 0;
-                font-weight: normal;
+        .toggle{   
+            display: flex;
+            flex-direction: column;
+            div{
+                margin: 5px 0;
             }
-            input {
-                width: 0; 
-                height: 0; 
-                position: absolute; 
-                left: -9999px;
-            }
-            input + label {
-                margin: 0; 
-                padding: .25rem 1rem; 
-                box-sizing: border-box;
-                position: relative; 
-                display: inline-block;
-                border: solid 1px #DDD; 
-                background-color: #FFF;
-                font-size: 0.8rem; 
-                line-height: 140%; 
-                font-weight: 600; 
-                text-align: center;
-                box-shadow: 0 0 0 rgba(255,255,255,0);
-                transition: border-color .15s ease-out, 
-                            color .25s ease-out, 
-                            background-color .15s ease-out,
-                            box-shadow .15s ease-out;
-        
-                &:first-of-type {border-radius: 6px 0 0 6px; border-right: none;}
-                &:last-of-type {border-radius: 0 6px 6px 0; border-left: none;}
-            }
-            input:hover + label {
-                border-color: #213140;
-            }
-            input.checked + label {
-                background-color: #4B9DEA;
-                color: #FFF;
-                box-shadow: 0 0 10px rgba(#66B3FB, .5);
-                border-color: #4B9DEA;
-                z-index: 1;
-            }
+            
         }
         .case{
             margin-right: 30px;
+            input[type="text"]{
+                padding: 4px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                resize: vertical;
+            }
         }
     
     }
@@ -159,6 +121,21 @@
 
 
 .verification{
+    input[type="text"]{
+        flex-grow: 1;   
+        width: 300px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        resize: vertical;
+    }
+    a{
+        cursor: pointer;
+        font-weight: bold;
+        &:hover{
+            text-decoration: none;
+        }
+    }
     .tablecontainer{
         overflow: auto;
         width: 100%;
