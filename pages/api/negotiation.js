@@ -27,7 +27,8 @@ handler.post(async (req, res) => {
         try {
             let insertion = await req.db.collection('negotiation').insertOne(insertdoc);
             if (insertion.ops && insertion.ops.length){
-                res.json(insertion.ops[0]);
+                const result = insertion.ops[0]
+                res.json({...result, receive: {...result.receive, considerationlist:undefined}});
             }else{
                 res.status(400).json({error:"unable to make post request", detail: error});
             }
@@ -36,7 +37,6 @@ handler.post(async (req, res) => {
         };
 
     }else if (party === "receive" && receive && receive.receiveprice && receive.receiveprice && receive.timed && receive.currency && negotiationid){
-
         //initialize considerationlist into created negotiation
         let updatedoc = { 
             confirmed: false, 
@@ -52,7 +52,7 @@ handler.post(async (req, res) => {
                 updatedoc = {...updatedoc, confirmed : true, confirmtime: Date.now()}
                 await req.db.collection('negotiation').updateOne({'negotiationid': negotiationid}, [ { $set: updatedoc } ])
                 result = await req.db.collection('negotiation').findOne({'negotiationid': negotiationid})
-                res.json(result);
+                res.json({...result, convey: {...result.convey, considerationlist:undefined}});
             }else{
                 res.status(400).json({error:"negotiationid not found", detail: error});
             }

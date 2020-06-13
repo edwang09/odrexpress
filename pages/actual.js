@@ -1,14 +1,15 @@
-import Head from 'next/head'
-import Layout, { siteTitle } from '../components/layout'
-import Considerationbox from '../components/considerationbox'
+import Head from 'next/head';
+import Layout, { siteTitle } from '../components/layout';
+import Considerationbox from '../components/considerationbox';
 import styles from './actual.module.scss'
 import classNames from 'classnames';
 import React from 'react';
-import axios from 'axios'
+import axios from 'axios';
 
 let ConfirmationInterval
 let CountdownInterval
 const APIendpoint = process.env.APIendpoint
+
 export default class HelloWorld extends React.Component {
     state = {
         party: "",
@@ -30,6 +31,22 @@ export default class HelloWorld extends React.Component {
         // stage:0,
         // negotiationid:"285445241188",
     }
+    Confirm = async (negotiationid, stage, cb)=>{
+        ConfirmationInterval = setInterval(async ()=>{
+            console.log("post check confirmation")
+            const response = await axios.post(`${APIendpoint}/confirm`,{negotiationid: negotiationid, party: this.state.party})
+            if ((response.data.confirmed && stage === 0) || (stage >= 3 && response.data.stage === stage)){
+                clearInterval(ConfirmationInterval)
+                this.setState({...response.data,
+                    // considerationlist: response.data[this.state.party].considerationlist,
+                    // considerationsubmited: response.data[`${this.state.party}consideration`],
+                },cb)
+            }
+        },1000)
+    }
+    validateForm = ()=>{
+        return (!this.state.party || this.state.party==="" ||!this.state.currency || this.state.currency==="" ||  !this.state.conveyprice || this.state.conveyprice==="" ||  !this.state.receiveprice || this.state.receiveprice==="" || !this.state.timed)
+    }
     displayPrice = (x) => {
         x = x.toString();
         var pattern = /(-?\d+)(\d{3})/;
@@ -37,11 +54,18 @@ export default class HelloWorld extends React.Component {
             x = x.replace(pattern, "$1,$2");
         return x;
     }
-    displayCountdown = (time, countdown) =>{
-        const diff = countdown*60*1000 - (Date.now() - time)
-        const minute = "00" + Math.floor(diff/1000/60).toString()
-        const second = "00" + Math.floor(diff/1000%60).toString()
-        return `${minute.substring(minute.length-2, minute.length) } : ${second.substring(second.length-2, second.length)}`
+    Countdown = (starttime, countdown, duration) =>{
+        CountdownInterval = setInterval(()=>{
+            const diff = duration*60*1000 - (Date.now() - starttime)
+            if (diff > 0){
+                const minute = "00" + Math.floor(diff/1000/60).toString()
+                const second = "00" + Math.floor(diff/1000%60).toString()
+                const displaytime = `${minute.substring(minute.length-2, minute.length) } : ${second.substring(second.length-2, second.length)}`
+                this.setState({[countdown] : displaytime})
+            }else{
+                clearInterval(CountdownInterval)
+            }
+        },1000)
     }
     booleanToString = (bool)=>{
         return bool ? "True" : "False"
@@ -55,7 +79,7 @@ export default class HelloWorld extends React.Component {
         const party = sessionStorage.getItem('party',null)
         const negotiationid = sessionStorage.getItem('negotiationid',null)
         if (party && negotiationid){
-            const response = await axios.post(`${APIendpoint}/confirm`,{negotiationid: sessionStorage.getItem('negotiationid')})
+            const response = await axios.post(`${APIendpoint}/confirm`,{negotiationid, party})
             console.log(response.data)
             this.setState({...response.data,
                 party,
@@ -63,37 +87,25 @@ export default class HelloWorld extends React.Component {
                 considerationsubmited: response.data[`${party}consideration`],
             })
             if (response.data.stage === 0){
-                ConfirmationInterval = setInterval(async ()=>{
-                    console.log("post check confirmation")
-                    const res = await axios.post(`${APIendpoint}/confirm`,{negotiationid: response.data.negotiationid})
-                    if (res.data.confirmed){
-                        clearInterval(ConfirmationInterval)
-                        this.setState({
-                            convey: res.data.convey,
-                            receive: res.data.receive,
-                            confirmed: res.data.confirmed,
-                            considerationlist: res.data[this.state.party].considerationlist,
-                            considerationsubmited: res.data[`${this.state.party}consideration`],
-                            stage: res.data.stage,
-                            final: res.data.final,
-                            result: res.data.result,
-                            confirmtime: res.data.confirmtime,
-                            finaltime: res.data.finaltime
-                        })
-                    }
-                },1000)
-            }else if (response.data.stage === 1){
-                CountdownInterval = setInterval(()=>{
-                    this.setState({countdowna : this.displayCountdown(response.data.confirmtime, 45)})
-                },1000)
+                await this.Confirm(res.data.negotiationid,0)
+            }else if (response.data.stage === 1 || response.data.stage === 2 ){
+                if (response.data[`${party}consideration`]){
+                    this.Confirm(response.data.negotiationid, 3, ()=>{this.Countdown(response.data.finaltime, "countdownb", 10)})
+                }else{
+                    this.Countdown(response.data.confirmtime, "countdowna", 45)
+                }
+                this.Confirm(res.data.negotiationid, 4)
+            }else if (response.data.stage === 3){
+                this.Countdown(response.data.finaltime, "countdownb", 10)
             }
         }
     }
+    componentWillUnmount(){
+        clearInterval(ConfirmationInterval)
+        clearInterval(CountdownInterval)
+    }
     postCase = () =>{
-        if((!this.state.party || this.state.party==="" || !this.state.currency || this.state.currency==="" || 
-        !this.state.conveyprice || this.state.conveyprice==="" || 
-        !this.state.receiveprice || this.state.receiveprice==="" || 
-        !this.state.timed)){
+        if(this.validateForm()){
             this.setState({error: "Please complete the above form before preceeding"})
         }else if (this.state.party === "convey"){
             this.setState({error: ""})
@@ -109,41 +121,11 @@ export default class HelloWorld extends React.Component {
             }
             axios.post(`${APIendpoint}/negotiation`,body).then(res => {
                 console.log(res.data)
-                this.setState({
-                    negotiationid: res.data.negotiationid, 
-                    convey: res.data.convey ? res.data.convey : {}, 
-                    receive: res.data.receive ? res.data.receive : {},
-                    confirmed: res.data.confirmed,
-                    stage: res.data.stage,
-                    considerationlist: res.data[this.state.party].considerationlist,
-                    considerationsubmited: res.data[`${this.state.party}consideration`],
-                    final: res.data.final,
-                    result: res.data.result,
-                    confirmtime: res.data.confirmtime,
-                    finaltime: res.data.finaltime
-                }, ()=>{
+                this.setState({...res.data}, async ()=>{
                     sessionStorage.setItem('negotiationid', res.data.negotiationid)
                     sessionStorage.setItem('party', this.state.party)
+                    await this.Confirm(res.data.negotiationid,0)
                 })
-                ConfirmationInterval = setInterval(async ()=>{
-                    console.log("post check confirmation")
-                    const response = await axios.post(`${APIendpoint}/confirm`,{negotiationid: res.data.negotiationid})
-                    if (response.data.confirmed){
-                        clearInterval(ConfirmationInterval)
-                        this.setState({
-                            convey: response.data.convey,
-                            receive: response.data.receive,
-                            confirmed: response.data.confirmed,
-                            considerationlist: res.data[this.state.party].considerationlist,
-                            considerationsubmited: res.data[`${this.state.party}consideration`],
-                            stage: response.data.stage,
-                            final: response.data.final,
-                            result: response.data.result,
-                            confirmtime: response.data.confirmtime,
-                            finaltime: response.data.finaltime
-                        })
-                    }
-                },1000)
             }).catch(err=>{
                 console.log(err)
             })
@@ -173,75 +155,26 @@ export default class HelloWorld extends React.Component {
             }
         }
         axios.post(`${APIendpoint}/negotiation`,body).then(res => {
-            this.setState({
-                negotiationid: res.data.negotiationid, 
-                convey: res.data.convey ? res.data.convey : {}, 
-                receive: res.data.receive ? res.data.receive : {},
-                confirmed: res.data.confirmed,
-                stage: res.data.stage,
-                considerationlist: res.data[this.state.party].considerationlist,
-                considerationsubmited: res.data[`${this.state.party}consideration`],
-                final: res.data.final,
-                result: res.data.result,
-                confirmtime: res.data.confirmtime,
-                finaltime: res.data.finaltime
-            }, ()=>{
+            this.setState({...res.data}, async ()=>{
                 sessionStorage.setItem('negotiationid', res.data.negotiationid)
                 sessionStorage.setItem('party', this.state.party)
+                await this.Confirm(res.data.negotiationid,0)
             })
-            ConfirmationInterval = setInterval(async ()=>{
-                console.log("post check confirmation")
-                const response = await axios.post(`${APIendpoint}/confirm`,{negotiationid: res.data.negotiationid})
-                if (response.data.confirmed){
-                    clearInterval(ConfirmationInterval)
-                    this.setState({
-                        convey: response.data.convey,
-                        receive: response.data.receive,
-                        confirmed: response.data.confirmed,
-                        considerationlist: res.data[this.state.party].considerationlist,
-                        considerationsubmited: res.data[`${this.state.party}consideration`],
-                        stage: response.data.stage,
-                        final: response.data.final,
-                        result: response.data.result,
-                        confirmtime: response.data.confirmtime,
-                        finaltime: response.data.finaltime
-                    })
-                }
-            },1000)
+            
     })
     }
-
     proceedToStages = () =>{
         axios.post(`${APIendpoint}/stage`,{negotiationid:this.state.negotiationid})
         .then(res => {
-          if (res.data ){
-            console.log(res.error)
-            if(res.data.error){
-                this.setState({
-                    error: res.data.error
-                })
-            }else{
-                this.setState({
-                    negotiationid: res.data.negotiationid, 
-                    convey: res.data.convey ? res.data.convey : {}, 
-                    receive: res.data.receive ? res.data.receive : {},
-                    stage: res.data.stage,
-                    considerationlist: res.data[this.state.party].considerationlist,
-                    considerationsubmited: res.data[`${this.state.party}consideration`],
-                    final: res.data.final,
-                    result: res.data.result,
-                    confirmtime: res.data.confirmtime
-                })
-                CountdownInterval = setInterval(()=>{
-                    this.setState({countdowna : this.displayCountdown(res.data.confirmtime, 45)})
-                },1000)
-            }
-          }
+            this.setState({... res.data,
+                considerationlist: res.data[this.state.party].considerationlist,
+                considerationsubmited: res.data[`${this.state.party}consideration`]
+            })
+            this.Countdown(res.data.confirmtime, "countdowna", 45)
         }).catch(err=>{
             console.log(err)
         })
     }
-
     onConsiderationChoose = (e) => {
         const newconsiderationlist = [...this.state.considerationlist]
         const id = parseInt(e.target.id.replace("consideration","").split("-")[0])
@@ -260,6 +193,7 @@ export default class HelloWorld extends React.Component {
         this.setState({currentquestion: this.state.currentquestion === 17 ? this.state.currentquestion : this.state.currentquestion + 1})
     }
     onConsiderationSubmit =(e) =>{
+        //check for unfinished questions
         const unfinished = this.state.considerationlist.filter((cons)=>{
             return cons.choice === undefined
         })
@@ -273,47 +207,16 @@ export default class HelloWorld extends React.Component {
                 }
             }
             axios.post(`${APIendpoint}/consideration`,body).then(res => {
-              if (res.data ){
-                if(res.data.error){
-                    this.setState({
-                        error: res.data.error
-                    })
-                }
-                this.setState({
-                    negotiationid: res.data.negotiationid, 
-                    convey: res.data.convey ? res.data.convey : {}, 
-                    receive: res.data.receive ? res.data.receive : {},
-                    confirmed: res.data.confirmed,
-                    stage: res.data.stage,
-                    considerationsubmited: res.data[`${this.state.party}consideration`],
-                    final: res.data.final,
-                    confirmtime: res.data.confirmtime,
-                    finaltime: res.data.finaltime
+                this.setState({... res.data,
+                    considerationsubmited: res.data[`${this.state.party}consideration`]
                 })
                 clearInterval(CountdownInterval)
-                ConfirmationInterval = setInterval(async ()=>{
-                    console.log("consideration check confirmation")
-                    const response = await axios.post(`${APIendpoint}/confirm`,{negotiationid: res.data.negotiationid})
-                    if (response.data.stage >= 3){
-                        clearInterval(ConfirmationInterval)
-                        this.setState({
-                            stage: response.data.stage,
-                            final: response.data.final,
-                            confirmtime: response.data.confirmtime,
-                            finaltime: response.data.finaltime
-                        })
-                        CountdownInterval = setInterval(()=>{
-                            this.setState({countdownb : this.displayCountdown(res.data.finaltime, 10)})
-                        },1000)
-                    }
-                },1000)
-              }
+                this.Confirm(res.data.negotiationid, 3, ()=>{this.Countdown(res.data.finaltime, "countdownb", 10)})
             }).catch(err=>{
                 console.log(err)
             })
         }
     }
-
     onDecisionSubmit =(e) =>{
         if(!this.state.decision || (this.state.decision !== "reject" && this.state.decision !== "accept")){
             this.setState({error: `Please complete your preference before submission`})
@@ -324,37 +227,14 @@ export default class HelloWorld extends React.Component {
             }
             axios.post(`${APIendpoint}/decision`,body)
             .then(res => {
-            if (res.data ){
-                if(res.data.error){
-                    this.setState({
-                        error: res.data.error
-                    })
-                }
                 clearInterval(CountdownInterval)
-                this.setState({
-                    stage: res.data.stage,
-                    final: res.data.final,
-                    result: res.data.result
-                })
-                ConfirmationInterval = setInterval(async ()=>{
-                    console.log("decision check confirmation")
-                    const response = await axios.post(`${APIendpoint}/confirm`,{negotiationid: res.data.negotiationid})
-                    if (response.data.stage === 4){
-                        clearInterval(ConfirmationInterval)
-                        this.setState({
-                            stage: response.data.stage,
-                            final: response.data.final,
-                            result: response.data.result
-                        })
-                    }
-                },1000)
-            }
+                this.setState(res.data)
+                this.Confirm(res.data.negotiationid, 4)
             }).catch(err=>{
                 console.log(err)
             })
         }
     }
-
     render(){
         const {party, caseid, currency, conveyprice, receiveprice, timed, error} = this.state
         const currencylistRender = this.state.currencylist.map((cur)=>{return (<option value={cur.symbol} key={cur.symbol}>{cur.name}</option>)})
