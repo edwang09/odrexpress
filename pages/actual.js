@@ -72,9 +72,7 @@ export default class HelloWorld extends React.Component {
     }
     setValue = (name, value) =>{
         console.log({[name]:value})
-        return this.setState({[name]:value},()=>{
-            console.log(this.state[name])
-        })
+        return this.setState({[name]:value})
     }
     async componentDidMount(){
         axios.get(`${APIendpoint}/setting`).then((res)=> this.setState({currencylist:res.data.setting.currency}))
@@ -108,7 +106,6 @@ export default class HelloWorld extends React.Component {
     }
     postCase = () =>{
         if(this.validateForm()){
-            console.log(this.state)
             this.setState({error: "Please complete the above form before preceeding"})
         }else if (this.state.party === "convey"){
             this.setState({error: ""})
@@ -136,7 +133,7 @@ export default class HelloWorld extends React.Component {
             this.setState({
                 stage: 0,
                 error: "",
-                convey:{
+                receive:{
                     currency: this.state.currency,
                     conveyprice: this.state.conveyprice,
                     receiveprice: this.state.receiveprice,
@@ -250,13 +247,13 @@ export default class HelloWorld extends React.Component {
                     <div className={styles.topform}>
                         <div className={styles.toggle}>
                             <p><b>For this case, I am the:</b> </p>
-                            <div className={styles.radiobutton}>
+                            <div className={styles.radiobutton} onClick={()=>this.setValue("party", "convey")}>
                                 <input type="radio" name="sizeBy" value="convey" id="convey" className={classNames({[styles.checked]:party==="convey"})}/>
-                                <label htmlFor="convey"onClick={()=>this.setValue("party", "convey")} >Convey Party</label>
+                                <label htmlFor="convey" >Convey Party</label>
                             </div>
-                            <div className={styles.radiobutton}>
+                            <div className={styles.radiobutton} onClick={()=>this.setValue("party", "receive")} >
                                 <input type="radio" name="sizeBy" value="receive" id="receive" className={classNames({[styles.checked]:party==="receive"})}/>
-                                <label htmlFor="receive" onClick={()=>this.setValue("party", "receive")} >Receive Party</label>
+                                <label htmlFor="receive">Receive Party</label>
                             </div>
                         </div>
                         <div className={styles.case}>
