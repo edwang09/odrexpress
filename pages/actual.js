@@ -71,8 +71,10 @@ export default class HelloWorld extends React.Component {
         return bool ? "True" : "False"
     }
     setValue = (name, value) =>{
-        // console.log({[name]:value})
-        return this.setState({[name]:value})
+        console.log({[name]:value})
+        return this.setState({[name]:value},()=>{
+            console.log(this.state[name])
+        })
     }
     async componentDidMount(){
         axios.get(`${APIendpoint}/setting`).then((res)=> this.setState({currencylist:res.data.setting.currency}))
@@ -106,6 +108,7 @@ export default class HelloWorld extends React.Component {
     }
     postCase = () =>{
         if(this.validateForm()){
+            console.log(this.state)
             this.setState({error: "Please complete the above form before preceeding"})
         }else if (this.state.party === "convey"){
             this.setState({error: ""})
