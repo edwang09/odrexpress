@@ -100,7 +100,7 @@
                         border-radius: 50%;
                           
                     }
-                    &.checked{
+                    &:checked{
                         background-color: #2196F3;
                         &:before{
                             -webkit-transform: translateX(26px);

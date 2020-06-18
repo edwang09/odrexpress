@@ -71,7 +71,7 @@ export default class HelloWorld extends React.Component {
         return bool ? "True" : "False"
     }
     setValue = (name, value) =>{
-        console.log({[name]:value})
+        // console.log({[name]:value})
         return this.setState({[name]:value})
     }
     async componentDidMount(){
@@ -247,12 +247,16 @@ export default class HelloWorld extends React.Component {
                     <div className={styles.topform}>
                         <div className={styles.toggle}>
                             <p><b>For this case, I am the:</b> </p>
-                            <div className={styles.radiobutton} onClick={()=>this.setValue("party", "convey")}>
-                                <input type="radio" name="sizeBy" value="convey" id="convey" className={classNames({[styles.checked]:party==="convey"})}/>
+                            <div className={styles.radiobutton}>
+                                <input type="radio" name="party" value="convey" id="convey" checked={this.state.party === "convey" } 
+                                onChange={(e)=>this.setValue("party", e.target.value)}
+                                className={classNames({[styles.checked]:party==="convey"})}/>
                                 <label htmlFor="convey" >Convey Party</label>
                             </div>
-                            <div className={styles.radiobutton} onClick={()=>this.setValue("party", "receive")} >
-                                <input type="radio" name="sizeBy" value="receive" id="receive" className={classNames({[styles.checked]:party==="receive"})}/>
+                            <div className={styles.radiobutton} >
+                                <input type="radio" name="party" value="receive" id="receive" checked={this.state.party === "receive" } 
+                                onChange={(e)=>this.setValue("party", e.target.value)}
+                                className={classNames({[styles.checked]:party==="receive"})}/>
                                 <label htmlFor="receive">Receive Party</label>
                             </div>
                         </div>

@@ -36,13 +36,13 @@ handler.post(async (req, res) => {
             res.status(400).json({error:"unable to make post request", detail: error});
         };
 
-    }else if (party === "receive" && receive && receive.receiveprice && receive.receiveprice && receive.timed && receive.currency && negotiationid){
+    }else if (party === "receive" && receive && receive.conveyprice && receive.receiveprice && receive.timed && receive.currency && negotiationid){
         //initialize considerationlist into created negotiation
         let updatedoc = { 
             confirmed: false, 
             stage:0, 
             receive:{...receive,
-                considerationlist : makerandom(receive.receiveprice, receive.receiveprice, 18)
+                considerationlist : makerandom(receive.receiveprice, receive.conveyprice, 18)
             }
         }
 
