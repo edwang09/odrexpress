@@ -326,7 +326,7 @@ export default class HelloWorld extends React.Component {
                             <label htmlFor="receiveprice">4. Start Time calendared</label>
                             <div className={styles.switch} onClick={()=>this.setValue("timed", !timed)} >
                                 <input id="timed" name="timed" type="checkbox"/>
-                                <span className={styles.slider}className={classNames(styles.slider,{[styles.checked]:timed})}></span>
+                                <span className={classNames(styles.slider,{[styles.checked]:timed})}></span>
                             </div>
                         </div>
                         {error && <p className={styles.errorMessage}>{error}</p>}
