@@ -31,7 +31,7 @@ app.prepare().then(() => {
     ws.send('something');
   });
   
-  server.listen(3000, (err) => {
+  server.listen(process.env.PORT || 3000, (err) => {
     if (err) throw err
     console.log('> Ready on http://localhost:3000')
   })
