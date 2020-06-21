@@ -6,24 +6,29 @@ const handler = nextConnect();
 handler.use(database);
 
 
-//stage 1 for room creation
 handler.post(async (req, res) => {
     const {negotiationid, party} = req.body
-    let counterparty
-    switch (party) {
-        case "convey":
-            counterparty = "receive"
-            break;
-        case "receive":
-            counterparty = "convey"
-            break;
-    }
-    if (negotiationid && negotiationid!=="" && counterparty){
+    
+    if (negotiationid && negotiationid!==""){
         const result = await req.db.collection('negotiation').findOne({'negotiationid': negotiationid})
-        res.json({...result, [counterparty]: {...result[counterparty], considerationlist:undefined}});
+        if (result.confirmed){
+            res.json(result)
+        }else{
+            const confirmed = (result.convey && result.convey.conveyprice && result.convey.receiveprice && result.convey.currency && 
+                result.receive && result.receive.conveyprice && result.receive.receiveprice && result.receive.currency && 
+                result.convey.conveyprice === result.receive.conveyprice &&
+                result.convey.receiveprice === result.receive.receiveprice &&
+                result.convey.currency === result.receive.currency
+            )
+            // const unconfirmedfield = getUnconfirmedfield(result)
+            const confirmtime= Date.now()
+            await req.db.collection('negotiation').updateOne({'negotiationid': negotiationid}, [ { $set: {confirmed, confirmtime} } ]) 
+            res.json({...result, confirmed, confirmtime});
+        }
     }else{
         res.status(400).json({error: "negotiationid and party is required"});
     }
 });
+
 
 export default handler;

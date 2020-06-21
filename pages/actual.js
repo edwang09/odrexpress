@@ -5,6 +5,7 @@ import styles from './actual.module.scss'
 import classNames from 'classnames';
 import React from 'react';
 import axios from 'axios';
+import Matchtable from '../components/matchtable';
 
 let ConfirmationInterval
 let CountdownInterval
@@ -41,11 +42,25 @@ export default class HelloWorld extends React.Component {
                     // considerationlist: response.data[this.state.party].considerationlist,
                     // considerationsubmited: response.data[`${this.state.party}consideration`],
                 },cb)
+            }else if(stage === 0){
+                this.setState({...response.data})
             }
         },1000)
     }
     validateForm = ()=>{
-        return (!this.state.party || this.state.party==="" ||!this.state.currency || this.state.currency==="" ||  !this.state.conveyprice || this.state.conveyprice==="" ||  !this.state.receiveprice || this.state.receiveprice==="" || !this.state.timed)
+        let errormsg = []
+        const missingfield = ["party", "currency", "conveyprice", "receiveprice", "timed"].filter((field)=> (!this.state[field] || this.state[field]===""))
+        if (missingfield.length > 0){
+            errormsg.push("Please complete fields: " + missingfield.join(", "))
+        }
+        if (this.state.conveyprice && parseInt(this.state.conveyprice) && this.state.receiveprice && parseInt(this.state.receiveprice) && parseInt(this.state.receiveprice) <= parseInt(this.state.conveyprice) ){
+            errormsg.push("Receive Claim must be greater than Convey Claim")
+            return errormsg
+        }else if (missingfield.length > 0){
+            return errormsg
+        }else{
+            return false
+        }
     }
     displayPrice = (x) => {
         x = x.toString();
@@ -67,11 +82,11 @@ export default class HelloWorld extends React.Component {
             }
         },1000)
     }
-    booleanToString = (bool)=>{
-        return bool ? "True" : "False"
-    }
+    // booleanToString = (bool)=>{
+    //     return bool ? "True" : "False"
+    // }
     setValue = (name, value) =>{
-        // console.log({[name]:value})
+        console.log({[name]:value})
         return this.setState({[name]:value})
     }
     async componentDidMount(){
@@ -87,14 +102,14 @@ export default class HelloWorld extends React.Component {
                 considerationsubmited: response.data[`${party}consideration`],
             })
             if (response.data.stage === 0){
-                await this.Confirm(res.data.negotiationid,0)
+                await this.Confirm(response.data.negotiationid,0)
             }else if (response.data.stage === 1 || response.data.stage === 2 ){
                 if (response.data[`${party}consideration`]){
                     this.Confirm(response.data.negotiationid, 3, ()=>{this.Countdown(response.data.finaltime, "countdownb", 10)})
                 }else{
                     this.Countdown(response.data.confirmtime, "countdowna", 45)
                 }
-                this.Confirm(res.data.negotiationid, 4)
+                this.Confirm(response.data.negotiationid, 4)
             }else if (response.data.stage === 3){
                 this.Countdown(response.data.finaltime, "countdownb", 10)
             }
@@ -106,9 +121,10 @@ export default class HelloWorld extends React.Component {
     }
     postCase = () =>{
         if(this.validateForm()){
-            this.setState({error: "Please complete the above form before preceeding"})
+            console.log(this.validateForm())
+            this.setState({errors: this.validateForm()})
         }else if (this.state.party === "convey"){
-            this.setState({error: ""})
+            this.setState({errors: []})
             const body = {
                 party : this.state.party,
                 [this.state.party]: {
@@ -132,7 +148,7 @@ export default class HelloWorld extends React.Component {
         }else if (this.state.party === "receive"){
             this.setState({
                 stage: 0,
-                error: "",
+                errors: [],
                 receive:{
                     currency: this.state.currency,
                     conveyprice: this.state.conveyprice,
@@ -141,6 +157,30 @@ export default class HelloWorld extends React.Component {
                 }
             })
         }
+    }
+    editCase = (field) =>{
+        // if(this.validateForm()){
+        //     console.log(this.validateForm())
+        //     this.setState({errors: this.validateForm()})
+        // }else{
+            this.setState({errors: []})
+            const value = (field === "conveyprice" ||field === "receiveprice" ) ? parseInt(this.state[field]) : this.state[field]
+            const body = {
+                party : this.state.party,
+                negotiationid : this.state.negotiationid,
+                [this.state.party]: {[field]: value}
+            }
+            axios.put(`${APIendpoint}/negotiation`,body).then(res => {
+                console.log(res.data)
+                // this.setState({...res.data}, async ()=>{
+                //     sessionStorage.setItem('negotiationid', res.data.negotiationid)
+                //     sessionStorage.setItem('party', this.state.party)
+                //     await this.Confirm(res.data.negotiationid,0)
+                // })
+            }).catch(err=>{
+                console.log(err)
+            })
+        // }
     }
     postCaseid = ()=>{
         const body = {
@@ -154,6 +194,7 @@ export default class HelloWorld extends React.Component {
                 timed: this.state.timed
             }
         }
+        console.log(body)
         axios.post(`${APIendpoint}/negotiation`,body).then(res => {
             this.setState({...res.data}, async ()=>{
                 sessionStorage.setItem('negotiationid', res.data.negotiationid)
@@ -164,7 +205,7 @@ export default class HelloWorld extends React.Component {
     })
     }
     proceedToStages = () =>{
-        axios.post(`${APIendpoint}/stage`,{negotiationid:this.state.negotiationid})
+        axios.post(`${APIendpoint}/stage`,{negotiationid:this.state.negotiationid, party: this.state.party})
         .then(res => {
             this.setState({... res.data,
                 considerationlist: res.data[this.state.party].considerationlist,
@@ -198,7 +239,7 @@ export default class HelloWorld extends React.Component {
             return cons.choice === undefined
         })
         if(unfinished && unfinished.length >0){
-            this.setState({error: `Please complete all questions before submission`})
+            this.setState({errors: [`Please complete all questions before submission`]})
         }else{
             const body = {
                 negotiationid : this.state.negotiationid,
@@ -219,7 +260,7 @@ export default class HelloWorld extends React.Component {
     }
     onDecisionSubmit =(e) =>{
         if(!this.state.decision || (this.state.decision !== "reject" && this.state.decision !== "accept")){
-            this.setState({error: `Please complete your preference before submission`})
+            this.setState({errors: [`Please complete your preference before submission`]})
         }else{
             const body = {
                 negotiationid : this.state.negotiationid,
@@ -236,7 +277,7 @@ export default class HelloWorld extends React.Component {
         }
     }
     render(){
-        const {party, caseid, currency, conveyprice, receiveprice, timed, error} = this.state
+        const {party, caseid, currency, conveyprice, receiveprice, timed, errors} = this.state
         const currencylistRender = this.state.currencylist.map((cur)=>{return (<option value={cur.symbol} key={cur.symbol}>{cur.name}</option>)})
         return (
             <Layout>
@@ -329,7 +370,7 @@ export default class HelloWorld extends React.Component {
                                 <span className={classNames(styles.slider,{[styles.checked]:timed})}></span>
                             </div>
                         </div>
-                        {error && <p className={styles.errorMessage}>{error}</p>}
+                        {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}
                         Within a reasonable time frame from one another, both parties shall <span className={styles.submit} onClick={()=>this.postCase()}>CLICK HERE</span> to proceed to the Verification module.
                     </form>
                     </div>
@@ -366,48 +407,15 @@ export default class HelloWorld extends React.Component {
                     After entering the Numeric Key <a onClick={()=>this.postCaseid()}>CLICK HERE</a> to view the updated Verify column
                     </li>
                 </ul>}
-                <div className={styles.tablecontainer}>
-                    <table>
-                    <thead>
-                    <tr>
-                        <th className={styles.title} colSpan="4">{this.state.party.charAt(0).toUpperCase() + this.state.party.slice(1)} Party Verification</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <th>Claim Variables</th>
-                        <th>Convey Party Entry</th>
-                        <th>Receive Party Entry</th>
-                        <th>Verify</th>
-                    </tr>
-                    <tr>
-                        <td>1. Currency</td>
-                        <td>{this.state.convey.currency || "Pending"}</td>
-                        <td>{this.state.receive.currency || "Pending"}</td>
-                        <td>{this.state.convey.currency === this.state.receive.currency ? "Match" : "Unmatch"}</td>
-                    </tr>
-                    <tr>
-                        <td>2. Convey Party Claim</td>
-                        <td>{this.state.convey.conveyprice || "Pending"}</td>
-                        <td>{this.state.receive.conveyprice || "Pending"}</td>
-                        <td>{this.state.convey.currency === this.state.receive.currency ? "Match" : "Unmatch"}</td>
-                    </tr>
-                    <tr>
-                        <td>3. Receive Party Claim</td>
-                        <td>{this.state.convey.receiveprice || "Pending"}</td>
-                        <td>{this.state.receive.receiveprice || "Pending"}</td>
-                        <td>{this.state.convey.receiveprice === this.state.receive.receiveprice ? "Match" : "Unmatch"}</td>
-                    </tr>
-                    <tr>
-                        <td>4. Start Time Calendared</td>
-                        <td>{this.state.convey.timed ? this.booleanToString(this.state.convey.timed) : "Pending"}</td>
-                        <td>{this.state.receive.timed ? this.booleanToString(this.state.convey.timed)  : "Pending"}</td>
-                        <td>{this.state.convey.timed === this.state.receive.timed ? "Match" : "Unmatch"}</td>
-                    </tr>
-
-                </tbody>
-                </table>
-                </div>
+                {/* <div className={styles.tablecontainer}> */}
+                    <Matchtable 
+                    form = {{currency:this.state.currency,conveyprice:this.state.conveyprice,receiveprice:this.state.receiveprice,timed:this.state.timed}}
+                    party={this.state.party} 
+                    convey={this.state.convey} 
+                    receive={this.state.receive} 
+                    setValue={(field, value) => this.setValue(field, value)} 
+                    editCase={(field)=>this.editCase(field)} />
+                {/* </div> */}
                 <button onClick={this.proceedToStages.bind(this)} disabled={!this.state.confirmed}>Proceed</button>
                 </section>
                 }
@@ -439,7 +447,7 @@ export default class HelloWorld extends React.Component {
 
                     {((this.state.stage === 1 || this.state.stage === 2) && !this.state.considerationsubmited) && <div>
                             <p>As each of the 18 sums is generated, you shall make a Consideration as to the feasibility of that specific amount</p>                        
-                            {error && <p className={styles.errorMessage}>{error}</p>}
+                            {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}
 
                             <Considerationbox 
                                 considerationlist = {this.state.considerationlist} 
@@ -504,7 +512,7 @@ export default class HelloWorld extends React.Component {
                                         <small>Pending a mutually agreed upon Settlement Agreement</small>
                                     </div>
                                 </div>
-                                {error && <p className={styles.errorMessage}>{error}</p>}
+                                {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}
                                 <div className={styles.generatenbr}>
                                     <div className={styles.condition}>
                                         <h4>Non-Binding Recommendation (NBR)</h4>

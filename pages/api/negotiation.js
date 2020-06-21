@@ -20,15 +20,13 @@ handler.post(async (req, res) => {
             negotiationid: newnegotiationid, 
             confirmed: false, 
             stage:0, 
-            convey:{...convey,
-                considerationlist : makerandom(convey.receiveprice, convey.conveyprice, 18)
-            }
+            convey
         }
         try {
             let insertion = await req.db.collection('negotiation').insertOne(insertdoc);
             if (insertion.ops && insertion.ops.length){
                 const result = insertion.ops[0]
-                res.json({...result, receive: {...result.receive, considerationlist:undefined}});
+                res.json(result);
             }else{
                 res.status(400).json({error:"unable to make post request", detail: error});
             }
@@ -41,18 +39,16 @@ handler.post(async (req, res) => {
         let updatedoc = { 
             confirmed: false, 
             stage:0, 
-            receive:{...receive,
-                considerationlist : makerandom(receive.receiveprice, receive.conveyprice, 18)
-            }
+            receive
         }
 
         try {
             let result = await req.db.collection('negotiation').findOne({'negotiationid': negotiationid})
-            if (result && result.convey && result.convey.considerationlist){
-                updatedoc = {...updatedoc, confirmed : true, confirmtime: Date.now()}
+            if (result && result.convey){
+                // updatedoc = {...updatedoc, confirmed : true, confirmtime: Date.now()}
                 await req.db.collection('negotiation').updateOne({'negotiationid': negotiationid}, [ { $set: updatedoc } ])
                 result = await req.db.collection('negotiation').findOne({'negotiationid': negotiationid})
-                res.json({...result, convey: {...result.convey, considerationlist:undefined}});
+                res.json(result);
             }else{
                 res.status(400).json({error:"negotiationid not found", detail: error});
             }
@@ -63,6 +59,18 @@ handler.post(async (req, res) => {
         res.status(400).json({error: "please provide proper parameters"});
     }
 });
+
+handler.put(async (req, res) => {
+    const {negotiationid, party} = req.body
+    if(negotiationid && negotiationid!=="" && party && party!=="" ){
+        const updatedoc = {[party] : req.body[party]}
+        await req.db.collection('negotiation').updateOne({'negotiationid': negotiationid}, [ { $set: updatedoc } ])
+    }else{
+        res.status(400).json({error: "please provide proper parameters"});
+    }
+});
+
+
 // handler.delete(async (req, res)=>{
 //     await req.db.collection('negotiation').deleteMany({})
 //     res.send("done")
@@ -71,13 +79,7 @@ handler.post(async (req, res) => {
 function makeid() {
     return (Math.floor(Math.random() * (999999999999 - 123456789900)) + 123456789900).toString()
 }
-function makerandom(upperbound, lowerbound, count) {
-    var result = [];
-    for ( var i = 0; i < count; i++ ) {
-       result.push({ amount: Math.floor(Math.random()*(upperbound - lowerbound -1) + lowerbound + 1) })
-    }
-    return result;
-}
+
 
 
 export default handler;
