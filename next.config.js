@@ -11,7 +11,7 @@ module.exports = (phase, { defaultConfig }) => {
 
   return {
     env: {
-        APIendpoint: 'https://odrexpress-iota.now.sh/api',
+        APIendpoint: 'https://odrexpress.herokuapp.com/api',
     },
   }
 }
