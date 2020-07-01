@@ -82,11 +82,15 @@ export default class HelloWorld extends React.Component {
             }
         },1000)
     }
-    // booleanToString = (bool)=>{
-    //     return bool ? "True" : "False"
-    // }
+    formatCurrency(amt){
+        if (!amt) return ""
+        return amt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    }
     setValue = (name, value) =>{
-        console.log({[name]:value})
+        if (name === "conveyprice" || name === "receiveprice"){
+            value = parseInt(value.replace(/\D/g, ""))
+            return this.setState({[name]:value})
+        }
         return this.setState({[name]:value})
     }
     async componentDidMount(){
@@ -202,7 +206,10 @@ export default class HelloWorld extends React.Component {
                 await this.Confirm(res.data.negotiationid,0)
             })
             
-    })
+        }).catch(err=>{
+            console.log(err.response.data)
+            this.setState({errors: err.response.data.error.split()})
+        })
     }
     proceedToStages = () =>{
         axios.post(`${APIendpoint}/stage`,{negotiationid:this.state.negotiationid, party: this.state.party})
@@ -320,29 +327,33 @@ export default class HelloWorld extends React.Component {
                     <div className={styles.secondarytext}>
                         <div>
                             <h4>Convey Party data entry </h4>
-                            <p>Provided your claim was agreed upon as viable by the Receive Party: </p>
-                            <ul>
-                                <li>Both parties must utilize the same Currency</li>
-                                <li>Enter your claim in field number 2</li>
-                            </ul>
-                            <p>Provided you agree that the Receive Party claim is viable: </p>
-                            <ul>
-                                <li>Enter the Receive Party claim in field number 3</li>
-                            </ul>
-                            <p>Continue to number 4 and make your No or Yes selection </p>
+                            <div  className={classNames({[styles.greyout]:this.state.party !== "convey"})}>
+                                <p>Provided your claim was agreed upon as viable by the Receive Party: </p>
+                                <ul>
+                                    <li>Both parties must utilize the same Currency</li>
+                                    <li>Enter your claim in field number 2</li>
+                                </ul>
+                                <p>Provided you agree that the Receive Party claim is viable: </p>
+                                <ul>
+                                    <li>Enter the Receive Party claim in field number 3</li>
+                                </ul>
+                                <p>Continue to number 4 and make your No or Yes selection </p>
+                            </div>
                         </div>
                         <div>
                             <h4>Receive Party data entry</h4>
-                            <p>Provided your claim was agreed upon as viable by the Convey Party: </p>
-                            <ul>
-                                <li>Both parties must utilize the same Currency</li>
-                                <li>Enter your claim in field number 3</li>
-                            </ul>
-                            <p>Provided you agree that the Convey Party claim is viable: </p>
-                            <ul>
-                                <li>Enter the Receive Party claim in field number 2</li>
-                            </ul>
+                            <div  className={classNames({[styles.greyout]:this.state.party !== "receive"})}>
+                                <p>Provided your claim was agreed upon as viable by the Convey Party: </p>
+                                <ul>
+                                    <li>Both parties must utilize the same Currency</li>
+                                    <li>Enter your claim in field number 3</li>
+                                </ul>
+                                <p>Provided you agree that the Convey Party claim is viable: </p>
+                                <ul>
+                                    <li>Enter the Receive Party claim in field number 2</li>
+                                </ul>
                             <p>Continue to number 4 and make your No or Yes selection </p>
+                            </div>
                         </div>
                     </div>
                     <hr/>
@@ -350,22 +361,22 @@ export default class HelloWorld extends React.Component {
                     <form>
                         <div className={styles.formgroup}>
                             <label htmlFor="currency">1. Currency</label>
-                            <select id="currency" name="currency" value = {currency} onChange={(e)=>this.setValue("currency", e.target.value)}   >
+                            <select disabled={this.state.party === ""} id="currency" name="currency" value = {currency} onChange={(e)=>this.setValue("currency", e.target.value)}   >
                                 <option value="">Please Select ... </option>
                                 {currencylistRender}
                             </select>
                         </div>
                         <div className={styles.formgroup}>
-                            <label htmlFor="conveyprice">2. Convey Party Claim</label>
-                            <input value = {conveyprice} onChange={(e)=>this.setValue("conveyprice",e.target.value)}  type="number" id="conveyprice" name="conveyprice" placeholder="Amount (subject to contingencies) Convey Party is willing to allocate to Receive Party"/>
+                            <label htmlFor="conveyprice">2. Convey Party Negotiable Claim</label>
+                            <input disabled={this.state.party === ""}  value = {this.formatCurrency(conveyprice)} onChange={(e)=>this.setValue("conveyprice",e.target.value)}  type="text" id="conveyprice" name="conveyprice" placeholder="Amount (subject to contingencies) Convey Party is willing to allocate to Receive Party"/>
                         </div>
                         <div className={styles.formgroup}>
-                            <label htmlFor="receiveprice">3. receive Party Claim</label>
-                            <input  value = {receiveprice} onChange={(e)=>this.setValue("receiveprice",e.target.value)} type="number" id="receiveprice" name="receiveprice" placeholder="Amount (subject to contingencies) Receive Party is willing to receive from Convey Party"/>
+                            <label htmlFor="receiveprice">3. receive Party Negotiable Claim</label>
+                            <input  disabled={this.state.party === ""} value = {this.formatCurrency(receiveprice)} onChange={(e)=>this.setValue("receiveprice",e.target.value)} type="text" id="receiveprice" name="receiveprice" placeholder="Amount (subject to contingencies) Receive Party is willing to receive from Convey Party"/>
                         </div>
                         <div className={styles.formgroup}>
                             <label htmlFor="receiveprice">4. Start Time calendared</label>
-                            <div className={styles.switch} onClick={()=>this.setValue("timed", !timed)} >
+                            <div className={styles.switch} onClick={()=>{if (this.state.party !== "") this.setValue("timed", !timed)}} >
                                 <input id="timed" name="timed" type="checkbox"/>
                                 <span className={classNames(styles.slider,{[styles.checked]:timed})}></span>
                             </div>
@@ -378,7 +389,9 @@ export default class HelloWorld extends React.Component {
                 }        
                 {this.state.stage === 0 && <section className={styles.verification}>
 
-                <h4>Numeric Key: {this.state.negotiationid}</h4>
+                {this.state.negotiationid && <h4>Numeric Key: {this.state.negotiationid}</h4>}
+                {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}
+
                 {this.state.party === "convey" && <ul>
                     <li>
                     Provide the above 12 character Numeric Key to the Receive Party via: text / e-mail / fax
@@ -409,6 +422,7 @@ export default class HelloWorld extends React.Component {
                 </ul>}
                 {/* <div className={styles.tablecontainer}> */}
                     <Matchtable 
+                    formatCurrency = {this.formatCurrency}
                     form = {{currency:this.state.currency,conveyprice:this.state.conveyprice,receiveprice:this.state.receiveprice,timed:this.state.timed}}
                     party={this.state.party} 
                     convey={this.state.convey} 

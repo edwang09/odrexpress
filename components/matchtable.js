@@ -29,14 +29,14 @@ export default function Matchtable(props){
                 </tr>
                 <tr>
                     <td>2. Convey Party Claim</td>
-                    <td><Matchtablerow form = {props.form.conveyprice} convey = {props.convey.conveyprice} receive = {props.receive.conveyprice} party={props.party} column = {"convey"} setValue={(value)=>props.setValue("conveyprice", value)}/></td>
-                    <td><Matchtablerow form = {props.form.conveyprice} convey = {props.convey.conveyprice} receive = {props.receive.conveyprice} party={props.party} column = {"receive"} setValue={(value)=>props.setValue("conveyprice", value)}/></td>
+                    <td><Matchtablerow form = {props.form.conveyprice} convey = {props.formatCurrency(props.convey.conveyprice)} receive = {props.formatCurrency(props.receive.conveyprice)} party={props.party} column = {"convey"} setValue={(value)=>props.setValue("conveyprice", value)}/></td>
+                    <td><Matchtablerow form = {props.form.conveyprice} convey = {props.formatCurrency(props.convey.conveyprice)} receive = {props.formatCurrency(props.receive.conveyprice)} party={props.party} column = {"receive"} setValue={(value)=>props.setValue("conveyprice", value)}/></td>
                     <td><Matchtablerow convey = {props.convey.conveyprice} receive = {props.receive.conveyprice} party={props.party} column = {"match"} editCase={()=>props.editCase("conveyprice")}/></td>
                 </tr>
                 <tr>
                     <td>3. Receive Party Claim</td>
-                    <td><Matchtablerow form = {props.form.receiveprice} convey = {props.convey.receiveprice} receive = {props.receive.receiveprice} party={props.party} column = {"convey"} setValue={(value)=>props.setValue("receiveprice", value)}/></td>
-                    <td><Matchtablerow form = {props.form.receiveprice} convey = {props.convey.receiveprice} receive = {props.receive.receiveprice} party={props.party} column = {"receive"} setValue={(value)=>props.setValue("receiveprice", value)}/></td>
+                    <td><Matchtablerow form = {props.form.receiveprice} convey = {props.formatCurrency(props.convey.receiveprice)} receive = {props.formatCurrency(props.receive.receiveprice)} party={props.party} column = {"convey"} setValue={(value)=>props.setValue("receiveprice", value)}/></td>
+                    <td><Matchtablerow form = {props.form.receiveprice} convey = {props.formatCurrency(props.convey.receiveprice)} receive = {props.formatCurrency(props.receive.receiveprice)} party={props.party} column = {"receive"} setValue={(value)=>props.setValue("receiveprice", value)}/></td>
                     <td><Matchtablerow convey = {props.convey.receiveprice} receive = {props.receive.receiveprice} party={props.party} column = {"match"} editCase={()=>props.editCase("receiveprice")}/></td>
                 </tr>
                 <tr>

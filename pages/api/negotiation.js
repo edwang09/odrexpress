@@ -44,16 +44,19 @@ handler.post(async (req, res) => {
 
         try {
             let result = await req.db.collection('negotiation').findOne({'negotiationid': negotiationid})
+            console.log(result)
             if (result && result.convey){
+                console.log(result)
                 // updatedoc = {...updatedoc, confirmed : true, confirmtime: Date.now()}
                 await req.db.collection('negotiation').updateOne({'negotiationid': negotiationid}, [ { $set: updatedoc } ])
                 result = await req.db.collection('negotiation').findOne({'negotiationid': negotiationid})
                 res.json(result);
             }else{
+                console.log(result)
                 res.status(400).json({error:"negotiationid not found", detail: error});
             }
         } catch (error) {
-            res.status(400).json({error:"unable to make post request", detail: error});
+            res.status(400).json({error:"negotiationid not found", detail: error});
         }
     }else{
         res.status(400).json({error: "please provide proper parameters"});
