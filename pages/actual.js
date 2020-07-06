@@ -394,30 +394,45 @@ export default class HelloWorld extends React.Component {
 
                 {this.state.party === "convey" && <ul>
                     <li>
-                    Provide the above 12 character Numeric Key to the Receive Party via: text / e-mail / fax
+                    Provide the above Numeric Key to the Receive party via:  text / e-mail / fax 
                     </li>
                     <li>
-                    Has the Receive Party entered the Numeric Key allowing the System to connect the parties?    NO
+                    The Receive party shall enter the Numeric Key in their CAPTURE field
                     </li>
                     <li>
-                    When the above NO changes to YES, CLICK HERE to view the updated Verify column
+                    Receive party shall click their CLICK HERE link to allow opposing party sharing of the Numeric Key
                     </li>
                     <li>
-                    As per FAQ number 5, both parties shall abandon this claim currently in progress and shall begin a new case at a time frame that is mutually convenient
+                    Pending mode for both parties will update to <b style={{color:"green"}}>Match</b> if data entries match
+                    </li>
+                    <li>
+                    Pending mode for both parties will update to <b style={{color:"red"}}>Mis-match</b>  if data entries do not match
+                    </li>
+                    <li>
+                    If <b style={{color:"red"}}>Mis-match</b>  occurs, begin a new case at no charge.  See FAQ for details
                     </li>
                 </ul>}
                 {this.state.party === "receive" && <ul>
                     <li>
-                    Await the 12 character Numeric Key from the Convey Party via: text / e-mail / fax
+                    Await the Numeric Key from the Convey party via:  text  / e-mail / fax 
                     </li>
                     <li>
-                    Once received, enter the 12 character Numeric Key
+                    Enter the Numeric Key in the CAPTURE field >>
                     <input value = {this.state.negotiationidinput} 
                             onChange={(e)=>this.setValue("negotiationidinput",e.target.value)} 
                             type="text" id="negotiationidinput" name="negotiationidinput" />
                     </li>
                     <li>
-                    After entering the Numeric Key <a onClick={()=>this.postCaseid()}>CLICK HERE</a> to view the updated Verify column
+                    <a onClick={()=>this.postCaseid()}>CLICK HERE</a> to allow opposing party sharing of the Numeric Key
+                    </li>
+                    <li>
+                    Pending mode for both parties will update to <b style={{color:"green"}}>Match</b> if data entries match 
+                    </li>
+                    <li>
+                    Pending mode for both parties will update to <b style={{color:"red"}}>Mis-match</b> if data entries do not match 
+                    </li>
+                    <li>
+                    If <b style={{color:"red"}}>Mis-match</b> occurs, begin a new case at no charge.  See FAQ for details
                     </li>
                 </ul>}
                 {/* <div className={styles.tablecontainer}> */}

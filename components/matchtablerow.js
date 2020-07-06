@@ -23,15 +23,33 @@ export default function Matchtablerow(props){
     }else if (!props[props.column] ){
         return <div>Pending</div>
     }else if ((props.convey === props.receive) || props.column !== props.party || !props.convey|| !props.receive ){
-        return (
-            <div>{props[props.column]}</div>
-        )
+        if (props.formatCurrency){
+
+            return (
+                <div>{props.formatCurrency(props[props.column])}</div>
+            )
+        }else{
+
+            return (
+                <div>{props[props.column]}</div>
+            )
+        }
     }else{
-        return (
-            <select className={style.dropdown} value = {props.form} onChange={(e)=>props.setValue(e.target.value)}  >
-                <option value={props.convey}> {props.convey} </option>
-                <option value={props.receive}> {props.receive} </option>
-            </select>
-        )
+        if (props.formatCurrency){
+            return (
+                <select className={style.dropdown} value = {props.form} onChange={(e)=>props.setValue(e.target.value)}  >
+                    <option value={props.convey}> {props.formatCurrency(props.convey)} </option>
+                    <option value={props.receive}> {props.formatCurrency(props.receive)} </option>
+                </select>
+            )
+        }else{
+            return (
+                <select className={style.dropdown} value = {props.form} onChange={(e)=>props.setValue(e.target.value)}  >
+                    <option value={props.convey}> {props.convey} </option>
+                    <option value={props.receive}> {props.receive} </option>
+                </select>
+            )
+        }
+        
     }
 }
