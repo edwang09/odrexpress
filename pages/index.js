@@ -18,7 +18,7 @@ export default function Home() {
           <p>An exceedingly logical and user friendly methodology that provides:  Government Agencies  /  Individuals  / Business / with:</p>
           <ul>
             <li>
-              No Registration format
+            No Registration format
             </li>
             <li>
             Very high degree of privacy

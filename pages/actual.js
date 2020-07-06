@@ -315,44 +315,40 @@ export default class HelloWorld extends React.Component {
                     </div>
                     <div className={styles.maintext}>
                         <h4>Prior to the commencement of proceedings</h4>
-                        <p> All parties shall familiarize themselves with the Interactive Demo.</p>
+                        <p>All parties shall familiarize themselves with the Interactive Demo.</p>
                         <p>The below 1, 2, 3 and 4 Claim Variables must be agreed upon in advance by the opposing parties.</p>
-                        <p>Communication for this advance agreement may include: text / e¬mail / fax.</p>
+                        <p>Both parties have agreed to utilize the same currency.</p>
+                        <p>Communication for this advance Claim Variables agreement may include: text / e-mail / fax.</p>
+
                         <h4>At the commencement of proceedings</h4>
                         <p>The opposing parties are on this Actual case page at their calendared Start Time.</p>
-                        <p>Having every Claim Variable at hand enables the Actual case data to be entered in seconds.</p>
+                        <p>Having every Claim Variable at hand allows expedited and error free data entry.</p>
                         <p>Completion of this Actual case page by both parties enables advancement to the Verification module.</p>
+
+                        <h4>Compromise</h4>
+                        <p>Compromise is important and is directly related to our fee policy.</p>
+                        <p>View the FAQ as it outlines essential implications regarding the directly above. </p>
                     </div>
                     <hr/>
                     <div className={styles.secondarytext}>
                         <div>
                             <h4>Convey Party data entry </h4>
                             <div  className={classNames({[styles.greyout]:this.state.party !== "convey"})}>
-                                <p>Provided your claim was agreed upon as viable by the Receive Party: </p>
                                 <ul>
-                                    <li>Both parties must utilize the same Currency</li>
-                                    <li>Enter your claim in field number 2</li>
+                                    <li>Enter your negotiable claim in field # 2</li>
+                                    <li>Enter the Receive Party negotiable claim in field # 3</li>
+                                    <li>Proceed to # 4 and make a No or Yes selection</li>
                                 </ul>
-                                <p>Provided you agree that the Receive Party claim is viable: </p>
-                                <ul>
-                                    <li>Enter the Receive Party claim in field number 3</li>
-                                </ul>
-                                <p>Continue to number 4 and make your No or Yes selection </p>
                             </div>
                         </div>
                         <div>
                             <h4>Receive Party data entry</h4>
                             <div  className={classNames({[styles.greyout]:this.state.party !== "receive"})}>
-                                <p>Provided your claim was agreed upon as viable by the Convey Party: </p>
                                 <ul>
-                                    <li>Both parties must utilize the same Currency</li>
-                                    <li>Enter your claim in field number 3</li>
+                                    <li>Enter your negotiable claim in field # 3</li>
+                                    <li>Enter the Convey Party negotiable claim in field # 2</li>
+                                    <li>Proceed to # 4 and make a No or Yes selection</li>
                                 </ul>
-                                <p>Provided you agree that the Convey Party claim is viable: </p>
-                                <ul>
-                                    <li>Enter the Receive Party claim in field number 2</li>
-                                </ul>
-                            <p>Continue to number 4 and make your No or Yes selection </p>
                             </div>
                         </div>
                     </div>
@@ -376,9 +372,11 @@ export default class HelloWorld extends React.Component {
                         </div>
                         <div className={styles.formgroup}>
                             <label htmlFor="receiveprice">4. Start Time calendared</label>
-                            <div className={styles.switch} onClick={()=>{if (this.state.party !== "") this.setValue("timed", !timed)}} >
-                                <input id="timed" name="timed" type="checkbox"/>
-                                <span className={classNames(styles.slider,{[styles.checked]:timed})}></span>
+                            <div  className={styles.radiobutton}>
+                                <input type="radio"  disabled={this.state.party === ""} value="yes" id="timedyes" name="timed" onClick={()=>{this.setValue("timed", true)}} checked={timed} />
+                                <label htmlFor="timedyes">Yes</label>
+                                <input type="radio"  disabled={this.state.party === ""} value="no" id="timedno" name="timed" onClick={()=>{this.setValue("timed", false)}} checked={!timed}  />
+                                <label htmlFor="timedno">No</label>
                             </div>
                         </div>
                         {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}
