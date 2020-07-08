@@ -19,7 +19,7 @@ export default class HelloWorld extends React.Component {
         conveyprice: "",
         receiveprice: "",
         currency: "",
-        timed: true,
+        timed: false,
         countdowna: "",
         countdownb: "",
         currentquestion:0,
@@ -337,7 +337,7 @@ export default class HelloWorld extends React.Component {
                                 <ul>
                                     <li>Enter your negotiable claim in field # 2</li>
                                     <li>Enter the Receive Party negotiable claim in field # 3</li>
-                                    <li>Proceed to # 4 and make a No or Yes selection</li>
+                                    <li>Proceed to # 4 and select No or Yes</li>
                                 </ul>
                             </div>
                         </div>
@@ -347,7 +347,7 @@ export default class HelloWorld extends React.Component {
                                 <ul>
                                     <li>Enter your negotiable claim in field # 3</li>
                                     <li>Enter the Convey Party negotiable claim in field # 2</li>
-                                    <li>Proceed to # 4 and make a No or Yes selection</li>
+                                    <li>Proceed to # 4 and select No or Yes</li>
                                 </ul>
                             </div>
                         </div>
@@ -356,27 +356,27 @@ export default class HelloWorld extends React.Component {
                     <div className={styles.bottomform}>
                     <form>
                         <div className={styles.formgroup}>
-                            <label htmlFor="currency">1. Currency</label>
+                            <label htmlFor="currency"><span>1.</span> <span>Currency</span></label>
                             <select disabled={this.state.party === ""} id="currency" name="currency" value = {currency} onChange={(e)=>this.setValue("currency", e.target.value)}   >
                                 <option value="">Please Select ... </option>
                                 {currencylistRender}
                             </select>
                         </div>
                         <div className={styles.formgroup}>
-                            <label htmlFor="conveyprice">2. Convey Party Negotiable Claim</label>
+                            <label htmlFor="conveyprice"><span>2.</span> <span>Convey Party Negotiable Claim</span> </label>
                             <input disabled={this.state.party === ""}  value = {this.formatCurrency(conveyprice)} onChange={(e)=>this.setValue("conveyprice",e.target.value)}  type="text" id="conveyprice" name="conveyprice" placeholder="Amount (subject to contingencies) Convey Party is willing to allocate to Receive Party"/>
                         </div>
                         <div className={styles.formgroup}>
-                            <label htmlFor="receiveprice">3. receive Party Negotiable Claim</label>
+                            <label htmlFor="receiveprice"><span>3.</span> <span>Receive Party Negotiable Claim</span> </label>
                             <input  disabled={this.state.party === ""} value = {this.formatCurrency(receiveprice)} onChange={(e)=>this.setValue("receiveprice",e.target.value)} type="text" id="receiveprice" name="receiveprice" placeholder="Amount (subject to contingencies) Receive Party is willing to receive from Convey Party"/>
                         </div>
                         <div className={styles.formgroup}>
-                            <label htmlFor="receiveprice">4. Start Time calendared</label>
+                            <label htmlFor="receiveprice"><span>4.</span> <span>Start Time calendared</span> </label>
                             <div  className={styles.radiobutton}>
-                                <input type="radio"  disabled={this.state.party === ""} value="yes" id="timedyes" name="timed" onClick={()=>{this.setValue("timed", true)}} checked={timed} />
-                                <label htmlFor="timedyes">Yes</label>
                                 <input type="radio"  disabled={this.state.party === ""} value="no" id="timedno" name="timed" onClick={()=>{this.setValue("timed", false)}} checked={!timed}  />
                                 <label htmlFor="timedno">No</label>
+                                <input type="radio"  disabled={this.state.party === ""} value="yes" id="timedyes" name="timed" onClick={()=>{this.setValue("timed", true)}} checked={timed} />
+                                <label htmlFor="timedyes">Yes</label>
                             </div>
                         </div>
                         {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}

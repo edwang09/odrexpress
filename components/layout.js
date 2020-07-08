@@ -28,9 +28,9 @@ export default function Layout({ children, page }) {
       <header className={style.header}>
           <div className={style.logo}>
             <Link href="/">
-                <div className={style.main}>DRO <b>EXPRESS</b></div>
+                <div className={style.main}>ODR <b>EXPRESS</b></div>
             </Link>
-            <div className={style.secondary}>The Mediation App</div>
+            <div className={style.secondary}>The Online Dispute Resolution App</div>
           </div>
           <Navbar/>
       </header>

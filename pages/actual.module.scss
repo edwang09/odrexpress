@@ -21,9 +21,11 @@
             
         }
         .case{
-            margin-right: 30px;
+            margin-right: 20px;
             input[type="text"]{
-                padding: 4px;
+                margin-left: 12px;
+                width: 230px;
+                padding: 2px 4px ;
                 border: 1px solid #ccc;
                 border-radius: 4px;
                 resize: vertical;
@@ -42,37 +44,49 @@
         justify-content: space-between;
         flex-wrap: wrap;
         & > div{
-            max-width: 400px;
+            max-width: 455px;
+            ul{
+                padding-left:20px;
+            }
         }
         .greyout{
-            color: #999;
+            color: #ccc;
         }
     }
     .bottomform{
         margin-top: 20px;
         margin-bottom: 20px;
         .formgroup{
+            height:35px;
             display: flex;
             flex-wrap: wrap;
-            margin: 2px 0;
+            margin: 4px 0;
             justify-content: space-between;
             font-size: 1.1rem;
             & > label{
-                display: block;
+                display: flex;
                 min-width: 300px;
+                span{
+                    display: block;
+                    min-width:20px;
+                }
             }
             & > input, select{
+                font-size: 14px;
                 display: block;
                 flex-grow: 1;    
                 max-width: 600px;
-                padding: 8px;
+                padding: 4px 8px ;
                 border: 1px solid #ccc;
                 border-radius: 4px;
                 resize: vertical;
+                option{
+                    padding: 0 0;
+                }
             }
-            input[type=text]{
-                text-align: right;
-            }
+            // input[type=text]{
+            //     text-align: right;
+            // }
             .radiobutton{
                 flex-grow: 1;    
                 max-width: 600px;
