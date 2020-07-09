@@ -283,6 +283,11 @@ export default class HelloWorld extends React.Component {
             })
         }
     }
+    clearCase =()=>{
+        sessionStorage.removeItem('party')
+        sessionStorage.removeItem('negotiationid')
+        window.location.reload(false);
+    }
     render(){
         const {party, caseid, currency, conveyprice, receiveprice, timed, errors} = this.state
         const currencylistRender = this.state.currencylist.map((cur)=>{return (<option value={cur.symbol} key={cur.symbol}>{cur.name}</option>)})
@@ -294,7 +299,7 @@ export default class HelloWorld extends React.Component {
                 {this.state.stage === -1 && <section className={styles.actual}>
                     <div className={styles.topform}>
                         <div className={styles.toggle}>
-                            <p><b>For this case, I am the:</b> </p>
+                            <p><b>For this case, I am the:</b></p>
                             <div className={styles.radiobutton}>
                                 <input type="radio" name="party" value="convey" id="convey" checked={this.state.party === "convey" } 
                                 onChange={(e)=>this.setValue("party", e.target.value)}
@@ -385,8 +390,8 @@ export default class HelloWorld extends React.Component {
                     </div>
                 </section>
                 }        
+                {this.state.stage !== -1 && <div className={styles.clearbutton}><button onClick={()=>this.clearCase()}>Clear case</button></div>}
                 {this.state.stage === 0 && <section className={styles.verification}>
-
                 {this.state.negotiationid && <h4>Numeric Key: {this.state.negotiationid}</h4>}
                 {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}
 
