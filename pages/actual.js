@@ -390,7 +390,7 @@ export default class HelloWorld extends React.Component {
                     </div>
                 </section>
                 }        
-                {this.state.stage !== -1 && <div className={styles.clearbutton}><button onClick={()=>this.clearCase()}>Clear case</button></div>}
+                {this.state.stage !== -1 && <div className={styles.clearbutton}><button onClick={()=>this.clearCase()}>DISCARD</button></div>}
                 {this.state.stage === 0 && <section className={styles.verification}>
                 {this.state.negotiationid && <h4>Numeric Key: {this.state.negotiationid}</h4>}
                 {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}
