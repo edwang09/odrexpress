@@ -3,16 +3,23 @@
     width: 100%;
     table {
         border-collapse: collapse;
+        width: 100%;
       }
       table td, table th {
         border: 1px solid #ddd;
         padding: 3px 8px;
       }
       table tr:nth-child(even){background-color: #f2f2f2;}
+      table tr td{
+        text-align: right;
+      }
+      table tr td:first-child{
+        text-align: left;
+      }
       table th {
         padding-top: 8px;
         padding-bottom: 8px;
-        text-align: left;
+        text-align: center;
         background-color: #4CAF50;
         color: white;
         &.title{

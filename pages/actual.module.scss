@@ -69,7 +69,7 @@
         margin-top: 20px;
         margin-bottom: 20px;
         .formgroup{
-            height:35px;
+            min-height:35px;
             display: flex;
             flex-wrap: wrap;
             margin: 4px 0;
@@ -83,6 +83,19 @@
                     min-width:20px;
                 }
             }
+            & > div{
+                display: flex;
+                min-width: 300px;
+                & > label{
+                    display: flex;
+                    min-width: 300px;
+                    span{
+                        display: block;
+                        min-width:20px;
+                    }
+                }
+            }
+
             & > input, select{
                 font-size: 14px;
                 display: block;
@@ -95,6 +108,13 @@
                 option{
                     padding: 0 0;
                 }
+            }
+            & >  small{
+                font-size: 14px;
+                display: block;
+                flex-grow: 1;    
+                max-width: 600px;
+                resize: vertical;
             }
             // input[type=text]{
             //     text-align: right;

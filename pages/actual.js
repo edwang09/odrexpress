@@ -26,7 +26,8 @@ export default class HelloWorld extends React.Component {
         currencylist:[],
         convey:{},
         stage:-1,
-        receive:{}
+        receive:{},
+        missingfield:[]
         //dummy
         // confirmed:false,
         // stage:0,
@@ -50,11 +51,12 @@ export default class HelloWorld extends React.Component {
     validateForm = ()=>{
         let errormsg = []
         const missingfield = ["party", "currency", "conveyprice", "receiveprice", "timed"].filter((field)=> (!this.state[field] || this.state[field]===""))
+        this.setState({missingfield})
         if (missingfield.length > 0){
             errormsg.push("Please complete fields: " + missingfield.join(", "))
         }
         if (this.state.conveyprice && parseInt(this.state.conveyprice) && this.state.receiveprice && parseInt(this.state.receiveprice) && parseInt(this.state.receiveprice) <= parseInt(this.state.conveyprice) ){
-            errormsg.push("Receive Claim must be greater than Convey Claim")
+            errormsg.push("Greater / Lessor error. Monetary correction(s) are required now.")
             return errormsg
         }else if (missingfield.length > 0){
             return errormsg
@@ -368,21 +370,35 @@ export default class HelloWorld extends React.Component {
                             </select>
                         </div>
                         <div className={styles.formgroup}>
-                            <label htmlFor="conveyprice"><span>2.</span> <span>Convey Party Negotiable Claim</span> </label>
+                            <label htmlFor="conveyprice">
+                                <span>2.</span> 
+                                <span style={{color:((this.state.missingfield.findIndex((field)=>field === "conveyprice")>-1) ? "red" : "auto")}}>Convey Party&nbsp;</span> 
+                                <span>Negotiable Claim</span> 
+                            </label>
                             <input disabled={this.state.party === ""}  value = {this.formatCurrency(conveyprice)} onChange={(e)=>this.setValue("conveyprice",e.target.value)}  type="text" id="conveyprice" name="conveyprice" placeholder="Amount (subject to contingencies) Convey Party is willing to allocate to Receive Party"/>
                         </div>
                         <div className={styles.formgroup}>
-                            <label htmlFor="receiveprice"><span>3.</span> <span>Receive Party Negotiable Claim</span> </label>
+                            <label htmlFor="receiveprice">
+                                <span>3.</span> 
+                                <span style={{color:((this.state.missingfield.findIndex((field)=>field === "receiveprice")>-1) ? "red" : "auto")}}>Receive Party&nbsp;</span> 
+                                <span>Negotiable Claim</span> 
+                            </label>
                             <input  disabled={this.state.party === ""} value = {this.formatCurrency(receiveprice)} onChange={(e)=>this.setValue("receiveprice",e.target.value)} type="text" id="receiveprice" name="receiveprice" placeholder="Amount (subject to contingencies) Receive Party is willing to receive from Convey Party"/>
                         </div>
                         <div className={styles.formgroup}>
-                            <label htmlFor="receiveprice"><span>4.</span> <span>Start Time calendared</span> </label>
-                            <div  className={styles.radiobutton}>
-                                <input type="radio"  disabled={this.state.party === ""} value="no" id="timedno" name="timed" onClick={()=>{this.setValue("timed", false)}} checked={!timed}  />
-                                <label htmlFor="timedno">No</label>
-                                <input type="radio"  disabled={this.state.party === ""} value="yes" id="timedyes" name="timed" onClick={()=>{this.setValue("timed", true)}} checked={timed} />
-                                <label htmlFor="timedyes">Yes</label>
+                            <div>
+                                <label htmlFor="receiveprice"><span>4.</span> <span>Start Time calendared</span> </label>
+                                <div  className={styles.radiobutton}>
+                                    <input type="radio"  disabled={this.state.party === ""} value="no" id="timedno" name="timed" onClick={()=>{this.setValue("timed", false)}} checked={!timed}  />
+                                    <label htmlFor="timedno">No</label>
+                                    <input type="radio"  disabled={this.state.party === ""} value="yes" id="timedyes" name="timed" onClick={()=>{this.setValue("timed", true)}} checked={timed} />
+                                    <label htmlFor="timedyes">Yes</label>
+                                </div>
                             </div>
+                            
+                            
+                            <small><span style={{color:((this.state.missingfield.findIndex((field)=>field === "timed")>-1) ? "red" : "auto")}}>Requires Yes to proceed</span>, with consideration if needed for time zone differences</small>
+
                         </div>
                         {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}
                         Within a reasonable time frame from one another, both parties shall <span className={styles.submit} onClick={()=>this.postCase()}>CLICK HERE</span> to proceed to the Verification module.
