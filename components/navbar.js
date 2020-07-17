@@ -1,11 +1,12 @@
 import Link from 'next/link'
+import { withRouter } from 'next/router'
 import style from './navbar.module.scss'
 import classNames from 'classnames';
 import React, { useState } from 'react';
 
 
-export default function Navbar(){
-    const [shownav, setShownav] = useState(false) 
+function Navbar({router}){
+    const [shownav, setShownav] = useState(false)
     return (
         <div>
         <div onClick={()=>setShownav(false)} className={classNames(style.overlay, {[style.shownav]:shownav})}></div>
@@ -18,27 +19,27 @@ export default function Navbar(){
             <ul className={classNames(style.mainnav, {[style.active]:shownav})}>
                 <li>
                     <Link href="/">
-                        <a className={style.navlink}>HOME</a>
+                        <a className={style.navlink} style={(router.pathname ==="/") ? {fontWeight: "bold"} : {}}>HOME</a>
                     </Link>
                 </li>
                 <li>
                     <Link href="/about">   
-                        <a className={style.navlink}>ABOUT</a>
+                        <a className={style.navlink} style={(router.pathname ==="/about") ? {fontWeight: "bold"} : {}}>ABOUT</a>
                     </Link>
                 </li>
                 <li>
                     <Link href="/">
-                        <a className={style.navlink}>DEMO</a> 
+                        <a className={style.navlink} style={(router.pathname ==="/") ? {fontWeight: "bold"} : {}}>DEMO</a> 
                     </Link>
                 </li>
                 <li>
                     <Link href="/actual">
-                        <a className={style.navlink}>ACTUAL</a>
+                        <a className={style.navlink} style={(router.pathname ==="/actual") ? {fontWeight: "bold"} : {}}>ACTUAL</a>
                     </Link>
                 </li>
                 <li>
                     <Link href="/faq">
-                        <a className={style.navlink}>FAQ</a>
+                        <a className={style.navlink} style={(router.pathname ==="/faq") ? {fontWeight: "bold"} : {}}>FAQ</a>
                     </Link>
                 </li>
             </ul>
@@ -46,3 +47,4 @@ export default function Navbar(){
         </div>
     )
 }
+export default withRouter(Navbar)

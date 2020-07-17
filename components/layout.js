@@ -5,6 +5,7 @@ import Navbar from './navbar'
 
 export const siteTitle = "DRO Express"
 export default function Layout({ children, page }) {
+
   return (
     <div className={style.container}>
       <Head>
