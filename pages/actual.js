@@ -324,7 +324,6 @@ export default class HelloWorld extends React.Component {
                         <h4>Prior to the commencement of proceedings</h4>
                         <p>All parties shall familiarize themselves with the Interactive Demo.</p>
                         <p>The below 1, 2, 3 and 4 Claim Variables must be agreed upon in advance by the opposing parties.</p>
-                        <p>Both parties have agreed to utilize the same currency.</p>
                         <p>Communication for this advance Claim Variables agreement may include: text / e-mail / fax.</p>
 
                         <h4>At the commencement of proceedings</h4>

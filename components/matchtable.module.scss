@@ -15,6 +15,11 @@
       }
       table tr td:first-child{
         text-align: left;
+        display: flex;
+        span{
+          display: block;
+          min-width: 20px;
+        }
       }
       table th {
         padding-top: 8px;

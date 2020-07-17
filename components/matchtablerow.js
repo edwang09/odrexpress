@@ -21,7 +21,7 @@ export default function Matchtablerow(props){
         }
         
     }else if (!props[props.column] ){
-        return <div>Pending</div>
+        return <div>In Progress</div>
     }else if ((props.convey === props.receive) || props.column !== props.party || !props.convey|| !props.receive ){
         if (props.formatCurrency){
 
@@ -29,7 +29,6 @@ export default function Matchtablerow(props){
                 <div>{props.formatCurrency(props[props.column])}</div>
             )
         }else{
-
             return (
                 <div>{props[props.column]}</div>
             )
