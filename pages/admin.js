@@ -12,10 +12,10 @@ const APIendpoint = process.env.APIendpoint
 
 export default class Admin extends React.Component {
   state = {
-    username:"admin",
-    password:"BIG#cake3",
-    verified:true,
-    tab: "currency",
+    username:"",
+    password:"",
+    verified:false,
+    tab: "",
     content:"choose from above tabs",
     error : "",
     currency:[]
