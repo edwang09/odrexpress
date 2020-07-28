@@ -1,0 +1,28 @@
+.currencyadmin{
+
+    max-width: 800px;
+    margin:auto;
+    .buttons{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        button{
+            margin: 3px 0;
+            margin-left: 5px;
+            cursor: pointer;
+            background-color: none;
+            padding: 2px 5px;
+            &.add{
+    
+                border: 1px solid blue;
+                color: blue
+            }
+            &.save{
+    
+                border: 1px solid green;
+                color: green
+            }
+        }
+    }
+
+}

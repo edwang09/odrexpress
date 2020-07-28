@@ -292,7 +292,7 @@ export default class HelloWorld extends React.Component {
     }
     render(){
         const {party, caseid, currency, conveyprice, receiveprice, timed, errors} = this.state
-        const currencylistRender = this.state.currencylist.map((cur)=>{return (<option value={cur.symbol} key={cur.symbol}>{cur.name}</option>)})
+        const currencylistRender = this.state.currencylist.map((cur)=>{return (<option value={cur.symbol} key={cur.symbol}>{cur.name} ({cur.symbol.toUpperCase()}) </option>)})
         return (
             <Layout>
               <Head>
@@ -364,7 +364,7 @@ export default class HelloWorld extends React.Component {
                         <div className={styles.formgroup}>
                             <label htmlFor="currency"><span>1.</span> <span>Currency</span></label>
                             <select disabled={this.state.party === ""} id="currency" name="currency" value = {currency} onChange={(e)=>this.setValue("currency", e.target.value)}   >
-                                <option value="">Please Select ... </option>
+                                <option value="">Select a mutually agreed upon currency</option>
                                 {currencylistRender}
                             </select>
                         </div>

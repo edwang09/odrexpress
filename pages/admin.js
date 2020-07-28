@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Layout, { siteTitle } from '../components/layout'
+import Currencyadmin from "../components/currencyadmin"
 import styles from './admin.module.scss'
 import Link from 'next/link'
 import React, {useState} from 'react'
@@ -13,8 +14,8 @@ export default class Admin extends React.Component {
   state = {
     username:"admin",
     password:"BIG#cake3",
-    verified:false,
-    tab: "",
+    verified:true,
+    tab: "currency",
     content:"choose from above tabs",
     error : "",
     currency:[]
@@ -26,16 +27,7 @@ export default class Admin extends React.Component {
   switchTab= (tab) =>{
     switch (tab) {
       case "currency":
-        axios.get(`${APIendpoint}/setting`).then(res => {
-          if (res.data ){
-              console.log(res.data)
-              this.setState({currency:res.data.setting.currency, tab},()=>{
-                // console.log(this.state.content.substr(0,10))
-              })
-          }
-        }).catch(err=>{
-          console.log(err)
-        })
+        this.setState({tab})
         break;
       case "setting":
         axios.get(`${APIendpoint}/setting`).then(res => {
@@ -81,8 +73,6 @@ export default class Admin extends React.Component {
     }).catch(err=>console.log(err))
   }
   handleEditorChange = (e) => {
-    // console.log(this.state.content.substr(0,10))
-    // console.log(e.target.getContent().substr(0,10))
     this.setState({content:e.target.getContent()})
   }
   submitpost = () =>{
@@ -102,29 +92,14 @@ export default class Admin extends React.Component {
           console.log(err)
       })
   }
-  setCurrency = (id, prop, value) =>{
-    const currency = this.state.currency.map((cur,idx)=>{
-      if (idx===id){
-        return {...cur, [prop]:value}
-      }
-      return cur
-    })
-    this.setState({currency})
-  }
-  addCurrency = () =>{
-    this.setState({currency:[...this.state.currency, {name:"", symbol:""}]})
-  }
-  removeCurrency = (id) =>{
-    const currency = this.state.currency.filter((cur,idx)=>idx!==id)
-    this.setState({currency})
-  }
-  submitCurrency = () =>{
+  submitCurrency = (currency) =>{
+    console.log("save currency")
       const body = {
           username : this.state.username, 
           password : this.state.password,
-          currency: this.state.currency
+          currency : currency
       }
-      axios.post(`${APIendpoint}/currency`,body).then(res => {
+      axios.post(`${APIendpoint}/setting`,body).then(res => {
           if (res.data ){
               console.log(res.data)
           }
@@ -151,15 +126,7 @@ export default class Admin extends React.Component {
     })
 }
   render(){
-    const currencyRender=this.state.currency.map((cur,id)=>{
-      return (
-        <div className={styles.currencyitem}>
-          <input type="text" value={cur.symbol} className={styles.symbol} onChange={(e)=>this.setCurrency(id,"symbol", e.target.value)}/>
-          <input type="text" value={cur.name}  className={styles.name} onChange={(e)=>this.setCurrency(id,"name", e.target.value)}/>
-          <button onClick={()=>this.removeCurrency(id)}>Remove</button>
-        </div>
-      )
-    })
+  
     return (
       <Layout>
         <Head>
@@ -238,19 +205,7 @@ export default class Admin extends React.Component {
               </div>
             }
             {(this.state.tab === "currency") && 
-              (
-                <div className={styles.currencylist}>
-                  <div className={styles.currencyhead}>
-                    <p className={styles.symbol}>Symbol</p>
-                    <p className={styles.name}>Name</p>
-                  </div>
-                  {currencyRender}
-                  <div className={styles.actions}>
-                    <button onClick={()=>this.addCurrency()}>Add new</button>
-                    <button onClick={()=>this.submitCurrency()}>Submit</button>
-                  </div>
-                </div>
-              )
+              <Currencyadmin saveChange={this.submitCurrency}/>
             }
             {(this.state.tab === "setting") && (
             <div className={styles.setting}>
