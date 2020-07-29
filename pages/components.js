@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Layout, { siteTitle } from '../components/layout'
-import styles from './about.module.scss'
+import styles from './components.module.scss'
 import React from 'react';
 import axios from 'axios'
 const APIendpoint = process.env.APIendpoint
@@ -24,14 +24,14 @@ export async function getStaticProps() {
   const content = (await client.db('odrexpress').collection('content').findOne({name:"about"})).content
   return {props:{ content }}
 }
-export default function About({ content }) {
+export default function Components({ content }) {
   return (
     <Layout>
         <Head>
           <title>{siteTitle}</title>
         </Head>
       <section className={styles.about}>
-        <h2>About</h2>
+        <h2>Components</h2>
           <div dangerouslySetInnerHTML={{__html: content}}></div>
       </section>
     </Layout>

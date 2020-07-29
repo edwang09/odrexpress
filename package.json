@@ -11,6 +11,8 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.30",
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
     "@fortawesome/react-fontawesome": "^0.1.11",
+    "@stripe/react-stripe-js": "^1.1.2",
+    "@stripe/stripe-js": "^1.8.0",
     "@tinymce/tinymce-react": "^3.6.0",
     "array-move": "^3.0.0",
     "axios": "^0.19.2",
@@ -24,6 +26,7 @@
     "react-dom": "16.13.1",
     "react-sortable-hoc": "^1.11.0",
     "sass": "^1.26.9",
+    "stripe": "^8.80.0",
     "ws": "^7.3.1"
   }
 }

@@ -6,6 +6,11 @@ import classNames from 'classnames';
 import React from 'react';
 import axios from 'axios';
 import Matchtable from '../components/matchtable';
+import CheckoutForm from '../components/checkoutform';
+
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+const promise = loadStripe("pk_test_BYjXAXt4ejnuDFBNVS1odFYo00xwLnXO2g");
 
 let ConfirmationInterval
 let CountdownInterval
@@ -27,7 +32,8 @@ export default class HelloWorld extends React.Component {
         convey:{},
         stage:-1,
         receive:{},
-        missingfield:[]
+        missingfield:[],
+        showpaymentmodal :false
         //dummy
         // confirmed:false,
         // stage:0,
@@ -213,7 +219,14 @@ export default class HelloWorld extends React.Component {
             this.setState({errors: err.response.data.error.split()})
         })
     }
-    proceedToStages = () =>{
+    proceedToPayment = () =>{
+        if (this.state.confirmed){
+            this.setState({showpaymentmodal:true})
+        }
+    }
+    proceedToStages=()=>{
+        console.log("payment succeed")
+        this.setState({showpaymentmodal:false})
         axios.post(`${APIendpoint}/stage`,{negotiationid:this.state.negotiationid, party: this.state.party})
         .then(res => {
             this.setState({... res.data,
@@ -230,11 +243,6 @@ export default class HelloWorld extends React.Component {
         const id = parseInt(e.target.id.replace("consideration","").split("-")[0])
         newconsiderationlist[id] = {...newconsiderationlist[id], choice:e.target.name}
         this.setState({considerationlist:newconsiderationlist})
-        if (this.state.currentquestion !== 17){
-            setTimeout(()=>{
-                this.setState({currentquestion:this.state.currentquestion + 1})
-            },1000)
-        }
     }  
     onConsiderationPrevious = (e) => {
         this.setState({currentquestion:this.state.currentquestion - 1})
@@ -292,12 +300,25 @@ export default class HelloWorld extends React.Component {
     }
     render(){
         const {party, caseid, currency, conveyprice, receiveprice, timed, errors} = this.state
-        const currencylistRender = this.state.currencylist.map((cur)=>{return (<option value={cur.symbol} key={cur.symbol}>{cur.name} ({cur.symbol.toUpperCase()}) </option>)})
+        const currencylistRender = this.state.currencylist.map((cur)=>{return (<option value={cur.symbol} key={cur.symbol}>{cur.name}</option>)})
         return (
             <Layout>
               <Head>
                 <title>{siteTitle}</title>
               </Head>
+                {this.state.showpaymentmodal && (
+                    <div className={styles.overlay} onClick={()=>this.setState({showpaymentmodal:false})}>
+                        <div className={styles.paymentmodal}  onClick={(e)=>e.stopPropagation()}>
+                            <Elements stripe={promise}>
+                                <CheckoutForm paymentSucceed={this.proceedToStages.bind(this)}/>
+                            </Elements>
+                        </div>
+                    </div>
+                )
+                }
+
+
+
                 {this.state.stage === -1 && <section className={styles.actual}>
                     <div className={styles.topform}>
                         <div className={styles.toggle}>
@@ -314,10 +335,6 @@ export default class HelloWorld extends React.Component {
                                 className={classNames({[styles.checked]:party==="receive"})}/>
                                 <label htmlFor="receive">Receive Party</label>
                             </div>
-                        </div>
-                        <div className={styles.case}>
-                            <label htmlFor="caseid">Case ID <span>(optional)</span></label>
-                            <input type="text" name="caseid" id="caseid" value = {caseid} onChange={(e)=>this.setValue("caseid",e.target.value)}/>
                         </div>
                     </div>
                     <div className={styles.maintext}>
@@ -372,17 +389,24 @@ export default class HelloWorld extends React.Component {
                             <label htmlFor="conveyprice">
                                 <span>2.</span> 
                                 <span style={{color:((this.state.missingfield.findIndex((field)=>field === "conveyprice")>-1) ? "red" : "auto")}}>Convey Party&nbsp;</span> 
-                                <span>Negotiable Claim</span> 
+                                <span>negotiable claim</span> 
                             </label>
-                            <input disabled={this.state.party === ""}  value = {this.formatCurrency(conveyprice)} onChange={(e)=>this.setValue("conveyprice",e.target.value)}  type="text" id="conveyprice" name="conveyprice" placeholder="Amount (subject to contingencies) Convey Party is willing to allocate to Receive Party"/>
+
+                            <div className={styles.input}>
+                            {this.state.currency && <p>{this.state.currency}</p>}
+                                <input disabled={this.state.party === ""}  value = {this.formatCurrency(conveyprice)} onChange={(e)=>this.setValue("conveyprice",e.target.value)}  type="text" id="conveyprice" name="conveyprice" placeholder="Amount (subject to contingencies) Convey Party is willing to allocate to Receive Party"/>
+                            </div>
                         </div>
                         <div className={styles.formgroup}>
                             <label htmlFor="receiveprice">
                                 <span>3.</span> 
                                 <span style={{color:((this.state.missingfield.findIndex((field)=>field === "receiveprice")>-1) ? "red" : "auto")}}>Receive Party&nbsp;</span> 
-                                <span>Negotiable Claim</span> 
+                                <span>negotiable claim</span> 
                             </label>
-                            <input  disabled={this.state.party === ""} value = {this.formatCurrency(receiveprice)} onChange={(e)=>this.setValue("receiveprice",e.target.value)} type="text" id="receiveprice" name="receiveprice" placeholder="Amount (subject to contingencies) Receive Party is willing to receive from Convey Party"/>
+                            <div className={styles.input}>
+                                {this.state.currency && <p>{this.state.currency}</p>}
+                                <input  disabled={this.state.party === ""} value = {this.formatCurrency(receiveprice)} onChange={(e)=>this.setValue("receiveprice",e.target.value)} type="text" id="receiveprice" name="receiveprice" placeholder="Amount (subject to contingencies) Receive Party is willing to receive from Convey Party"/>
+                            </div>
                         </div>
                         <div className={styles.formgroup}>
                             <div>
@@ -453,17 +477,17 @@ export default class HelloWorld extends React.Component {
                     If <b style={{color:"red"}}>Mis-match</b> occurs, begin a new case at no charge.  See FAQ for details
                     </li>
                 </ul>}
-                {/* <div className={styles.tablecontainer}> */}
-                    <Matchtable 
+                <Matchtable 
                     formatCurrency = {this.formatCurrency}
                     form = {{currency:this.state.currency,conveyprice:this.state.conveyprice,receiveprice:this.state.receiveprice,timed:this.state.timed}}
                     party={this.state.party} 
                     convey={this.state.convey} 
                     receive={this.state.receive} 
                     setValue={(field, value) => this.setValue(field, value)} 
-                    editCase={(field)=>this.editCase(field)} />
-                {/* </div> */}
-                <button onClick={this.proceedToStages.bind(this)} disabled={!this.state.confirmed}>Proceed</button>
+                    editCase={(field)=>this.editCase(field)} 
+                    onProceed = {this.proceedToPayment.bind(this)}
+                    disabled = {!this.state.confirmed}
+                />
                 </section>
                 }
 

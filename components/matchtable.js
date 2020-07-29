@@ -28,13 +28,13 @@ export default function Matchtable(props){
                     <td><Matchtablerow convey = {props.convey.currency} receive = {props.receive.currency} party={props.party} column = {"match"} editCase={()=>props.editCase("currency")}/></td>
                 </tr>
                 <tr>
-                    <td><span>2.</span><span>Convey Party Negotiable Claim</span></td>
+                    <td><span>2.</span><span>Convey Party negotiable claim</span></td>
                     <td><Matchtablerow form = {props.form.conveyprice} convey = {props.convey.conveyprice} formatCurrency = {props.formatCurrency} receive = {props.receive.conveyprice} party={props.party} column = {"convey"} setValue={(value)=>props.setValue("conveyprice", value)}/></td>
                     <td><Matchtablerow form = {props.form.conveyprice} convey = {props.convey.conveyprice} formatCurrency = {props.formatCurrency} receive = {props.receive.conveyprice} party={props.party} column = {"receive"} setValue={(value)=>props.setValue("conveyprice", value)}/></td>
                     <td><Matchtablerow convey = {props.convey.conveyprice} receive = {props.receive.conveyprice} party={props.party} column = {"match"} editCase={()=>props.editCase("conveyprice")}/></td>
                 </tr>
                 <tr>
-                    <td><span>3.</span><span>Receive Party Negotiable Claim</span></td>
+                    <td><span>3.</span><span>Receive Party negotiable claim</span></td>
                     <td><Matchtablerow form = {props.form.receiveprice} convey = {props.convey.receiveprice} formatCurrency = {props.formatCurrency} receive = {props.receive.receiveprice} party={props.party} column = {"convey"} setValue={(value)=>props.setValue("receiveprice", value)}/></td>
                     <td><Matchtablerow form = {props.form.receiveprice} convey = {props.convey.receiveprice} formatCurrency = {props.formatCurrency} receive = {props.receive.receiveprice} party={props.party} column = {"receive"} setValue={(value)=>props.setValue("receiveprice", value)}/></td>
                     <td><Matchtablerow convey = {props.convey.receiveprice} receive = {props.receive.receiveprice} party={props.party} column = {"match"} editCase={()=>props.editCase("receiveprice")}/></td>
@@ -46,6 +46,13 @@ export default function Matchtable(props){
                     <td><Matchtablerow convey = {props.convey.timed} receive = {props.receive.timed} party={props.party} column = {"match"} editCase={()=>props.editCase("timed")}/></td>
                 </tr>
             </tbody>
+            <tfoot>
+                <tr>
+                    <th className={classNames(styles.proceed, {[styles.disabled]: props.disabled})} colSpan="4"
+                        onClick={()=>props.onProceed()}
+                    >Proceed to the secure Payment Gateway</th>
+                </tr>
+            </tfoot>
         </table>
         </div>
     )
