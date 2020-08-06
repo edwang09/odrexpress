@@ -50,7 +50,7 @@ export default function Matchtable(props){
                 <tr>
                     <th className={classNames(styles.proceed, {[styles.disabled]: props.disabled})} colSpan="4"
                         onClick={()=>props.onProceed()}
-                    >Proceed to the secure Payment Gateway</th>
+                    >{props.disabled?"Pause":"Proceed to the secure Payment Gateway"}</th>
                 </tr>
             </tfoot>
         </table>

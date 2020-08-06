@@ -121,6 +121,8 @@
                     border: 1px solid #ccc;
                     border-radius: 4px;
                     resize: vertical;
+                    //tuning font-size 1 size larger
+                    font-size: 1.05rem;
                 }
             }
             & > select {
@@ -132,6 +134,8 @@
                 border: 1px solid #ccc;
                 border-radius: 4px;
                 resize: vertical;
+                //tuning font-size 1 size larger
+                font-size: 1.05rem;
                 option{
                     padding: 0 0;
                 }
@@ -179,13 +183,25 @@
         border-radius: 4px;
         resize: vertical;
     }
+    
     a{
+        
         cursor: pointer;
         font-weight: bold;
         &:hover{
             text-decoration: none;
         }
     }
+    li{
+        &.disabled span{
+            color:#ccc;
+            a{
+                color:#ccc;
+                cursor: not-allowed;
+            }
+        }
+    }
+    
 
 
 }

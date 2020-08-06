@@ -1,3 +1,4 @@
+
 import Head from 'next/head';
 import Layout, { siteTitle } from '../components/layout';
 import Considerationbox from '../components/considerationbox';
@@ -7,7 +8,7 @@ import React from 'react';
 import axios from 'axios';
 import Matchtable from '../components/matchtable';
 import CheckoutForm from '../components/checkoutform';
-
+import { withRouter  } from 'next/router'
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 const promise = loadStripe("pk_test_BYjXAXt4ejnuDFBNVS1odFYo00xwLnXO2g");
@@ -16,7 +17,7 @@ let ConfirmationInterval
 let CountdownInterval
 const APIendpoint = process.env.APIendpoint
 
-export default class HelloWorld extends React.Component {
+class Actual extends React.Component {
     state = {
         party: "",
         caseid: "",
@@ -195,6 +196,7 @@ export default class HelloWorld extends React.Component {
         // }
     }
     postCaseid = ()=>{
+        if (this.state.negotiationid){return}
         const body = {
             party : this.state.party,
             negotiationid : this.state.negotiationidinput,
@@ -294,9 +296,17 @@ export default class HelloWorld extends React.Component {
         }
     }
     clearCase =()=>{
-        sessionStorage.removeItem('party')
-        sessionStorage.removeItem('negotiationid')
-        window.location.reload(false);
+        const body = {negotiationid: this.state.negotiationid}
+        axios.delete(`${APIendpoint}/negotiation`,body)
+        .then(res => {
+            console.log("done")
+            sessionStorage.removeItem('party')
+            sessionStorage.removeItem('negotiationid')
+            this.props.router.push("/")
+            // window.location.reload(false);
+        }).catch(err=>{
+            console.log(err)
+        })
     }
     render(){
         const {party, caseid, currency, conveyprice, receiveprice, timed, errors} = this.state
@@ -436,27 +446,19 @@ export default class HelloWorld extends React.Component {
 
                 {this.state.party === "convey" && <ul>
                     <li>
-                    Provide the above Numeric Key to the Receive party via:  text / e-mail / fax 
+                    Provide the Numeric Key to the Receive Party via text, etc.
                     </li>
                     <li>
-                    The Receive party shall enter the Numeric Key in their CAPTURE field
+                    Pending view for both parties will update to Match if data entries match.
                     </li>
-                    <li>
-                    Receive party shall click their CLICK HERE link to allow opposing party sharing of the Numeric Key
-                    </li>
-                    <li>
-                    Pending mode for both parties will update to <b style={{color:"green"}}>Match</b> if data entries match
-                    </li>
-                    <li>
-                    Pending mode for both parties will update to <b style={{color:"red"}}>Mis-match</b>  if data entries do not match
-                    </li>
-                    <li>
-                    If <b style={{color:"red"}}>Mis-match</b>  occurs, begin a new case at no charge.  See FAQ for details
-                    </li>
+
+                    <small>
+                    If for any reason the parties elect to discontinue this case, <a onClick={()=>this.clearCase()}>CLICK RE-START</a> to clear current data entry.
+                    </small>
                 </ul>}
                 {this.state.party === "receive" && <ul>
                     <li>
-                    Await the Numeric Key from the Convey party via:  text  / e-mail / fax 
+                    Await the Numeric Key from the Convey Party via text, etc. 
                     </li>
                     <li>
                     Enter the Numeric Key in the CAPTURE field >>
@@ -464,18 +466,15 @@ export default class HelloWorld extends React.Component {
                             onChange={(e)=>this.setValue("negotiationidinput",e.target.value)} 
                             type="text" id="negotiationidinput" name="negotiationidinput" />
                     </li>
-                    <li>
-                    <a onClick={()=>this.postCaseid()}>CLICK HERE</a> to allow opposing party sharing of the Numeric Key
+                    <li className={classNames({[styles.disabled]:this.state.negotiationid})} >
+                    <span><a onClick={()=>this.postCaseid()}>CLICK HERE</a> to allow opposing party sharing of the Numeric Key</span>
                     </li>
                     <li>
-                    Pending mode for both parties will update to <b style={{color:"green"}}>Match</b> if data entries match 
+                    Pending view for both parties will update to Match if data entries match.
                     </li>
-                    <li>
-                    Pending mode for both parties will update to <b style={{color:"red"}}>Mis-match</b> if data entries do not match 
-                    </li>
-                    <li>
-                    If <b style={{color:"red"}}>Mis-match</b> occurs, begin a new case at no charge.  See FAQ for details
-                    </li>
+                    <small>
+                    If for any reason the parties elect to discontinue this case, <a onClick={()=>this.clearCase()}>CLICK RE-START</a> to clear current data entry.
+                    </small>
                 </ul>}
                 <Matchtable 
                     formatCurrency = {this.formatCurrency}
@@ -626,3 +625,7 @@ export default class HelloWorld extends React.Component {
     }
   
 }
+
+
+
+export default withRouter(Actual)

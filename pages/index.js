@@ -35,7 +35,7 @@ export default function Home() {
         </div>
         <div className={styles.expedition}>
         <h5>Expeditious</h5>
-          <p>A procedure offering an efficient 3 step process.Results are obtained in less then one hour.</p>
+          <p>A procedure offering an efficient 3 step process. Results are obtained in less then one hour.</p>
           <ul>
             <li>
               ENTER the numeric amount of the claims

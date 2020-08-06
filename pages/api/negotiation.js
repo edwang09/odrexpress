@@ -79,6 +79,13 @@ handler.put(async (req, res) => {
 //     res.send("done")
 // })
 
+
+handler.delete(async (req, res)=>{
+    const {negotiationid} = req.body
+    await req.db.collection('negotiation').deleteOne({'negotiationid': negotiationid})
+    res.send("done")
+})
+
 function makeid() {
     return (Math.floor(Math.random() * (999999999999 - 123456789900)) + 123456789900).toString()
 }
