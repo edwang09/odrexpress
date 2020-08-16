@@ -86,20 +86,37 @@
             & > label{
                 display: flex;
                 min-width: 300px;
+                max-width: 350px;
                 span{
                     display: block;
                     min-width:20px;
                 }
             }
-            & > div{
+            & > .timedradio{
+                flex-grow: 1;
                 display: flex;
+                justify-content: space-between;
                 min-width: 300px;
+                max-width: 350px;
                 & > label{
                     display: flex;
-                    min-width: 300px;
                     span{
                         display: block;
                         min-width:20px;
+                    }
+                }
+                .radiobutton{
+                    flex-grow: 1;
+                    display: flex;
+                    justify-content: flex-end;
+                    align-items: baseline;
+                    line-height: 1.7;
+                    *{
+                        flex-grow: 0;
+                        display: block;
+                    }
+                    label{
+                        margin-right:10px;
                     }
                 }
             }
@@ -107,7 +124,7 @@
                 display: flex;
                 align-items: stretch;
                 flex-grow: 1;    
-                max-width: 600px;
+                max-width: 675px;
                 p{
                     display: block;
                     margin: 2px 5px;
@@ -116,7 +133,7 @@
                     font-size: 14px;
                     display: block;
                     flex-grow: 1;    
-                    max-width: 600px;
+                    width: 100%;
                     padding: 4px 8px ;
                     border: 1px solid #ccc;
                     border-radius: 4px;
@@ -128,8 +145,8 @@
             & > select {
                 font-size: 14px;
                 display: block;
-                flex-grow: 1;    
-                max-width: 600px;
+                flex-grow: 1;     
+                max-width: 675px;
                 padding: 4px 8px ;
                 border: 1px solid #ccc;
                 border-radius: 4px;
@@ -144,26 +161,13 @@
                 font-size: 14px;
                 display: block;
                 flex-grow: 1;    
-                max-width: 600px;
+                max-width: 675px;
                 resize: vertical;
+                line-height: 2;
             }
             // input[type=text]{
             //     text-align: right;
             // }
-            .radiobutton{
-                flex-grow: 1;    
-                max-width: 600px;
-                display: flex;
-                justify-content: flex-start;
-                align-items: baseline;
-                *{
-                    flex-grow: 0;
-                    display: block;
-                }
-                label{
-                    margin-right:10px;
-                }
-            }
         }
         .submit{
             color: blueviolet;

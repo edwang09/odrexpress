@@ -398,7 +398,7 @@ class Actual extends React.Component {
                         <div className={styles.formgroup}>
                             <label htmlFor="conveyprice">
                                 <span>2.</span> 
-                                <span style={{color:((this.state.missingfield.findIndex((field)=>field === "conveyprice")>-1) ? "red" : "auto")}}>Convey Party&nbsp;</span> 
+                                <span style={{color:((this.state.missingfield.findIndex((field)=>field === "conveyprice")>-1) ? "red" : "auto")}}>Convey&nbsp;</span> 
                                 <span>negotiable claim</span> 
                             </label>
 
@@ -410,7 +410,7 @@ class Actual extends React.Component {
                         <div className={styles.formgroup}>
                             <label htmlFor="receiveprice">
                                 <span>3.</span> 
-                                <span style={{color:((this.state.missingfield.findIndex((field)=>field === "receiveprice")>-1) ? "red" : "auto")}}>Receive Party&nbsp;</span> 
+                                <span style={{color:((this.state.missingfield.findIndex((field)=>field === "receiveprice")>-1) ? "red" : "auto")}}>Receive&nbsp;</span> 
                                 <span>negotiable claim</span> 
                             </label>
                             <div className={styles.input}>
@@ -419,7 +419,7 @@ class Actual extends React.Component {
                             </div>
                         </div>
                         <div className={styles.formgroup}>
-                            <div>
+                            <div className={styles.timedradio}>
                                 <label htmlFor="receiveprice"><span>4.</span> <span>Start Time calendared</span> </label>
                                 <div  className={styles.radiobutton}>
                                     <input type="radio"  disabled={this.state.party === ""} value="no" id="timedno" name="timed" onClick={()=>{this.setValue("timed", false)}} checked={!timed}  />
@@ -461,7 +461,7 @@ class Actual extends React.Component {
                     Await the Numeric Key from the Convey Party via text, etc. 
                     </li>
                     <li>
-                    Enter the Numeric Key in the CAPTURE field >>
+                    Enter the Numeric Key in the CAPTURE field &gt;&gt;
                     <input value = {this.state.negotiationidinput} 
                             onChange={(e)=>this.setValue("negotiationidinput",e.target.value)} 
                             type="text" id="negotiationidinput" name="negotiationidinput" />
