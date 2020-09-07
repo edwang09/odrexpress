@@ -38,7 +38,7 @@ export default function Considerationbox(props){
         <div className={style.buttons}>
             <button disabled={props.currentquestion===0} onClick={props.onPrevious}>Previous</button>
             {props.currentquestion !== 17 && <button onClick={props.onNext} disabled={props.considerationlist[props.currentquestion].choice === undefined}>Next</button>}
-            {props.currentquestion === 17 &&<button onClick={props.onSubmit} disabled={props.considerationlist[17].choice === undefined}>Submit</button>}
+            {props.currentquestion === 17 &&<button onClick={props.onSubmit} disabled={props.considerationlist[17].choice === undefined}>Proceed</button>}
         </div>
         </div>
 

@@ -247,16 +247,18 @@ class Actual extends React.Component {
         this.setState({considerationlist:newconsiderationlist})
     }  
     onConsiderationPrevious = (e) => {
-        this.setState({currentquestion:this.state.currentquestion - 1})
+        const newconsiderationlist = this.state.considerationlist.map((consideration, id)=>{
+            if (id === (this.state.currentquestion - 1)) return {...consideration, choice : undefined}
+            return consideration
+        })
+        this.setState({considerationlist:newconsiderationlist, currentquestion:this.state.currentquestion - 1})
     }  
     onConsiderationNext = (e) => {
         this.setState({currentquestion: this.state.currentquestion === 17 ? this.state.currentquestion : this.state.currentquestion + 1})
     }
     onConsiderationSubmit =(e) =>{
         //check for unfinished questions
-        const unfinished = this.state.considerationlist.filter((cons)=>{
-            return cons.choice === undefined
-        })
+        const unfinished = this.state.considerationlist.filter((cons)=> !cons.choice)
         if(unfinished && unfinished.length >0){
             this.setState({errors: [`Please complete all questions before submission`]})
         }else{
@@ -492,11 +494,11 @@ class Actual extends React.Component {
 
                 {this.state.negotiationid && this.state.confirmed  && this.state.stage > 0 && <section className={styles.negotiation}>
                     <div className={styles.progressbar}>
-                        <div className={classNames(styles.progress, {[styles.active]:((this.state.stage === 1 || this.state.stage === 2) && !this.state.considerationsubmited)})}>
+                        <div className={classNames(styles.progress, {[styles.active]:((this.state.stage === 1 || this.state.stage === 2) && this.state.considerationlist.filter((cons)=> !cons.choice).length > 0)})}>
                             <p>Considerations in Progress</p>
                         </div>
-                        <div className={classNames(styles.progress, {[styles.active]:(this.state.stage === 2 && this.state.considerationsubmited)})}>
-                            <p>All Considerations Logged</p>
+                        <div className={classNames(styles.progress, {[styles.active]:( (this.state.stage === 2 || this.state.stage === 1 ) && (this.state.considerationsubmited || this.state.considerationlist.filter((cons)=> !cons.choice).length === 0)) })}>
+                            <p>Considerations Logged</p>
                         </div>
                         <div className={classNames(styles.progress, {[styles.active]:this.state.stage == 3})}>
                             <p>Monetary Analysis</p>
@@ -516,7 +518,8 @@ class Actual extends React.Component {
                     </div>
 
                     {((this.state.stage === 1 || this.state.stage === 2) && !this.state.considerationsubmited) && <div>
-                            <p>As each of the 18 sums is generated, you shall make a Consideration as to the feasibility of that specific amount</p>                        
+                            <p>As each of the {this.state.currency} sums is generated, you, the {this.state.party==="convey" ? "Convey" : "Receive"} Party, shall consider the feasibility of that amount.</p>
+                            <p>Randomly generated sums for the {this.state.party==="convey" ? "Receive" : "Convey"} Party differ from randomly generated sums for the {this.state.party==="convey" ? "Convey" : "Receive"} Party.</p>             
                             {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}
 
                             <Considerationbox 
