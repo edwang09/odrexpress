@@ -7,7 +7,8 @@ import React, { useState } from 'react';
 export default function Consideration(props){
     return (
         <div  className={classNames([style.consideration,{[style.current]: props.current, [style.previous]: props.previous, [style.next]: props.next}])}>
-            <h4>{props.id+1} of 18: Would you (as the {props.party} party) give consideration to a {props.currency} settlement in the amount of {props.amount}</h4>
+            <h4>Consideration {props.id+1} of 18: </h4>
+            <h4>Would you give consideration to a {props.currency} settlement in the amount of {props.amount}</h4>
             <div className={style.inputGroup}>
                 <input id={`consideration${props.id}-0`} name="0" type="radio" onChange={props.onChange} checked = {props.choice == 0} className={classNames([{[style.checked]: props.choice == 0}])}/>
                 <label htmlFor={`consideration${props.id}-0`}>Under no circumstances would I consider this sum.</label>

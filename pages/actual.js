@@ -248,7 +248,7 @@ class Actual extends React.Component {
     }  
     onConsiderationPrevious = (e) => {
         const newconsiderationlist = this.state.considerationlist.map((consideration, id)=>{
-            if (id === (this.state.currentquestion - 1)) return {...consideration, choice : undefined}
+            if (id === (this.state.currentquestion - 1) || id === this.state.currentquestion) return {...consideration, choice : undefined}
             return consideration
         })
         this.setState({considerationlist:newconsiderationlist, currentquestion:this.state.currentquestion - 1})
@@ -497,7 +497,10 @@ class Actual extends React.Component {
                         <div className={classNames(styles.progress, {[styles.active]:((this.state.stage === 1 || this.state.stage === 2) && this.state.considerationlist.filter((cons)=> !cons.choice).length > 0)})}>
                             <p>Considerations in Progress</p>
                         </div>
-                        <div className={classNames(styles.progress, {[styles.active]:( (this.state.stage === 2 || this.state.stage === 1 ) && (this.state.considerationsubmited || this.state.considerationlist.filter((cons)=> !cons.choice).length === 0)) })}>
+                        <div className={classNames(styles.progress, 
+                            {[styles.active]:((this.state.stage === 2 || this.state.stage === 1 ) && 
+                            (this.state.considerationsubmited ||( this.state.considerationlist.filter((cons)=>!cons.choice).length === 0 && this.state.currentquestion === 17))) 
+                            })}>
                             <p>Considerations Logged</p>
                         </div>
                         <div className={classNames(styles.progress, {[styles.active]:this.state.stage == 3})}>
@@ -528,7 +531,9 @@ class Actual extends React.Component {
                                 onPrevious = {this.onConsiderationPrevious.bind(this)} 
                                 onNext = {this.onConsiderationNext.bind(this)} 
                                 onSubmit = {this.onConsiderationSubmit.bind(this)} 
-                                onConsiderationChoose = {this.onConsiderationChoose.bind(this)} 
+                                onConsiderationChoose = {this.onConsiderationChoose.bind(this)}
+                                currency = {this.state.currency} 
+                                party={this.state.party} 
                             />
                     </div>
                     }
