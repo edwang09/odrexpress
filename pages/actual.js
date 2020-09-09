@@ -520,9 +520,9 @@ class Actual extends React.Component {
                         </div>
                     </div>
 
-                    {((this.state.stage === 1 || this.state.stage === 2) && !this.state.considerationsubmited) && <div>
+                    {((this.state.stage === 1 || this.state.stage === 2) && !this.state.considerationsubmited) && <div>                            
+                            <p>Randomly generated sums for the {this.state.party==="convey" ? "Convey" : "Receive"} Party differ from randomly generated sums for the {this.state.party==="convey" ? "Receive" : "Convey"} Party.</p>             
                             <p>As each of the {this.state.currency} sums is generated, you, the {this.state.party==="convey" ? "Convey" : "Receive"} Party, shall consider the feasibility of that amount.</p>
-                            <p>Randomly generated sums for the {this.state.party==="convey" ? "Receive" : "Convey"} Party differ from randomly generated sums for the {this.state.party==="convey" ? "Convey" : "Receive"} Party.</p>             
                             {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}
 
                             <Considerationbox 
