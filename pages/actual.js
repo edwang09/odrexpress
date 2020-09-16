@@ -92,12 +92,16 @@ class Actual extends React.Component {
         },1000)
     }
     formatCurrency(amt){
+        // console.log(amt)
+        // console.log(amt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
         if (!amt) return ""
         return amt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     }
     setValue = (name, value) =>{
         if (name === "conveyprice" || name === "receiveprice"){
+            // console.log(value)
             value = parseInt(value.replace(/\D/g, ""))
+            // console.log(value)
             return this.setState({[name]:value})
         }
         return this.setState({[name]:value})
@@ -268,6 +272,7 @@ class Actual extends React.Component {
                     considerationlist: this.state.considerationlist
                 }
             }
+            this.setState({considerationsubmited: true})
             axios.post(`${APIendpoint}/consideration`,body).then(res => {
                 this.setState({... res.data,
                     considerationsubmited: res.data[`${this.state.party}consideration`]
@@ -351,18 +356,13 @@ class Actual extends React.Component {
                     </div>
                     <div className={styles.maintext}>
                         <h4>Prior to the commencement of proceedings</h4>
-                        <p>All parties shall familiarize themselves with the Interactive Demo.</p>
+                        <p>Both parties shall familiarize themselves with the DEMO.</p>
                         <p>The below 1, 2, 3 and 4 Claim Variables must be agreed upon in advance by the opposing parties.</p>
-                        <p>Communication for this advance Claim Variables agreement may include: text / e-mail / fax.</p>
+                        <p>Advance communication may include text or other messaging procedure.</p>
 
                         <h4>At the commencement of proceedings</h4>
-                        <p>The opposing parties are on this Actual case page at their calendared Start Time.</p>
-                        <p>Having every Claim Variable at hand allows expedited and error free data entry.</p>
-                        <p>Completion of this Actual case page by both parties enables advancement to the Verification module.</p>
-
-                        <h4>Compromise</h4>
-                        <p>Compromise is important and is directly related to our fee policy.</p>
-                        <p>View the FAQ as it outlines essential implications regarding the directly above. </p>
+                        <p>The opposing parties are on this ACTUAL case page at their calendared Start Time.</p>
+                        <p>Completion of this ACTUAL case page by both parties enables advancement to the Verification module.</p>
                     </div>
                     <hr/>
                     <div className={styles.secondarytext}>
@@ -406,7 +406,7 @@ class Actual extends React.Component {
 
                             <div className={styles.input}>
                             {this.state.currency && <p>{this.state.currency}</p>}
-                                <input disabled={this.state.party === ""}  value = {this.formatCurrency(conveyprice)} onChange={(e)=>this.setValue("conveyprice",e.target.value)}  type="text" id="conveyprice" name="conveyprice" placeholder="Amount (subject to contingencies) Convey Party is willing to allocate to Receive Party"/>
+                                <input disabled={this.state.party === ""}  value = {this.formatCurrency(conveyprice)} onChange={(e)=>this.setValue("conveyprice",e.target.value)}  type="text" id="conveyprice" name="conveyprice" placeholder="Contingent amount Convey Party is willing to allocate to the Receive Party."/>
                             </div>
                         </div>
                         <div className={styles.formgroup}>
@@ -417,7 +417,7 @@ class Actual extends React.Component {
                             </label>
                             <div className={styles.input}>
                                 {this.state.currency && <p>{this.state.currency}</p>}
-                                <input  disabled={this.state.party === ""} value = {this.formatCurrency(receiveprice)} onChange={(e)=>this.setValue("receiveprice",e.target.value)} type="text" id="receiveprice" name="receiveprice" placeholder="Amount (subject to contingencies) Receive Party is willing to receive from Convey Party"/>
+                                <input  disabled={this.state.party === ""} value = {this.formatCurrency(receiveprice)} onChange={(e)=>this.setValue("receiveprice",e.target.value)} type="text" id="receiveprice" name="receiveprice" placeholder="Contingent amount Receive Party is willing to accept from the Convey Party."/>
                             </div>
                         </div>
                         <div className={styles.formgroup}>
@@ -454,17 +454,18 @@ class Actual extends React.Component {
                     Pending view for both parties will update to Match if data entries match.
                     </li>
 
-                    <small>
+                    <p>
                     If for any reason the parties elect to discontinue this case, <a onClick={()=>this.clearCase()}>CLICK RE-START</a> to clear current data entry.
-                    </small>
+                    </p>
                 </ul>}
                 {this.state.party === "receive" && <ul>
-                    <li>
-                    Await the Numeric Key from the Convey Party via text, etc. 
+                    <li className={classNames({[styles.disabled]:this.state.negotiationid})} >
+                    Await the Numeric Key from the Convey Party via text or other messaging procedure. 
                     </li>
-                    <li>
+                    <li className={classNames({[styles.disabled]:this.state.negotiationid})} >
                     Enter the Numeric Key in the CAPTURE field &gt;&gt;
                     <input value = {this.state.negotiationidinput} 
+                            disabled = {this.state.negotiationid}
                             onChange={(e)=>this.setValue("negotiationidinput",e.target.value)} 
                             type="text" id="negotiationidinput" name="negotiationidinput" />
                     </li>
@@ -472,11 +473,11 @@ class Actual extends React.Component {
                     <span><a onClick={()=>this.postCaseid()}>CLICK HERE</a> to allow opposing party sharing of the Numeric Key</span>
                     </li>
                     <li>
-                    Pending view for both parties will update to Match if data entries match.
+                    Pending views will update to Match when all data is entered correctly.
                     </li>
-                    <small>
+                    <p>
                     If for any reason the parties elect to discontinue this case, <a onClick={()=>this.clearCase()}>CLICK RE-START</a> to clear current data entry.
-                    </small>
+                    </p>
                 </ul>}
                 <Matchtable 
                     formatCurrency = {this.formatCurrency}
@@ -537,10 +538,12 @@ class Actual extends React.Component {
                             />
                     </div>
                     }
-                    {(this.state.stage === 2 && this.state.considerationsubmited) && <div>
+                    {((this.state.stage === 1 || this.state.stage === 2) && this.state.considerationsubmited) && <div>
                             <div className={styles.pending}>
                                 <h3>Pending ...</h3>
-                                <p>Once both parties complete the Considerations, automatic progression to the Monetary Analysis occurs.</p>
+                                <p>Remain in this Pending view until all 18 Considerations have been logged by the opposing parties.</p>
+                                <p>Your wait time may vary from 20 seconds to several minutes.</p>
+                                <p>Completion of the 18 Considerations by both parties will enable automatic progression to the Monetary Analysis.</p>
                             </div>
                     </div>
                     }

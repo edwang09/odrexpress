@@ -158,7 +158,7 @@
                 }
             }
             & >  small{
-                font-size: 14px;
+                font-size: 16px;
                 display: block;
                 flex-grow: 1;    
                 max-width: 675px;
@@ -197,11 +197,14 @@
         }
     }
     li{
-        &.disabled span{
+        &.disabled{ 
             color:#ccc;
-            a{
+            span{
                 color:#ccc;
-                cursor: not-allowed;
+                a{
+                    color:#ccc;
+                    cursor: not-allowed;
+                }
             }
         }
     }
