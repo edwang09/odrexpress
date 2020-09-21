@@ -14,7 +14,6 @@ import { Elements } from "@stripe/react-stripe-js";
 const promise = loadStripe("pk_test_BYjXAXt4ejnuDFBNVS1odFYo00xwLnXO2g");
 
 let ConfirmationInterval
-let CountdownInterval
 const APIendpoint = process.env.APIendpoint
 
 class Actual extends React.Component {
@@ -26,8 +25,6 @@ class Actual extends React.Component {
         receiveprice: "",
         currency: "",
         timed: false,
-        countdowna: "",
-        countdownb: "",
         currentquestion:0,
         currencylist:[],
         convey:{},
@@ -78,19 +75,7 @@ class Actual extends React.Component {
             x = x.replace(pattern, "$1,$2");
         return x;
     }
-    Countdown = (starttime, countdown, duration) =>{
-        CountdownInterval = setInterval(()=>{
-            const diff = duration*60*1000 - (Date.now() - starttime)
-            if (diff > 0){
-                const minute = "00" + Math.floor(diff/1000/60).toString()
-                const second = "00" + Math.floor(diff/1000%60).toString()
-                const displaytime = `${minute.substring(minute.length-2, minute.length) } : ${second.substring(second.length-2, second.length)}`
-                this.setState({[countdown] : displaytime})
-            }else{
-                clearInterval(CountdownInterval)
-            }
-        },1000)
-    }
+
     formatCurrency(amt){
         // console.log(amt)
         // console.log(amt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
@@ -122,19 +107,14 @@ class Actual extends React.Component {
                 await this.Confirm(response.data.negotiationid,0)
             }else if (response.data.stage === 1 || response.data.stage === 2 ){
                 if (response.data[`${party}consideration`]){
-                    this.Confirm(response.data.negotiationid, 3, ()=>{this.Countdown(response.data.finaltime, "countdownb", 10)})
-                }else{
-                    this.Countdown(response.data.confirmtime, "countdowna", 45)
+                    this.Confirm(response.data.negotiationid, 3, ()=>{})
                 }
                 this.Confirm(response.data.negotiationid, 4)
-            }else if (response.data.stage === 3){
-                this.Countdown(response.data.finaltime, "countdownb", 10)
             }
         }
     }
     componentWillUnmount(){
         clearInterval(ConfirmationInterval)
-        clearInterval(CountdownInterval)
     }
     postCase = () =>{
         if(this.validateForm()){
@@ -239,7 +219,6 @@ class Actual extends React.Component {
                 considerationlist: res.data[this.state.party].considerationlist,
                 considerationsubmited: res.data[`${this.state.party}consideration`]
             })
-            this.Countdown(res.data.confirmtime, "countdowna", 45)
         }).catch(err=>{
             console.log(err)
         })
@@ -277,8 +256,7 @@ class Actual extends React.Component {
                 this.setState({... res.data,
                     considerationsubmited: res.data[`${this.state.party}consideration`]
                 })
-                clearInterval(CountdownInterval)
-                this.Confirm(res.data.negotiationid, 3, ()=>{this.Countdown(res.data.finaltime, "countdownb", 10)})
+                this.Confirm(res.data.negotiationid, 3, ()=>{})
             }).catch(err=>{
                 console.log(err)
             })
@@ -294,7 +272,6 @@ class Actual extends React.Component {
             }
             axios.post(`${APIendpoint}/decision`,body)
             .then(res => {
-                clearInterval(CountdownInterval)
                 this.setState(res.data)
                 this.Confirm(res.data.negotiationid, 4)
             }).catch(err=>{
@@ -509,15 +486,6 @@ class Actual extends React.Component {
                         </div>
                         <div className={classNames(styles.progress, {[styles.active]:this.state.stage == 4})}>
                             <p>Non-Binding Recommendation</p>
-                        </div>
-                    </div>
-
-                    <div className={styles.timerbar}>
-                        <div className={styles.timer}>
-                            Countdown A : {this.state.countdowna}
-                        </div>
-                        <div className={styles.timer}>
-                            Countdown B : {this.state.countdownb}
                         </div>
                     </div>
 

@@ -217,6 +217,7 @@
 .negotiation{
     max-width: 1000px;
     .progressbar{
+        margin-bottom:20px;
         overflow: hidden;
         border-radius: 5px;
         display: flex;
@@ -270,16 +271,6 @@
                     3px -3px 0 1px white;
                 border-radius: 0 5px 0 50px;
             }
-        }
-    }
-
-    .timerbar{
-        display:flex;
-        justify-content: space-between;
-        margin: 20px auto;
-        .timer{
-            flex-grow:1;
-            text-align: center;
         }
     }
 
