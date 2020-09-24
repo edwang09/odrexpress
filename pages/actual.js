@@ -332,14 +332,19 @@ class Actual extends React.Component {
                         </div>
                     </div>
                     <div className={styles.maintext}>
-                        <h4>Prior to the commencement of proceedings</h4>
+                        {/* <h4>Prior to the commencement of proceedings</h4>
                         <p>Both parties shall familiarize themselves with the DEMO.</p>
                         <p>The below 1, 2, 3 and 4 Claim Variables must be agreed upon in advance by the opposing parties.</p>
-                        <p>Advance communication may include text or other messaging procedure.</p>
+                        <p>Advance communication may include text or other messaging procedure.</p> */}
+                        <p>Any communication between opposing parties may include text or other messaging procedures.</p>
+                        <p>Each party shall have familiarization with the DEMO and FAQ.</p>
+                        <p>The 1, 2, 3 and 4 Claim Variables displayed below must be agreed upon in advance by the opposing parties.</p>
+                        <p>The opposing parties shall be on this ACTUAL case page at their calendared Start Time.</p>
+                        <p>Completion of this ACTUAL case page by each party enables advancement to the secure Payment Gateway.</p>
 
-                        <h4>At the commencement of proceedings</h4>
+                        {/* <h4>At the commencement of proceedings</h4>
                         <p>The opposing parties are on this ACTUAL case page at their calendared Start Time.</p>
-                        <p>Completion of this ACTUAL case page by both parties enables advancement to the Verification module.</p>
+                        <p>Completion of this ACTUAL case page by both parties enables advancement to the Verification module.</p> */}
                     </div>
                     <hr/>
                     <div className={styles.secondarytext}>
@@ -413,7 +418,7 @@ class Actual extends React.Component {
 
                         </div>
                         {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}
-                        Within a reasonable time frame from one another, both parties shall <span className={styles.submit} onClick={()=>this.postCase()}>CLICK HERE</span> to proceed to the Verification module.
+                        Within a reasonable time frame from one another, both parties shall click<span className={styles.submit} onClick={()=>this.postCase()}> HERE</span> to proceed to the Verification module.
                     </form>
                     </div>
                 </section>
