@@ -340,7 +340,7 @@ class Actual extends React.Component {
                         <p>Each party shall have familiarization with the DEMO and FAQ.</p>
                         <p>The 1, 2, 3 and 4 Claim Variables displayed below must be agreed upon in advance by the opposing parties.</p>
                         <p>The opposing parties shall be on this ACTUAL case page at their calendared Start Time.</p>
-                        <p>Completion of this ACTUAL case page by each party enables advancement to the secure Payment Gateway.</p>
+                        <p>Completion of this ACTUAL case page by each party enables advancement to the Numeric Key.</p>
 
                         {/* <h4>At the commencement of proceedings</h4>
                         <p>The opposing parties are on this ACTUAL case page at their calendared Start Time.</p>
@@ -418,7 +418,7 @@ class Actual extends React.Component {
 
                         </div>
                         {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}
-                        Within a reasonable time frame from one another, both parties shall click<span className={styles.submit} onClick={()=>this.postCase()}> HERE</span> to proceed to the Verification module.
+                        Within a reasonable time frame from one another, both parties shall click<span className={styles.submit} onClick={()=>this.postCase()}> HERE</span> to advance to the Numeric Key.
                     </form>
                     </div>
                 </section>
