@@ -475,9 +475,9 @@ class Actual extends React.Component {
                     </div>
                     <ul className={styles.connectionErrorList}>
                         <li className={classNames({[styles.red]:this.state.connection==="error"})}>A typo or miscommunication of the Numeric Key.</li>
-                        <li className={classNames({[styles.red]:this.state.connectionError.currency})}>Claim Variable # 1 – different currencies have been selected.</li>
-                        <li className={classNames({[styles.red]:this.state.connectionError.conveyprice})}>Claim Variable # 2 – the negotiable claims entered by the opposing parties do not match.</li>
-                        <li className={classNames({[styles.red]:this.state.connectionError.receiveprice})}>Claim Variable # 3 – the negotiable claims entered by the opposing parties do not match.</li>
+                        <li className={classNames({[styles.red]:this.state.connectionError.currency})}>Claim Variable # 1 – <span style={{color:"black"}}>different currencies have been selected.</span></li>
+                        <li className={classNames({[styles.red]:this.state.connectionError.conveyprice})}>Claim Variable # 2 – <span style={{color:"black"}}>the negotiable claims entered by the opposing parties do not match.</span></li>
+                        <li className={classNames({[styles.red]:this.state.connectionError.receiveprice})}>Claim Variable # 3 – <span style={{color:"black"}}>the negotiable claims entered by the opposing parties do not match.</span></li>
                     </ul>
                     <p>In the event of Connection Error, click <a style={{color:"red"}}onClick={()=>this.clearCase()}>DISCARD</a> to re-start at a mutually convenient time.</p>
                     <p>Since advancement to the secure Payment Gateway has yet to occur, no fees have been applied.</p>
