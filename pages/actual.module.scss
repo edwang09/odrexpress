@@ -179,9 +179,38 @@
 
 
 .verification{
+    
+    .key{
+        font-size: 18px;
+    }
+    .instructions{
+        margin-top:20px;
+    }
+    .indicators{
+        display: flex;
+
+        .indicator{
+            margin: 20px 20px;
+            font-size:120%;
+            color:#999;
+            &.red{
+                color:red;
+            }
+            &.blue{
+                color:#0070f3;
+            }
+        }
+    }
+    .connectionComplete, .connectionError, .connectionErrorList{
+        margin-bottom: 20px;
+        .red{
+            color:red;
+        }
+    }
     input[type="text"]{
         flex-grow: 1;   
-        width: 300px;
+        width: 70px;
+        margin-left: 10px;
         padding: 8px;
         border: 1px solid #ccc;
         border-radius: 4px;

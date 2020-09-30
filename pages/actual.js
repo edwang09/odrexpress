@@ -20,7 +20,9 @@ class Actual extends React.Component {
     state = {
         party: "",
         caseid: "",
-        negotiationidinput:"",
+        negotiationidinput1:"",
+        negotiationidinput2:"",
+        negotiationidinput3:"",
         conveyprice: "",
         receiveprice: "",
         currency: "",
@@ -31,9 +33,10 @@ class Actual extends React.Component {
         stage:-1,
         receive:{},
         missingfield:[],
-        showpaymentmodal :false
+        showpaymentmodal :false,
+        connection:"",
+        connectionError:{}
         //dummy
-        // confirmed:false,
         // stage:0,
         // negotiationid:"285445241188",
     }
@@ -41,14 +44,22 @@ class Actual extends React.Component {
         ConfirmationInterval = setInterval(async ()=>{
             console.log("post check confirmation")
             const response = await axios.post(`${APIendpoint}/confirm`,{negotiationid: negotiationid, party: this.state.party})
-            if ((response.data.confirmed && stage === 0) || (stage >= 3 && response.data.stage === stage)){
+            if (stage >= 3 && response.data.stage === stage){
                 clearInterval(ConfirmationInterval)
-                this.setState({...response.data,
-                    // considerationlist: response.data[this.state.party].considerationlist,
-                    // considerationsubmited: response.data[`${this.state.party}consideration`],
-                },cb)
-            }else if(stage === 0){
-                this.setState({...response.data})
+                this.setState({...response.data,},cb)
+            }else if(stage === 0 && response.data.convey && response.data.receive){
+                clearInterval(ConfirmationInterval)
+                if (response.data.convey.currency === response.data.receive.currency && 
+                    response.data.convey.receiveprice === response.data.receive.receiveprice && 
+                    response.data.convey.conveyprice === response.data.receive.conveyprice){
+                    this.setState({connection:"complete"})
+                }else{
+                    this.setState({connection:"error", connectionError:{
+                        currency: response.data.convey.currency !== response.data.receive.currency,
+                        receiveprice: response.data.convey.receiveprice !== response.data.receive.receiveprice,
+                        conveyprice: response.data.convey.conveyprice !== response.data.receive.conveyprice,
+                    }})
+                }
             }
         },1000)
     }
@@ -77,8 +88,6 @@ class Actual extends React.Component {
     }
 
     formatCurrency(amt){
-        // console.log(amt)
-        // console.log(amt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","))
         if (!amt) return ""
         return amt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     }
@@ -155,35 +164,11 @@ class Actual extends React.Component {
             })
         }
     }
-    editCase = (field) =>{
-        // if(this.validateForm()){
-        //     console.log(this.validateForm())
-        //     this.setState({errors: this.validateForm()})
-        // }else{
-            this.setState({errors: []})
-            const value = (field === "conveyprice" ||field === "receiveprice" ) ? parseInt(this.state[field]) : this.state[field]
-            const body = {
-                party : this.state.party,
-                negotiationid : this.state.negotiationid,
-                [this.state.party]: {[field]: value}
-            }
-            axios.put(`${APIendpoint}/negotiation`,body).then(res => {
-                console.log(res.data)
-                // this.setState({...res.data}, async ()=>{
-                //     sessionStorage.setItem('negotiationid', res.data.negotiationid)
-                //     sessionStorage.setItem('party', this.state.party)
-                //     await this.Confirm(res.data.negotiationid,0)
-                // })
-            }).catch(err=>{
-                console.log(err)
-            })
-        // }
-    }
     postCaseid = ()=>{
         if (this.state.negotiationid){return}
         const body = {
             party : this.state.party,
-            negotiationid : this.state.negotiationidinput,
+            negotiationid : `${this.state.negotiationidinput1}${this.state.negotiationidinput2}${this.state.negotiationidinput3}`,
             [this.state.party]: {
                 caseid : this.state.caseid,
                 currency: this.state.currency,
@@ -195,18 +180,28 @@ class Actual extends React.Component {
         console.log(body)
         axios.post(`${APIendpoint}/negotiation`,body).then(res => {
             this.setState({...res.data}, async ()=>{
-                sessionStorage.setItem('negotiationid', res.data.negotiationid)
-                sessionStorage.setItem('party', this.state.party)
-                await this.Confirm(res.data.negotiationid,0)
+                console.log(res.data)
+                if (res.data.convey.currency === res.data.receive.currency && 
+                    res.data.convey.receiveprice === res.data.receive.receiveprice && 
+                    res.data.convey.conveyprice === res.data.receive.conveyprice){
+                    sessionStorage.setItem('negotiationid', res.data.negotiationid)
+                    sessionStorage.setItem('party', this.state.party)
+                    this.setState({connection:"complete"})
+                }else{
+                    this.setState({connection:"error", connectionError:{
+                        currency: res.data.convey.currency !== res.data.receive.currency,
+                        receiveprice: res.data.convey.receiveprice !== res.data.receive.receiveprice,
+                        conveyprice: res.data.convey.conveyprice !== res.data.receive.conveyprice,
+                    }})
+                }
             })
-            
         }).catch(err=>{
             console.log(err.response.data)
             this.setState({errors: err.response.data.error.split()})
         })
     }
     proceedToPayment = () =>{
-        if (this.state.confirmed){
+        if (this.state.connection==="complete"){
             this.setState({showpaymentmodal:true})
         }
     }
@@ -292,6 +287,18 @@ class Actual extends React.Component {
             console.log(err)
         })
     }
+    handleNegotiationidInput = (pointer, value) =>{
+        if (value.length>=3){
+            value = value.slice(0,3)
+            if (pointer !==3){
+                this[`negotiationidinput${pointer+1}`].focus();
+            }
+        }
+        this.setState({[`negotiationidinput${pointer}`]:value})
+    }
+    getNegotiationidInput = (pointer) =>{
+        return this.state[`negotiationidinput${pointer}`]
+    }
     render(){
         const {party, caseid, currency, conveyprice, receiveprice, timed, errors} = this.state
         const currencylistRender = this.state.currencylist.map((cur)=>{return (<option value={cur.symbol} key={cur.symbol}>{cur.name}</option>)})
@@ -332,19 +339,11 @@ class Actual extends React.Component {
                         </div>
                     </div>
                     <div className={styles.maintext}>
-                        {/* <h4>Prior to the commencement of proceedings</h4>
-                        <p>Both parties shall familiarize themselves with the DEMO.</p>
-                        <p>The below 1, 2, 3 and 4 Claim Variables must be agreed upon in advance by the opposing parties.</p>
-                        <p>Advance communication may include text or other messaging procedure.</p> */}
                         <p>Any communication between opposing parties may include text or other messaging procedures.</p>
                         <p>Each party shall have familiarization with the DEMO and FAQ.</p>
                         <p>The 1, 2, 3 and 4 Claim Variables displayed below must be agreed upon in advance by the opposing parties.</p>
                         <p>The opposing parties shall be on this ACTUAL case page at their calendared Start Time.</p>
                         <p>Completion of this ACTUAL case page by each party enables advancement to the Numeric Key.</p>
-
-                        {/* <h4>At the commencement of proceedings</h4>
-                        <p>The opposing parties are on this ACTUAL case page at their calendared Start Time.</p>
-                        <p>Completion of this ACTUAL case page by both parties enables advancement to the Verification module.</p> */}
                     </div>
                     <hr/>
                     <div className={styles.secondarytext}>
@@ -425,57 +424,67 @@ class Actual extends React.Component {
                 }        
                 {this.state.stage !== -1 && <div className={styles.clearbutton}><button onClick={()=>this.clearCase()}>DISCARD</button></div>}
                 {this.state.stage === 0 && <section className={styles.verification}>
-                {this.state.negotiationid && <h4>Numeric Key: {this.state.negotiationid}</h4>}
+                <h4 className={styles.key}>Numeric Key: <br/>{this.state.negotiationid}</h4>
                 {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}
 
-                {this.state.party === "convey" && <ul>
-                    <li>
-                    Provide the Numeric Key to the Receive Party via text, etc.
-                    </li>
-                    <li>
-                    Pending view for both parties will update to Match if data entries match.
-                    </li>
-
+                {this.state.party === "convey" && <div className={styles.instructions}>
                     <p>
-                    If for any reason the parties elect to discontinue this case, <a onClick={()=>this.clearCase()}>CLICK RE-START</a> to clear current data entry.
+                    In an expedited amount of time, you, the Convey Party, shall provide the above Numeric Key to the Receive Party.  
                     </p>
-                </ul>}
-                {this.state.party === "receive" && <ul>
-                    <li className={classNames({[styles.disabled]:this.state.negotiationid})} >
-                    Await the Numeric Key from the Convey Party via text or other messaging procedure. 
-                    </li>
-                    <li className={classNames({[styles.disabled]:this.state.negotiationid})} >
-                    Enter the Numeric Key in the CAPTURE field &gt;&gt;
-                    <input value = {this.state.negotiationidinput} 
+                    <p>
+                    Once processed by the Receive Party, the opposing parties will be connected virtually.
+                    </p>
+                </div>}
+                {this.state.party === "receive" && <div className={styles.instructions}>
+                    <p className={classNames({[styles.disabled]:this.state.negotiationid})} >
+                    You, the Receive Party, shall await the Numeric Key from the Convey Party via text or other messaging procedure.
+                    </p>
+                    <p className={classNames({[styles.disabled]:this.state.negotiationid})} >
+                        Upon receipt, enter the Numeric Key in the CAPTURE field &gt;&gt;
+                    <input value = {this.getNegotiationidInput(1)} 
                             disabled = {this.state.negotiationid}
-                            onChange={(e)=>this.setValue("negotiationidinput",e.target.value)} 
-                            type="text" id="negotiationidinput" name="negotiationidinput" />
-                    </li>
-                    <li className={classNames({[styles.disabled]:this.state.negotiationid})} >
-                    <span><a onClick={()=>this.postCaseid()}>CLICK HERE</a> to allow opposing party sharing of the Numeric Key</span>
-                    </li>
-                    <li>
-                    Pending views will update to Match when all data is entered correctly.
-                    </li>
-                    <p>
-                    If for any reason the parties elect to discontinue this case, <a onClick={()=>this.clearCase()}>CLICK RE-START</a> to clear current data entry.
+                            ref={(input) => { this.negotiationidinput1 = input; }} 
+                            onChange={(e)=>this.handleNegotiationidInput(1,e.target.value)} 
+                            type="text" id="negotiationidinput1" name="negotiationidinput1" />
+                    <input value = {this.getNegotiationidInput(2)}
+                            disabled = {this.state.negotiationid}
+                            ref={(input) => { this.negotiationidinput2 = input; }} 
+                            onChange={(e)=>this.handleNegotiationidInput(2,e.target.value)} 
+                            type="text" id="negotiationidinput2" name="negotiationidinput2" />
+                    <input value = {this.getNegotiationidInput(3)} 
+                            disabled = {this.state.negotiationid}
+                            ref={(input) => { this.negotiationidinput3 = input; }} 
+                            onChange={(e)=>this.handleNegotiationidInput(3,e.target.value)} 
+                            type="text" id="negotiationidinput3" name="negotiationidinput3" />
                     </p>
-                </ul>}
-                <Matchtable 
-                    formatCurrency = {this.formatCurrency}
-                    form = {{currency:this.state.currency,conveyprice:this.state.conveyprice,receiveprice:this.state.receiveprice,timed:this.state.timed}}
-                    party={this.state.party} 
-                    convey={this.state.convey} 
-                    receive={this.state.receive} 
-                    setValue={(field, value) => this.setValue(field, value)} 
-                    editCase={(field)=>this.editCase(field)} 
-                    onProceed = {this.proceedToPayment.bind(this)}
-                    disabled = {!this.state.confirmed}
-                />
+                    <p className={classNames({[styles.disabled]:this.state.negotiationid})} >
+                    <span>Click <a onClick={()=>this.postCaseid()}>HERE</a> to allow the opposing parties to connect virtually. </span>
+                    </p>
+                </div>}
+                    <div className={styles.indicators}>
+                        <div className={classNames({[styles.indicator]:true, [styles.blue]:this.state.connection==="complete"})}>Connection Complete</div>
+                        <div className={classNames({[styles.indicator]:true, [styles.red]:this.state.connection==="error"})}>Connection Error</div>
+                    </div>
+                    <div className={styles.connectionComplete}>
+                        <h4>Connection Completed Procedure:</h4>
+                        <p>If Connection Completed is enabled, click <a onClick={()=>this.proceedToPayment()}>HERE</a> to advance to the secure Payment Gateway.</p>
+                    </div>
+                    <div className={styles.connectionError}>
+                        <h4>Correction Error Procedure: </h4>
+                        <p>Connection Errors may occur due to any or all of the following:</p>
+                    </div>
+                    <ul className={styles.connectionErrorList}>
+                        <li className={classNames({[styles.red]:this.state.connection==="error"})}>A typo or miscommunication of the Numeric Key.</li>
+                        <li className={classNames({[styles.red]:this.state.connectionError.currency})}>Claim Variable # 1 – different currencies have been selected.</li>
+                        <li className={classNames({[styles.red]:this.state.connectionError.conveyprice})}>Claim Variable # 2 – the negotiable claims entered by the opposing parties do not match.</li>
+                        <li className={classNames({[styles.red]:this.state.connectionError.receiveprice})}>Claim Variable # 3 – the negotiable claims entered by the opposing parties do not match.</li>
+                    </ul>
+                    <p>In the event of Connection Error, click <a style={{color:"red"}}onClick={()=>this.clearCase()}>DISCARD</a> to re-start at a mutually convenient time.</p>
+                    <p>Since advancement to the secure Payment Gateway has yet to occur, no fees have been applied.</p>
                 </section>
                 }
 
-                {this.state.negotiationid && this.state.confirmed  && this.state.stage > 0 && <section className={styles.negotiation}>
+                {this.state.negotiationid && this.state.stage > 0 && <section className={styles.negotiation}>
                     <div className={styles.progressbar}>
                         <div className={classNames(styles.progress, {[styles.active]:((this.state.stage === 1 || this.state.stage === 2) && this.state.considerationlist.filter((cons)=> !cons.choice).length > 0)})}>
                             <p>Considerations in Progress</p>

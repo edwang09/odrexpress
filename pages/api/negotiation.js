@@ -18,7 +18,6 @@ handler.post(async (req, res) => {
         //initialize considerationlist into created negotiation
         const insertdoc = { 
             negotiationid: newnegotiationid, 
-            confirmed: false, 
             stage:0, 
             convey
         }
@@ -37,7 +36,6 @@ handler.post(async (req, res) => {
     }else if (party === "receive" && receive && receive.conveyprice && receive.receiveprice && receive.timed && receive.currency && negotiationid){
         //initialize considerationlist into created negotiation
         let updatedoc = { 
-            confirmed: false, 
             stage:0, 
             receive
         }
@@ -87,7 +85,7 @@ handler.delete(async (req, res)=>{
 })
 
 function makeid() {
-    return (Math.floor(Math.random() * (999999999999 - 123456789900)) + 123456789900).toString()
+    return (Math.floor(Math.random() * (999999999 - 123456789)) + 123456789).toString()
 }
 
 
