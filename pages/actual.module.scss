@@ -164,6 +164,9 @@
                 max-width: 675px;
                 resize: vertical;
                 line-height: 2;
+                .red{
+                    color:red;
+                }
             }
             // input[type=text]{
             //     text-align: right;
@@ -171,7 +174,6 @@
         }
         .submit{
             color: blueviolet;
-            font-weight: bold;
             cursor: pointer;
         }
     }
@@ -209,18 +211,18 @@
     }
     input[type="text"]{
         flex-grow: 1;   
-        width: 70px;
+        width: 200px;
         margin-left: 10px;
         padding: 8px;
         border: 1px solid #ccc;
         border-radius: 4px;
         resize: vertical;
+        font-size: 110%;
     }
     
     a{
         
         cursor: pointer;
-        font-weight: bold;
         &:hover{
             text-decoration: none;
         }

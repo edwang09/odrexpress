@@ -20,9 +20,7 @@ class Actual extends React.Component {
     state = {
         party: "",
         caseid: "",
-        negotiationidinput1:"",
-        negotiationidinput2:"",
-        negotiationidinput3:"",
+        negotiationidinput:"",
         conveyprice: "",
         receiveprice: "",
         currency: "",
@@ -128,7 +126,7 @@ class Actual extends React.Component {
     postCase = () =>{
         if(this.validateForm()){
             console.log(this.validateForm())
-            this.setState({errors: this.validateForm()})
+            // this.setState({errors: this.validateForm()})
         }else if (this.state.party === "convey"){
             this.setState({errors: []})
             const body = {
@@ -168,7 +166,7 @@ class Actual extends React.Component {
         if (this.state.negotiationid){return}
         const body = {
             party : this.state.party,
-            negotiationid : `${this.state.negotiationidinput1}${this.state.negotiationidinput2}${this.state.negotiationidinput3}`,
+            negotiationid : this.state.negotiationidinput.replace(/\s/g,""),
             [this.state.party]: {
                 caseid : this.state.caseid,
                 currency: this.state.currency,
@@ -198,6 +196,9 @@ class Actual extends React.Component {
         }).catch(err=>{
             console.log(err.response.data)
             this.setState({errors: err.response.data.error.split()})
+            this.setState({connection:"error", connectionError:{
+                numericID: true,
+            }})
         })
     }
     proceedToPayment = () =>{
@@ -287,17 +288,27 @@ class Actual extends React.Component {
             console.log(err)
         })
     }
-    handleNegotiationidInput = (pointer, value) =>{
-        if (value.length>=3){
-            value = value.slice(0,3)
-            if (pointer !==3){
-                this[`negotiationidinput${pointer+1}`].focus();
-            }
-        }
-        this.setState({[`negotiationidinput${pointer}`]:value})
+    handleNegotiationidInput = (value) =>{
+        const rawvalue = value.replace(/\s/g,"").slice(0,9)
+        console.log(value)
+        console.log(rawvalue)
+        this.setState({[`negotiationidinput`] : rawvalue})
     }
-    getNegotiationidInput = (pointer) =>{
-        return this.state[`negotiationidinput${pointer}`]
+    getNegotiationidInput = () =>{
+        const rawvalue = this.state[`negotiationidinput`]
+        let result = rawvalue.slice(0,3)
+        if (rawvalue.length > 3 ){
+            result = result + " " + rawvalue.slice(3,6)
+        }
+        if (rawvalue.length > 6 ){
+            result = result + " " + rawvalue.slice(6,9)
+        }
+        console.log(result)
+        return result
+    }
+    formatNegotiationid = (negotiationid)=>{
+        if (!negotiationid) return ""
+        return ` ${negotiationid.slice(0,3)} ${negotiationid.slice(3,6)} ${negotiationid.slice(6,9)}`
     }
     render(){
         const {party, caseid, currency, conveyprice, receiveprice, timed, errors} = this.state
@@ -339,7 +350,7 @@ class Actual extends React.Component {
                         </div>
                     </div>
                     <div className={styles.maintext}>
-                        <p>Any communication between opposing parties may include text or other messaging procedures.</p>
+                        <p>Communication between opposing parties may include text or other messaging procedures.</p>
                         <p>Each party shall have familiarization with the DEMO and FAQ.</p>
                         <p>The 1, 2, 3 and 4 Claim Variables displayed below must be agreed upon in advance by the opposing parties.</p>
                         <p>The opposing parties shall be on this ACTUAL case page at their calendared Start Time.</p>
@@ -413,10 +424,10 @@ class Actual extends React.Component {
                             </div>
                             
                             
-                            <small><span style={{color:((this.state.missingfield.findIndex((field)=>field === "timed")>-1) ? "red" : "auto")}}>Requires Yes to proceed</span>, with consideration if needed for time zone differences</small>
+                            <small><span className={classNames({[styles.red]:(this.state.missingfield.findIndex((field)=>field === "timed")>-1 &&  timed===false)})} >Requires Yes to proceed</span>, with consideration if needed for time zone differences.</small>
 
                         </div>
-                        {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}
+                        {/* {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))} */}
                         Within a reasonable time frame from one another, both parties shall click<span className={styles.submit} onClick={()=>this.postCase()}> HERE</span> to advance to the Numeric Key.
                     </form>
                     </div>
@@ -424,7 +435,7 @@ class Actual extends React.Component {
                 }        
                 {this.state.stage !== -1 && <div className={styles.clearbutton}><button onClick={()=>this.clearCase()}>DISCARD</button></div>}
                 {this.state.stage === 0 && <section className={styles.verification}>
-                <h4 className={styles.key}>Numeric Key: <br/>{this.state.negotiationid}</h4>
+                <h4 className={styles.key}>Numeric Key: <b>{this.formatNegotiationid(this.state.negotiationid)}</b></h4>
                 {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}
 
                 {this.state.party === "convey" && <div className={styles.instructions}>
@@ -441,21 +452,11 @@ class Actual extends React.Component {
                     </p>
                     <p className={classNames({[styles.disabled]:this.state.negotiationid})} >
                         Upon receipt, enter the Numeric Key in the CAPTURE field &gt;&gt;
-                    <input value = {this.getNegotiationidInput(1)} 
+                    <input value = {this.getNegotiationidInput()} 
                             disabled = {this.state.negotiationid}
-                            ref={(input) => { this.negotiationidinput1 = input; }} 
-                            onChange={(e)=>this.handleNegotiationidInput(1,e.target.value)} 
-                            type="text" id="negotiationidinput1" name="negotiationidinput1" />
-                    <input value = {this.getNegotiationidInput(2)}
-                            disabled = {this.state.negotiationid}
-                            ref={(input) => { this.negotiationidinput2 = input; }} 
-                            onChange={(e)=>this.handleNegotiationidInput(2,e.target.value)} 
-                            type="text" id="negotiationidinput2" name="negotiationidinput2" />
-                    <input value = {this.getNegotiationidInput(3)} 
-                            disabled = {this.state.negotiationid}
-                            ref={(input) => { this.negotiationidinput3 = input; }} 
-                            onChange={(e)=>this.handleNegotiationidInput(3,e.target.value)} 
-                            type="text" id="negotiationidinput3" name="negotiationidinput3" />
+                            ref={(input) => { this.negotiationidinput = input; }} 
+                            onChange={(e)=>{e.preventDefault();this.handleNegotiationidInput(e.target.value)}} 
+                            type="text" id="negotiationidinput" name="negotiationidinput" />
                     </p>
                     <p className={classNames({[styles.disabled]:this.state.negotiationid})} >
                     <span>Click <a onClick={()=>this.postCaseid()}>HERE</a> to allow the opposing parties to connect virtually. </span>
@@ -466,15 +467,15 @@ class Actual extends React.Component {
                         <div className={classNames({[styles.indicator]:true, [styles.red]:this.state.connection==="error"})}>Connection Error</div>
                     </div>
                     <div className={styles.connectionComplete}>
-                        <h4>Connection Completed Procedure:</h4>
-                        <p>If Connection Completed is enabled, click <a onClick={()=>this.proceedToPayment()}>HERE</a> to advance to the secure Payment Gateway.</p>
+                        <h4>Connection Complete Procedure:</h4>
+                        <p>If Connection Complete is enabled, click <a onClick={()=>this.proceedToPayment()}>HERE</a> to advance to the secure Payment Gateway.</p>
                     </div>
                     <div className={styles.connectionError}>
                         <h4>Correction Error Procedure: </h4>
                         <p>Connection Errors may occur due to any or all of the following:</p>
                     </div>
                     <ul className={styles.connectionErrorList}>
-                        <li className={classNames({[styles.red]:this.state.connection==="error"})}>A typo or miscommunication of the Numeric Key.</li>
+                        <li className={classNames({[styles.red]:this.state.connectionError.numericID})}>A typo or miscommunication of the Numeric Key.</li>
                         <li className={classNames({[styles.red]:this.state.connectionError.currency})}>Claim Variable # 1 – <span style={{color:"black"}}>different currencies have been selected.</span></li>
                         <li className={classNames({[styles.red]:this.state.connectionError.conveyprice})}>Claim Variable # 2 – <span style={{color:"black"}}>the negotiable claims entered by the opposing parties do not match.</span></li>
                         <li className={classNames({[styles.red]:this.state.connectionError.receiveprice})}>Claim Variable # 3 – <span style={{color:"black"}}>the negotiable claims entered by the opposing parties do not match.</span></li>
