@@ -65,9 +65,9 @@ class Actual extends React.Component {
         let errormsg = []
         const missingfield = ["party", "currency", "conveyprice", "receiveprice", "timed"].filter((field)=> (!this.state[field] || this.state[field]===""))
         this.setState({missingfield})
-        if (missingfield.length > 0){
-            errormsg.push("Please complete fields: " + missingfield.join(", "))
-        }
+        // if (missingfield.length > 0){
+        //     errormsg.push("Please complete fields: " + missingfield.join(", "))
+        // }
         if (this.state.conveyprice && parseInt(this.state.conveyprice) && this.state.receiveprice && parseInt(this.state.receiveprice) && parseInt(this.state.receiveprice) <= parseInt(this.state.conveyprice) ){
             errormsg.push("Greater / Lessor error. Monetary correction(s) are required now.")
             return errormsg
@@ -126,7 +126,7 @@ class Actual extends React.Component {
     postCase = () =>{
         if(this.validateForm()){
             console.log(this.validateForm())
-            // this.setState({errors: this.validateForm()})
+            this.setState({errors: this.validateForm()})
         }else if (this.state.party === "convey"){
             this.setState({errors: []})
             const body = {
@@ -427,7 +427,7 @@ class Actual extends React.Component {
                             <small><span className={classNames({[styles.red]:(this.state.missingfield.findIndex((field)=>field === "timed")>-1 &&  timed===false)})} >Requires Yes to proceed</span>, with consideration if needed for time zone differences.</small>
 
                         </div>
-                        {/* {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))} */}
+                        {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}
                         Within a reasonable time frame from one another, both parties shall click<span className={styles.submit} onClick={()=>this.postCase()}> HERE</span> to advance to the Numeric Key.
                     </form>
                     </div>
