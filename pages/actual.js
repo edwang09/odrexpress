@@ -355,6 +355,7 @@ class Actual extends React.Component {
                         <p>The 1, 2, 3 and 4 Claim Variables displayed below must be agreed upon in advance by the opposing parties.</p>
                         <p>The opposing parties shall be on this ACTUAL case page at their calendared Start Time.</p>
                         <p>Completion of this ACTUAL case page by each party enables advancement to the Numeric Key.</p>
+                        <p>Alternatively, the opposing parties shall click <span style={{color:"red"}}>DISCARD</span> to begin anew at a mutually convenient time.</p>
                     </div>
                     <hr/>
                     <div className={styles.secondarytext}>
@@ -383,7 +384,9 @@ class Actual extends React.Component {
                     <div className={styles.bottomform}>
                     <form>
                         <div className={styles.formgroup}>
-                            <label htmlFor="currency"><span>1.</span> <span>Currency</span></label>
+                            <label htmlFor="currency"><span>1.</span>
+                            <span style={{color:((this.state.missingfield.findIndex((field)=>field === "currency")>-1) ? "red" : "auto")}}>Currency</span>
+                            </label>
                             <select disabled={this.state.party === ""} id="currency" name="currency" value = {currency} onChange={(e)=>this.setValue("currency", e.target.value)}   >
                                 <option value="">Select a mutually agreed upon currency</option>
                                 {currencylistRender}
@@ -428,14 +431,14 @@ class Actual extends React.Component {
 
                         </div>
                         {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}
-                        Within a reasonable time frame from one another, both parties shall click<span className={styles.submit} onClick={()=>this.postCase()}> HERE</span> to advance to the Numeric Key.
+                        <p>Within a reasonable time frame from one another, both parties shall click<span className={styles.submit} onClick={()=>this.postCase()}> HERE</span> to advance to the Numeric Key.</p>
                     </form>
                     </div>
                 </section>
                 }        
-                {this.state.stage !== -1 && <div className={styles.clearbutton}><button onClick={()=>this.clearCase()}>DISCARD</button></div>}
+                {/* {this.state.stage !== -1 && <div className={styles.clearbutton}><button onClick={()=>this.clearCase()}>DISCARD</button></div>} */}
                 {this.state.stage === 0 && <section className={styles.verification}>
-                <h4 className={styles.key}>Numeric Key: <b>{this.formatNegotiationid(this.state.negotiationid)}</b></h4>
+                <h4 className={styles.key}>Numeric Key: &nbsp;&nbsp;<b>{this.formatNegotiationid(this.state.negotiationid)}</b></h4>
                 {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}
 
                 {this.state.party === "convey" && <div className={styles.instructions}>
@@ -480,7 +483,7 @@ class Actual extends React.Component {
                         <li className={classNames({[styles.red]:this.state.connectionError.conveyprice})}>Claim Variable # 2 – <span style={{color:"black"}}>the negotiable claims entered by the opposing parties do not match.</span></li>
                         <li className={classNames({[styles.red]:this.state.connectionError.receiveprice})}>Claim Variable # 3 – <span style={{color:"black"}}>the negotiable claims entered by the opposing parties do not match.</span></li>
                     </ul>
-                    <p>In the event of Connection Error, click <a style={{color:"red"}}onClick={()=>this.clearCase()}>DISCARD</a> to re-start at a mutually convenient time.</p>
+                    <p>In the event of Connection Error, click <a style={{color:"red"}}onClick={()=>this.clearCase()}>DISCARD</a> to begin anew at a mutually convenient time.</p>
                     <p>Since advancement to the secure Payment Gateway has yet to occur, no fees have been applied.</p>
                 </section>
                 }

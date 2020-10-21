@@ -173,7 +173,7 @@
             // }
         }
         .submit{
-            color: blueviolet;
+            color:#0070f3;
             cursor: pointer;
         }
     }
@@ -193,6 +193,7 @@
 
         .indicator{
             margin: 20px 20px;
+            margin-right:100px;
             font-size:120%;
             color:#999;
             &.red{
