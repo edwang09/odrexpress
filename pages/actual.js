@@ -288,6 +288,14 @@ class Actual extends React.Component {
             console.log(err)
         })
     }
+    clearInput =()=>{
+        this.setState({
+            party: "",
+            conveyprice: "",
+            receiveprice: "",
+            currency: "",
+            timed: false})
+    }
     handleNegotiationidInput = (value) =>{
         const rawvalue = value.replace(/\s/g,"").slice(0,9)
         console.log(value)
@@ -355,7 +363,7 @@ class Actual extends React.Component {
                         <p>The 1, 2, 3 and 4 Claim Variables displayed below must be agreed upon in advance by the opposing parties.</p>
                         <p>The opposing parties shall be on this ACTUAL case page at their calendared Start Time.</p>
                         <p>Completion of this ACTUAL case page by each party enables advancement to the Numeric Key.</p>
-                        <p>Alternatively, the opposing parties shall click <span style={{color:"red"}}>DISCARD</span> to begin anew at a mutually convenient time.</p>
+                        <p>Alternatively, the opposing parties shall click <span style={{color:"red", cursor:"pointer"}}  onClick={()=>this.clearInput()}>DISCARD</span> to begin anew at a mutually convenient time.</p>
                     </div>
                     <hr/>
                     <div className={styles.secondarytext}>
@@ -483,7 +491,7 @@ class Actual extends React.Component {
                         <li className={classNames({[styles.red]:this.state.connectionError.conveyprice})}>Claim Variable # 2 – <span style={{color:"black"}}>the negotiable claims entered by the opposing parties do not match.</span></li>
                         <li className={classNames({[styles.red]:this.state.connectionError.receiveprice})}>Claim Variable # 3 – <span style={{color:"black"}}>the negotiable claims entered by the opposing parties do not match.</span></li>
                     </ul>
-                    <p>In the event of Connection Error, click <a style={{color:"red"}}onClick={()=>this.clearCase()}>DISCARD</a> to begin anew at a mutually convenient time.</p>
+                    <p>In the event of Connection Error, click <a style={{color:"red"}} onClick={()=>this.clearCase()}>DISCARD</a> to begin anew at a mutually convenient time.</p>
                     <p>Since advancement to the secure Payment Gateway has yet to occur, no fees have been applied.</p>
                 </section>
                 }
