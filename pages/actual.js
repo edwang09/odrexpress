@@ -294,7 +294,11 @@ class Actual extends React.Component {
             conveyprice: "",
             receiveprice: "",
             currency: "",
-            timed: false})
+            timed: false},()=>{
+                sessionStorage.removeItem('party')
+                sessionStorage.removeItem('negotiationid')
+                this.props.router.push("/")
+            })
     }
     handleNegotiationidInput = (value) =>{
         const rawvalue = value.replace(/\s/g,"").slice(0,9)
