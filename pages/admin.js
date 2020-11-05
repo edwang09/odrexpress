@@ -154,6 +154,9 @@ export default class Admin extends React.Component {
               <li className = {classNames({[styles.active]: this.state.tab === "about"})}>
                 <a onClick={()=>this.switchTab("about")}>About</a>
               </li>
+              <li className = {classNames({[styles.active]: this.state.tab === "pricing"})}>
+                <a onClick={()=>this.switchTab("pricing")}>Pricing</a>
+              </li>
               <li className = {classNames({[styles.active]: this.state.tab === "faq"})}>
                 <a onClick={()=>this.switchTab("faq")}>FAQ</a>
               </li>

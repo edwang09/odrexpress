@@ -33,8 +33,23 @@
         transform: translate(-50%, -50%);
     }
 }
+ul.subnav{
+    display: flex;
+    li{
+        width: 200px;
+        text-align: center;
+        cursor: pointer;
+        text-decoration: none;
+        list-style: none;
+        p:hover{
+            font-weight: bold;
+        }
+    }
+}
+.introduction{
+    margin-top: 20px;
 
-
+}
 .actual{
     margin-top: 20px;
 
