@@ -403,11 +403,11 @@ class Actual extends React.Component {
                             </div>
                         </div>
                         <div className={styles.maintext}>
-                            <p>Communication between opposing parties may include text or other messaging procedures.</p>
+                            <p>Communication between opposing parties shall be via Email or text.</p>
                             <p>Each party shall have familiarization with the DEMO and FAQ.</p>
                             <p>The 1, 2, 3 and 4 Claim Variables displayed below must be agreed upon in advance by the opposing parties.</p>
-                            <p>The opposing parties shall be on this ACTUAL case page at their calendared Start Time.</p>
-                            <p>Completion of this ACTUAL case page by each party enables advancement to the Numeric Key.</p>
+                            <p>The opposing parties shall be on this Data Entry page at their calendared Start Time.</p>
+                            <p>Completion of this Data Entry page by each party enables advancement to the Confirmation page.</p>
                             <p>Alternatively, the opposing parties shall click <span style={{color:"red", cursor:"pointer"}}  onClick={()=>this.clearInput()}>DISCARD</span> to begin anew at a mutually convenient time.</p>
                         </div>
                         <hr/>
