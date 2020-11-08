@@ -41,8 +41,17 @@ ul.subnav{
         cursor: pointer;
         text-decoration: none;
         list-style: none;
-        p:hover{
-            font-weight: bold;
+        p{
+            &:hover{
+                font-weight: bold;
+            }
+            &.disabled{
+                color:#555;
+                &:hover{
+                    font-weight: normal;
+                }
+            }
+
         }
     }
 }
@@ -219,10 +228,10 @@ ul.subnav{
             }
         }
     }
-    .connectionComplete, .connectionError, .connectionErrorList{
+    .connectionComplete, .connectionCheck, .connectionCheckList{
         margin-bottom: 20px;
-        .red{
-            color:red;
+        .check{
+            font-weight:bold;
         }
     }
     input[type="text"]{

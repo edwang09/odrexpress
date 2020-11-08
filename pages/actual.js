@@ -33,14 +33,16 @@ class Actual extends React.Component {
         missingfield:[],
         showpaymentmodal :false,
         connection:"",
-        connectionError:{},
+        connectionCheck:{},
         tab:"introduction"
         //dummy
         // stage:0,
         // negotiationid:"285445241188",
     }
     switchTab = (tab) =>{
-        this.setState({tab})
+        if (this.state.connection!=="complete"){
+            this.setState({tab})
+        }
     }
 
     Confirm = async (negotiationid, stage, cb)=>{
@@ -49,18 +51,24 @@ class Actual extends React.Component {
             const response = await axios.post(`${APIendpoint}/confirm`,{negotiationid: negotiationid, party: this.state.party})
             if (stage >= 3 && response.data.stage === stage){
                 clearInterval(ConfirmationInterval)
-                this.setState({...response.data,},cb)
+                this.setState({...response.data, tab:"confirmation"},cb)
             }else if(stage === 0 && response.data.convey && response.data.receive){
                 clearInterval(ConfirmationInterval)
                 if (response.data.convey.currency === response.data.receive.currency && 
                     response.data.convey.receiveprice === response.data.receive.receiveprice && 
                     response.data.convey.conveyprice === response.data.receive.conveyprice){
-                    this.setState({connection:"complete"})
+                    this.setState({connection:"complete", tab:"confirmation", connectionCheck:{
+                        numericID:true,
+                        currency: response.data.convey.currency === response.data.receive.currency,
+                        receiveprice: response.data.convey.receiveprice === response.data.receive.receiveprice,
+                        conveyprice: response.data.convey.conveyprice === response.data.receive.conveyprice,
+                    }})
                 }else{
-                    this.setState({connection:"error", connectionError:{
-                        currency: response.data.convey.currency !== response.data.receive.currency,
-                        receiveprice: response.data.convey.receiveprice !== response.data.receive.receiveprice,
-                        conveyprice: response.data.convey.conveyprice !== response.data.receive.conveyprice,
+                    this.setState({connection:"error", tab:"confirmation", connectionCheck:{
+                        numericID:true,
+                        currency: response.data.convey.currency === response.data.receive.currency,
+                        receiveprice: response.data.convey.receiveprice === response.data.receive.receiveprice,
+                        conveyprice: response.data.convey.conveyprice === response.data.receive.conveyprice,
                     }})
                 }
             }
@@ -146,7 +154,7 @@ class Actual extends React.Component {
             }
             axios.post(`${APIendpoint}/negotiation`,body).then(res => {
                 console.log(res.data)
-                this.setState({...res.data}, async ()=>{
+                this.setState({...res.data, tab:"confirmation"}, async ()=>{
                     sessionStorage.setItem('negotiationid', res.data.negotiationid)
                     sessionStorage.setItem('party', this.state.party)
                     await this.Confirm(res.data.negotiationid,0)
@@ -163,7 +171,8 @@ class Actual extends React.Component {
                     conveyprice: this.state.conveyprice,
                     receiveprice: this.state.receiveprice,
                     timed: this.state.timed,
-                }
+                },
+                tab:"confirmation"
             })
         }
     }
@@ -189,20 +198,29 @@ class Actual extends React.Component {
                     res.data.convey.conveyprice === res.data.receive.conveyprice){
                     sessionStorage.setItem('negotiationid', res.data.negotiationid)
                     sessionStorage.setItem('party', this.state.party)
-                    this.setState({connection:"complete"})
+                    this.setState({connection:"complete", connectionCheck:{
+                        numericID:true,
+                        currency: true,
+                        receiveprice: true,
+                        conveyprice: true,
+                    }})
                 }else{
-                    this.setState({connection:"error", connectionError:{
-                        currency: res.data.convey.currency !== res.data.receive.currency,
-                        receiveprice: res.data.convey.receiveprice !== res.data.receive.receiveprice,
-                        conveyprice: res.data.convey.conveyprice !== res.data.receive.conveyprice,
+                    this.setState({connection:"error", connectionCheck:{
+                        numericID:true,
+                        currency: res.data.convey.currency === res.data.receive.currency,
+                        receiveprice: res.data.convey.receiveprice === res.data.receive.receiveprice,
+                        conveyprice: res.data.convey.conveyprice === res.data.receive.conveyprice,
                     }})
                 }
             })
         }).catch(err=>{
             console.log(err.response.data)
             this.setState({errors: err.response.data.error.split()})
-            this.setState({connection:"error", connectionError:{
-                numericID: true,
+            this.setState({connection:"error", connectionCheck:{
+                numericID: false,
+                currency: false,
+                receiveprice: false,
+                conveyprice: false,
             }})
         })
     }
@@ -348,16 +366,16 @@ class Actual extends React.Component {
 
                 <ul className={styles.subnav}>
                     <li>
-                        <p className={styles.navlink} onClick = {()=>{this.switchTab("introduction")}} style={(this.state.tab ==="introduction") ? {fontWeight: "bold"} : {}}>Introduction</p>
+                        <p className={classNames({[styles.navlink]:true, [styles.disabled]:this.state.connection==="complete"})} onClick = {()=>{this.switchTab("introduction")}} style={(this.state.tab ==="introduction") ? {fontWeight: "bold"} : {}}>Introduction</p>
                     </li>
                     <li>
-                        <p className={styles.navlink} onClick = {()=>{this.switchTab("dataentry")}} style={(this.state.tab ==="dataentry") ? {fontWeight: "bold"} : {}}>Data Entry</p>
+                        <p className={classNames({[styles.navlink]:true, [styles.disabled]:this.state.connection==="complete"})} onClick = {()=>{this.switchTab("dataentry")}} style={(this.state.tab ==="dataentry") ? {fontWeight: "bold"} : {}}>Data Entry</p>
                     </li>
                     <li>
-                        <p className={styles.navlink} onClick = {()=>{this.switchTab("confirmation")}} style={(this.state.tab ==="confirmation") ? {fontWeight: "bold"} : {}}>Confimation</p>
+                        <p className={classNames({[styles.navlink]:true, [styles.forced]:this.state.connection==="complete"})} onClick = {()=>{this.switchTab("confirmation")}} style={(this.state.tab ==="confirmation") ? {fontWeight: "bold"} : {}}>Confimation</p>
                     </li>
                 </ul>
-                {(this.state.stage === -1 && this.state.tab==="introduction") &&
+                {(this.state.tab==="introduction") &&
                     <section  className={styles.introduction }>
                         <h4>Parties</h4>
                         <p>The ODR EXPRESS process consists of two opposing parties.</p>
@@ -490,23 +508,27 @@ class Actual extends React.Component {
                 {this.state.tab === "confirmation" && 
                     <div>
                     {this.state.stage === 0 && <section className={styles.verification}>
-                    <h4 className={styles.key}>Numeric Key: &nbsp;&nbsp;<b>{this.formatNegotiationid(this.state.negotiationid)}</b></h4>
                     {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}
 
                     {this.state.party === "convey" && <div className={styles.instructions}>
+                        <h4 className={styles.key}>Numeric Key: &nbsp;&nbsp;<b>{this.formatNegotiationid(this.state.negotiationid)}</b></h4>
+                        <h4><b>Numeric Key Interaction</b></h4>
                         <p>
-                        In an expedited amount of time, you, the Convey Party, shall provide the above Numeric Key to the Receive Party.  
+                        In an expedited amount of time, you, the Convey Party, shall provide the above Numeric Key to the Receive Party.
+Transmission of the Numeric Key shall be via Email or text.
                         </p>
                         <p>
-                        Once processed by the Receive Party, the opposing parties will be connected virtually.
+                        The Receive Party shall process the Numeric Key to effectuate the joining of the opposing parties.
                         </p>
                     </div>}
                     {this.state.party === "receive" && <div className={styles.instructions}>
+                        <h4 className={styles.key}>Pending Numeric Key: &nbsp;&nbsp;<b>{this.formatNegotiationid(this.state.negotiationid)}</b></h4>
+                        <h4><b>Numeric Key Interaction</b></h4>
                         <p className={classNames({[styles.disabled]:this.state.negotiationid})} >
-                        You, the Receive Party, shall await the Numeric Key from the Convey Party via text or other messaging procedure.
+                            You, the Receive Party, shall await the Numeric Key from the Convey Party via Email or text.
                         </p>
                         <p className={classNames({[styles.disabled]:this.state.negotiationid})} >
-                            Upon receipt, enter the Numeric Key in the CAPTURE field &gt;&gt;
+                            Upon receipt, enter the Numeric Key in the  CAPTURE field <span style={{fontSize:"168%", lineHeight:"1"}}>   &raquo; </span>
                         <input value = {this.getNegotiationidInput()} 
                                 disabled = {this.state.negotiationid}
                                 ref={(input) => { this.negotiationidinput = input; }} 
@@ -514,29 +536,24 @@ class Actual extends React.Component {
                                 type="text" id="negotiationidinput" name="negotiationidinput" />
                         </p>
                         <p className={classNames({[styles.disabled]:this.state.negotiationid})} >
-                        <span>Click <a onClick={()=>this.postCaseid()}>HERE</a> to allow the opposing parties to connect virtually. </span>
+                        <span><a onClick={()=>this.postCaseid()}>Click HERE</a> to join the parties, then allow 2 minutes or less for Convey Party confirmation. </span>
                         </p>
                     </div>}
                         <div className={styles.indicators}>
-                            <div className={classNames({[styles.indicator]:true, [styles.blue]:this.state.connection==="complete"})}>Connection Complete</div>
-                            <div className={classNames({[styles.indicator]:true, [styles.red]:this.state.connection==="error"})}>Connection Error</div>
+                            <p>
+                            To proceed, the below 4 bullet points must display as bold within 2 minutes after Receive Party processing.
+                            </p>
                         </div>
-                        <div className={styles.connectionComplete}>
-                            <h4>Connection Complete Procedure:</h4>
-                            <p>If Connection Complete is enabled, click <a onClick={()=>this.proceedToPayment()}>HERE</a> to advance to the secure Payment Gateway.</p>
-                        </div>
-                        <div className={styles.connectionError}>
-                            <h4>Correction Error Procedure: </h4>
-                            <p>Connection Errors may occur due to any or all of the following:</p>
-                        </div>
-                        <ul className={styles.connectionErrorList}>
-                            <li className={classNames({[styles.red]:this.state.connectionError.numericID})}>A typo or miscommunication of the Numeric Key.</li>
-                            <li className={classNames({[styles.red]:this.state.connectionError.currency})}>Claim Variable # 1 – <span style={{color:"black"}}>different currencies have been selected.</span></li>
-                            <li className={classNames({[styles.red]:this.state.connectionError.conveyprice})}>Claim Variable # 2 – <span style={{color:"black"}}>the negotiable claims entered by the opposing parties do not match.</span></li>
-                            <li className={classNames({[styles.red]:this.state.connectionError.receiveprice})}>Claim Variable # 3 – <span style={{color:"black"}}>the negotiable claims entered by the opposing parties do not match.</span></li>
+                        <ul className={styles.connectionCheckList}>
+                            <li className={classNames({[styles.check]:this.state.connectionCheck.numericID})}>Numeric Key.</li>
+                            <li className={classNames({[styles.check]:this.state.connectionCheck.currency})}>Currency</li>
+                            <li className={classNames({[styles.check]:this.state.connectionCheck.conveyprice})}>Convey negotiation claim</li>
+                            <li className={classNames({[styles.check]:this.state.connectionCheck.receiveprice})}>Receive negotiation claim</li>
                         </ul>
-                        <p>In the event of Connection Error, click <a style={{color:"red"}} onClick={()=>this.clearCase()}>DISCARD</a> to begin anew at a mutually convenient time.</p>
-                        <p>Since advancement to the secure Payment Gateway has yet to occur, no fees have been applied.</p>
+                        <p>If all four (4) bullet points are <b>bold</b>, <a onClick={()=>this.proceedToPayment()}>click HERE</a> to advance to the secure Payment Gateway.</p>
+                        <p>If any of the bullet points are NOT <b>bold</b>:</p>
+                        <p>Click <a style={{color:"red"}} onClick={()=>this.clearCase()}>DISCARD</a> to allow the opposing parties to begin anew at a mutually convenient time.</p>
+                        <p><b>Advancement to the secure Payment Gateway has yet to occur, therefore no fees have been applied.</b></p>
                     </section>
                     }
 
