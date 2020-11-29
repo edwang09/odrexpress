@@ -28,18 +28,13 @@ function Navbar({router}){
                     </Link>
                 </li>
                 <li>
-                    <Link href="/actual">
-                        <a className={style.navlink} style={(router.pathname ==="/actual") ? {fontWeight: "bold"} : {}}>BEGIN</a>
-                    </Link>
-                </li>
-                <li>
-                    <Link href="/components">   
-                        <a className={style.navlink} style={(router.pathname ==="/components") ? {fontWeight: "bold"} : {}}>COMPONENTS</a>
-                    </Link>
-                </li>
-                <li>
                     <Link href="/">
                         <a className={style.navlink} style={(router.pathname ==="/") ? {fontWeight: "bold"} : {}}>DEMO</a> 
+                    </Link>
+                </li>
+                <li>
+                    <Link href="/actual">
+                        <a className={style.navlink} style={(router.pathname ==="/actual") ? {fontWeight: "bold"} : {}}>BEGIN</a>
                     </Link>
                 </li>
                 <li>

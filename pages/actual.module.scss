@@ -88,7 +88,6 @@ ul.subnav{
         justify-content: space-between;
         flex-wrap: wrap;
         & > div{
-            max-width: 455px;
             ul{
                 padding-left:20px;
             }
@@ -164,23 +163,24 @@ ul.subnav{
                     resize: vertical;
                     //tuning font-size 1 size larger
                     font-size: 1.05rem;
+                }       
+                 & > select {
+                    font-size: 14px;
+                    display: block;
+                    flex-grow: 1;     
+                    max-width: 675px;
+                    padding: 4px 8px ;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    resize: vertical;
+                    //tuning font-size 1 size larger
+                    font-size: 1.05rem;
+                    option{
+                        padding: 0 0;
+                    }
                 }
             }
-            & > select {
-                font-size: 14px;
-                display: block;
-                flex-grow: 1;     
-                max-width: 675px;
-                padding: 4px 8px ;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-                resize: vertical;
-                //tuning font-size 1 size larger
-                font-size: 1.05rem;
-                option{
-                    padding: 0 0;
-                }
-            }
+    
             & >  small{
                 font-size: 16px;
                 display: block;

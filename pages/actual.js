@@ -421,34 +421,18 @@ class Actual extends React.Component {
                             </div>
                         </div>
                         <div className={styles.maintext}>
-                            <p>Communication between opposing parties shall be via Email or text.</p>
-                            <p>Each party shall have familiarization with the DEMO and FAQ.</p>
-                            <p>The 1, 2, 3 and 4 Claim Variables displayed below must be agreed upon in advance by the opposing parties.</p>
+                            <p>Each party shall have familiarization with the DEMO and the FAQ.</p>
+                            <p>All four Claim Variables below must be agreed upon by the opposing parties before a case is to BEGIN.</p>
+                            <p>Communication between opposing parties shall be via e-mail or text.</p>
                             <p>The opposing parties shall be on this Data Entry page at their calendared Start Time.</p>
-                            <p>Completion of this Data Entry page by each party enables advancement to the Confirmation page.</p>
-                            <p>Alternatively, the opposing parties shall click <span style={{color:"red", cursor:"pointer"}}  onClick={()=>this.clearInput()}>DISCARD</span> to begin anew at a mutually convenient time.</p>
+                            <p>In the event of a hindrance, click <span style={{color:"red", cursor:"pointer"}}  onClick={()=>this.clearInput()}>DISCARD</span> to begin anew at a mutually convenient time.</p>
                         </div>
                         <hr/>
                         <div className={styles.secondarytext}>
                             <div>
-                                <h4>Convey Party data entry </h4>
-                                <div  className={classNames({[styles.greyout]:this.state.party !== "convey"})}>
-                                    <ul>
-                                        <li>Enter your negotiable claim in field # 2</li>
-                                        <li>Enter the Receive Party negotiable claim in field # 3</li>
-                                        <li>Proceed to # 4 and select No or Yes</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div>
-                                <h4>Receive Party data entry</h4>
-                                <div  className={classNames({[styles.greyout]:this.state.party !== "receive"})}>
-                                    <ul>
-                                        <li>Enter your negotiable claim in field # 3</li>
-                                        <li>Enter the Convey Party negotiable claim in field # 2</li>
-                                        <li>Proceed to # 4 and select No or Yes</li>
-                                    </ul>
-                                </div>
+                                <h4>Claim Variables </h4>
+                                <p>As mentioned above:</p>
+                                <p>All four Claim Variables below must be agreed upon by the opposing parties before a case is to BEGIN</p>
                             </div>
                         </div>
                         <hr/>
@@ -458,10 +442,14 @@ class Actual extends React.Component {
                                 <label htmlFor="currency"><span>1.</span>
                                 <span style={{color:((this.state.missingfield.findIndex((field)=>field === "currency")>-1) ? "red" : "auto")}}>Currency</span>
                                 </label>
+                                
+                                <div className={styles.input}>
+                                {this.state.currency && <p>{this.state.currency}</p>}
                                 <select disabled={this.state.party === ""} id="currency" name="currency" value = {currency} onChange={(e)=>this.setValue("currency", e.target.value)}   >
                                     <option value="">Select a mutually agreed upon currency</option>
                                     {currencylistRender}
                                 </select>
+                                </div>
                             </div>
                             <div className={styles.formgroup}>
                                 <label htmlFor="conveyprice">
@@ -499,7 +487,8 @@ class Actual extends React.Component {
                                 <small><span className={classNames({[styles.red]:(this.state.missingfield.findIndex((field)=>field === "timed")>-1 &&  timed===false)})} >Requires Yes to proceed</span>, with consideration if needed for time zone differences.</small>
                             </div>
                             {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}
-                            <p>Within a reasonable time frame from one another, both parties shall click<span className={styles.submit} onClick={()=>this.postCase()}> HERE</span> to advance to the Numeric Key.</p>
+                            <p>Within a reasonable time frame from one another, both parties shall <span className={styles.submit} onClick={()=>this.postCase()}>click HERE</span> to advance to the Numeric Key.</p>
+                            <b>If either party considers that the opposition is unrealistic with their claim, than neither party is obligated to continue.</b>
                         </form>
                         </div>
                     </section>
