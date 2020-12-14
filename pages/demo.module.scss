@@ -1,0 +1,224 @@
+.errorMessage{
+    color: red;
+    font-weight: bold;
+    
+}
+.clearbutton{
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    button{
+        display: block;
+        cursor: pointer;
+        font-size: 16px;
+        background: none;
+        color: red;
+        padding: 10px 20px;
+    }
+}
+.overlay{
+    position: fixed;
+    left: 0;
+    top:0;
+    height: 100%;
+    width: 100%;
+    background-color: grey;
+    z-index: 1; 
+    background-color: rgba(0,0,0,0.4); 
+    .paymentmodal{
+        z-index: 1; 
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+ul.subnav{
+    display: flex;
+    li{
+        width: 200px;
+        text-align: center;
+        cursor: pointer;
+        text-decoration: none;
+        list-style: none;
+        p{
+            &:hover{
+                font-weight: bold;
+            }
+            &.disabled{
+                color:#555;
+                &:hover{
+                    font-weight: normal;
+                }
+            }
+
+        }
+    }
+}
+.introduction{
+    margin-top: 20px;
+
+}
+.claimvariables{
+    margin-top: 20px;
+
+}
+.distinctions{
+    margin-top: 20px;
+
+}
+.participate{
+    margin-top: 20px;
+
+    .topform{
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        .toggle{   
+            display: flex;
+            flex-direction: column;
+            div{
+                margin: 5px 0;
+            }
+            
+        }
+
+    
+    }
+    .maintext{
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    .secondarytext{
+        margin-top: 20px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        & > div{
+            ul{
+                padding-left:20px;
+            }
+        }
+        .greyout{
+            color: #ccc;
+        }
+    }
+    .bottomform{
+        margin-top: 20px;
+        margin-bottom: 20px;
+        .formgroup{
+            min-height:35px;
+            display: flex;
+            flex-wrap: wrap;
+            margin: 4px 0;
+            justify-content: space-between;
+            align-items: baseline;
+            font-size: 1.1rem;
+            & > label{
+                display: flex;
+                flex: 0 0 300px;
+                span{
+                    display: block;
+                    min-width:20px;
+                }
+            }
+            & > .timedradio{
+                flex-grow: 1;
+                display: flex;
+                justify-content: space-between;
+                min-width: 300px;
+                max-width: 350px;
+                & > label{
+                    display: flex;
+                    span{
+                        display: block;
+                        min-width:20px;
+                    }
+                }
+                .radiobutton{
+                    flex-grow: 1;
+                    display: flex;
+                    justify-content: flex-end;
+                    align-items: baseline;
+                    line-height: 1.7;
+                    *{
+                        flex-grow: 0;
+                        display: block;
+                    }
+                    label{
+                        margin-right:10px;
+                    }
+                }
+            }
+            .input{
+                display: flex;
+                align-items: stretch;   
+                flex: 0 0 300px;
+                p{
+                    display: block;
+                    margin: 2px 5px;
+                    flex: 0 0 30px;
+                }
+                input{
+                    font-size: 14px;
+                    display: block;
+                    flex-grow: 1;    
+                    width: 100%;
+                    padding: 4px 8px ;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    resize: vertical;
+                    //tuning font-size 1 size larger
+                    font-size: 1.05rem;
+                }       
+                 & > select {
+                    display: block;
+                    flex-grow: 1;      
+                    width: 100%;
+                    padding: 4px 8px ;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    resize: vertical;
+                    //tuning font-size 1 size larger
+                    font-size: 1.05rem;
+                    option{
+                        padding: 0 0;
+                    }
+                }
+            }
+            .instruction{
+                margin-left:10px;
+                font-size: 14px;
+                flex: 1 0 300px;
+            }
+    
+            & >  small{
+                font-size: 16px;
+                display: block;
+                flex-grow: 1;    
+                max-width: 675px;
+                resize: vertical;
+                line-height: 2;
+                .red{
+                    color:red;
+                }
+            }
+            // input[type=text]{
+            //     text-align: right;
+            // }
+        }
+        small{
+            font-size: 15px;
+            color:#888;
+            margin:0 30px;
+            font-style: italic;
+        }
+        .submit{
+            color:#0070f3;
+            cursor: pointer;
+        }
+    }
+}
+
+

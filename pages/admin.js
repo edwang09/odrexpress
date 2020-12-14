@@ -18,7 +18,8 @@ export default class Admin extends React.Component {
     tab: "",
     content:"choose from above tabs",
     error : "",
-    currency:[]
+    currency:[],
+    currencylist:[]
   }
   setValue = (name, value) =>{
     return this.setState({[name]:value})
@@ -33,7 +34,7 @@ export default class Admin extends React.Component {
         axios.get(`${APIendpoint}/setting`).then(res => {
           if (res.data ){
               console.log(res.data)
-              this.setState({setting:res.data.setting.setting, tab},()=>{
+              this.setState({setting:res.data.setting.setting,currencylist:res.data.setting.currency, tab},()=>{
                 // console.log(this.state.content.substr(0,10))
               })
           }
@@ -144,7 +145,7 @@ export default class Admin extends React.Component {
             <input type="password" name="password" id="password" value={this.state.password} 
             onChange={(e)=>this.setValue("password",e.target.value)}/>
           </div>
-          <button type="submit" default="true" onClick={()=>this.login()}>Submit</button>
+          <button type="submit" default onClick={()=>this.login()}>Submit</button>
         </div>}
         {this.state.verified &&
         <div className={styles.editor}>
@@ -249,6 +250,12 @@ export default class Admin extends React.Component {
                 <input type="number" value={this.state.setting.receive4} id="receive4" onChange={(e)=>this.setSetting("receive4", e.target.value)}/>
               </div>
               <div className={styles.settingitem}>
+                <label htmlFor="democurrency">Demo - Currency</label>
+                <select value={this.state.setting.democurrency} id="democurrency" onChange={(e)=>this.setSetting("democurrency", e.target.value)}>
+                  {this.state.currencylist.map((cur)=>{return (<option value={cur.symbol} key={cur.symbol}>{cur.name}</option>)})}
+                </select>
+              </div>
+              <div className={styles.settingitem}>
                 <label htmlFor="democonvey">Demo - Convey Party claim</label>
                 <input type="number" value={this.state.setting.democonvey} id="democonvey" onChange={(e)=>this.setSetting("democonvey", e.target.value)}/>
               </div>
@@ -270,6 +277,7 @@ export default class Admin extends React.Component {
               </div>
             </div>
             )}
+
         </div>
 
         }

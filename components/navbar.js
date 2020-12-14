@@ -28,8 +28,8 @@ function Navbar({router}){
                     </Link>
                 </li>
                 <li>
-                    <Link href="/">
-                        <a className={style.navlink} style={(router.pathname ==="/") ? {fontWeight: "bold"} : {}}>DEMO</a> 
+                    <Link href="/demo">
+                        <a className={style.navlink} style={(router.pathname ==="/demo") ? {fontWeight: "bold"} : {}}>DEMO</a> 
                     </Link>
                 </li>
                 <li>
