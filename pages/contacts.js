@@ -12,7 +12,7 @@ const client = new MongoClient('mongodb+srv://admin:ti21sNLGy1NuJ5s1@cluster0-8f
 });
 
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   // const content = await (await axios.get(`${APIendpoint}/content?page=contacts`)).data.content
   // const fullPath = path.join(process.cwd(), "admin", "contacts")
   // const fileContents = fs.readFileSync(fullPath, "utf8")

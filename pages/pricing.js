@@ -11,7 +11,7 @@ const client = new MongoClient('mongodb+srv://admin:ti21sNLGy1NuJ5s1@cluster0-8f
   useUnifiedTopology: true,
   useNewUrlParser: true
 });
-export async function getStaticProps() {
+export async function getServerSideProps() {
  
   if (!client.isConnected()) {
     await client.connect()
