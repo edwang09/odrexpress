@@ -27,6 +27,7 @@ export async function getStaticProps() {
   return {props:{ content }}
 }
 export default function Faq({ content }) {
+  const content = await (await axios.get(`${APIendpoint}/content?page=faq`)).data.content
   return (
     <Layout>
         <Head>
