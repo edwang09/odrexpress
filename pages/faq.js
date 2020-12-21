@@ -22,7 +22,8 @@ export async function getStaticProps() {
   if (!client.isConnected()) {
     await client.connect()
   };
-  const content = (await client.db('odrexpress').collection('content').findOne({name:"faq"})).content
+  // const content = (await client.db('odrexpress').collection('content').findOne({name:"faq"})).content
+  const content = await (await axios.get(`${APIendpoint}/content?page=faq`)).data.content
   return {props:{ content }}
 }
 export default function Faq({ content }) {
