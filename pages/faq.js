@@ -11,7 +11,7 @@ const client = new MongoClient('mongodb+srv://admin:ti21sNLGy1NuJ5s1@cluster0-8f
   useUnifiedTopology: true,
   useNewUrlParser: true
 });
-export async function getStaticProps() {
+export async function getServerSideProps() {
   // const content = await (await axios.get(`${APIendpoint}/content?page=faq`)).data.content
   
   // const fullPath = path.join(process.cwd(), "admin", "faq")
@@ -22,12 +22,10 @@ export async function getStaticProps() {
   if (!client.isConnected()) {
     await client.connect()
   };
-  // const content = (await client.db('odrexpress').collection('content').findOne({name:"faq"})).content
-  const content = await (await axios.get(`${APIendpoint}/content?page=faq`)).data.content
+  const content = (await client.db('odrexpress').collection('content').findOne({name:"faq"})).content
   return {props:{ content }}
 }
 export default function Faq({ content }) {
-  const content = await (await axios.get(`${APIendpoint}/content?page=faq`)).data.content
   return (
     <Layout>
         <Head>
