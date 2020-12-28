@@ -374,7 +374,7 @@ class Demo extends React.Component {
                 </ul>
                 {(this.state.tab==="introduction") &&
                     <section  className={styles.introduction }>
-                        <p>Obtaining a familiarity with the DEMO is required for any entity that has an involvement with this platform.</p>
+                        <p>Obtaining a familiarity with the DEMO provides comprehensive awareness.</p>
                         <p>Interaction with the DEMO is immediately and freely available.  No registration is required. </p>
                         <p>The DEMO consists of two parties, referenced as the Convey Party and the Receive Party.</p>
                         <p>The party willing to make a monetary allocation is identified as the Convey Party.</p>
@@ -395,7 +395,7 @@ class Demo extends React.Component {
                             <li>Receive Party negotiable claim </li>
                             <li>Start Time</li>
                         </ul>
-                        <p>Claim Variables in the <b>DEMO</b> are addressed in a different manner then Claim Variables in an actual case <b>(BEGIN)</b>.</p>
+                        <p>Claim Variables in the <b>DEMO</b> are addressed in a different manner than Claim Variables in an actual case <b>(BEGIN)</b>.</p>
                         <p>As it pertains to <b>DEMO</b>:<br/>
                             For familiarization purposes, the Claim Variables have been <b>PRESET</b> by the database.  
                         </p>
@@ -410,23 +410,24 @@ class Demo extends React.Component {
                 {this.state.tab==="distinctions" &&
                     <section className={styles.distinctions}>
                         <p>In the majority of instances DEMO will parallel BEGIN.</p>
-                        <p>However, there are are important distinctions between DEMO and BEGIN, including:</p>
-
+                        <p>Noteworthy distinctions are included below:</p>
+                        <h4>Specific to the DEMO:</h4>
                         <ul>
-                            <li>Specific to the DEMO, the Numeric Key that joins the opposing parties is bypassed. </li>
-                            <li>Specific to the DEMO, the secure Payment Gateway is bypassed. </li>
-                            <li>Specific to the DEMO, a national Currency has been provided by the database. </li>
-                            <li>Specific to the DEMO, all Claim Amounts have been provided by the database.  </li>
+                            <li>the Numeric Key that joins the opposing parties is bypassed</li>
+                            <li>the secure Payment Gateway is bypassed </li>
+                            <li>a national Currency has been provided by the database</li>
+                            <li>all Claim Amounts have been provided by the database</li>
                         </ul>
-                        <p>On a random basis, maybe around one time per month, we would change the currency used for the DEMO.<br/>The Currency presently in effect is NOK (Norway krone).</p>
-                        <p>On a random basis, the Convey Party negotiable claim utilized for the DEMO will change.<br/>The present negotiable claim for the Convey Party is NOK 14,525</p>
-                        <p>On a random basis, the Receive Party negotiable claim utilized for the DEMO will change.<br/>The present negotiable claim for the Receive Party is NOK 19,762</p>
+                        <h4>For the DEMO, on a random basis:</h4>
+                        <p>The preset currency will change.<br/>The Currency presently in effect is NOK (Norway krone).</p>
+                        <p>The Convey Party negotiable claim will change.<br/>The present negotiable claim for the Convey Party is {this.state.setting.democurrency} {this.formatCurrency(this.state.setting.democonvey)}</p>
+                        <p>The Receive Party negotiable claim will change.<br/>The present negotiable claim for the Receive Party is {this.state.setting.democurrency} {this.formatCurrency(this.state.setting.demoreceive)}</p>
 
                     </section>
                 }
                 {this.state.tab==="participate" &&
                     <section className={styles.participate}>
-                        <p>When the parties are available to Participate simultaneously, Interaction with this component should occur.</p>
+                        <p>When the parties are available to Participate, simultaneous interaction with this component should occur.</p>
                         <div className={styles.topform}>
                             <div className={styles.toggle}>
                                 <p><b>For this DEMO, I am the:</b></p>
@@ -513,7 +514,7 @@ class Demo extends React.Component {
                             </div>
                             <small>Requires Yes to proceed, with consideration if needed for time zone differences.</small>
                             {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}
-                            <p>Within a reasonable time frame from one another, both parties shall  <span className={styles.submit} onClick={()=>this.postCase()}>click HERE</span> to continue to the 18 Considerations.</p>
+                            <p>Within a reasonable time frame from one another, both parties shall  <span className={styles.submit} onClick={()=>this.postCase()}>click HERE</span> to proceed to the 18 Considerations.</p>
                         </form>
                         </div>
                     </section>
