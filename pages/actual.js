@@ -381,23 +381,27 @@ class Actual extends React.Component {
                         <p>The ODR EXPRESS process consists of two opposing parties.</p>
                         <p>These parties are referenced as the Convey Party and the Receive Party.</p>
                         <p>Both the Convey Party and the Receive Party enter Claims.</p>
-                        <p>The party intending to make a payment is referenced as the Convey Party.</p>
-                        <p>The party intending to receive a payment is referenced as the Receive Party.</p>
-                        <p>The Convey Claim is the amount that the Convey Party is willing to allocate to the Receive Party.</p>
+                        <p>The Convey Claim is the sum that the Convey Party is willing to allocate to the Receive Party.</p>
                         <p>The Receive Claim is the amount that the Receive Party is willing to accept from the Convey Party.</p>
-                        <p>Ancillary criteria regarding the parties is included in the FAQ.</p>
                         <h4>Successful Matching</h4>
-                        <p>Achieve a virtual connection between the parties after navigating to the Data Entry page.</p>
-                        <p>Insure that your data provided in the 4 bullet points below match data provided by Convey Party.</p>
+                        <p>The Data Entry page is the starting point to achieve a successful match.</p>
+                        <p>A virtual connection between the opposing parties is achieved via a Numeric Key.</p>
+                        <p>Prior to implementation of an ACTUAL case, the Claim Variables below must be mutually agreed upon.</p>
                         <ul>
-                            <li>Numeric Key</li>
                             <li>Currency </li>
                             <li>Convey negotiable claim </li>
                             <li>Receive negotiable claim </li>
+                            <li>Start Time calendared</li>
                         </ul>
-                        <p>Due to proximity constrains, miscommunication or transposition may unintentionally occur.</p>
-                        <p>Each party shall formulate their own internal guidelines to insure strict attention to data entry detail.  </p>
-                        <p>Adherence to the above criteria will significantly optimize successful matches.</p>
+                        <p>Regarding the mitigation of potential errors including:</p>
+                        
+                        <ul>
+                            <li>proximity constraints</li>
+                            <li>miscommunication</li>
+                            <li>Receive negotiable claim </li>
+                            <li>transposition</li>
+                        </ul>
+                        <p>Each party shall formulate their own internal guidelines to insure strict attention to Data Entry.</p>
                     </section>
                 }
                 {/* {(this.state.stage === -1 && this.state.tab==="dataentry") && */}

@@ -34,7 +34,7 @@ function Navbar({router}){
                 </li>
                 <li>
                     <Link href="/actual">
-                        <a className={style.navlink} style={(router.pathname ==="/actual") ? {fontWeight: "bold"} : {}}>BEGIN</a>
+                        <a className={style.navlink} style={(router.pathname ==="/actual") ? {fontWeight: "bold"} : {}}>ACTUAL</a>
                     </Link>
                 </li>
                 <li>
