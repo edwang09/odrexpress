@@ -393,14 +393,6 @@ class Actual extends React.Component {
                             <li>Receive negotiable claim </li>
                             <li>Start Time calendared</li>
                         </ul>
-                        <p>Regarding the mitigation of potential errors including:</p>
-                        
-                        <ul>
-                            <li>proximity constraints</li>
-                            <li>miscommunication</li>
-                            <li>Receive negotiable claim </li>
-                            <li>transposition</li>
-                        </ul>
                         <p>Each party shall formulate their own internal guidelines to insure strict attention to Data Entry.</p>
                     </section>
                 }

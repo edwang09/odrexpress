@@ -41,9 +41,16 @@ img {
 
   .fa-bars:before {
     content: "\f0c9"; }
-
-  h4, h5, p{
-    margin: 10px 0;
+  p{
+    
+    margin: 0 0;
+  }
+  h4, h5{
+    margin: 5px 0;
+  }
+  ul{
+    margin-block-start: 0;
+    margin-block-end: 0;
   }
   button{
     box-shadow: none;
