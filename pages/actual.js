@@ -382,23 +382,33 @@ class Actual extends React.Component {
                         <p>These parties are referenced as the Convey Party and the Receive Party.</p>
                         <p>Both the Convey Party and the Receive Party enter Claims.</p>
                         <p>The Convey Claim is the sum that the Convey Party is willing to allocate to the Receive Party.</p>
-                        <p>The Receive Claim is the amount that the Receive Party is willing to accept from the Convey Party.</p>
+                        <p>The Receive Claim is the sum that the Receive Party is willing to accept from the Convey Party.</p>
                         <h4>Successful Matching</h4>
-                        <p>The Data Entry page is the starting point to achieve a successful match.</p>
-                        <p>A virtual connection between the opposing parties is achieved via a Numeric Key.</p>
-                        <p>Prior to implementation of an ACTUAL case, the Claim Variables below must be mutually agreed upon.</p>
+                        <p>Clicking the Data Entry link is the starting point toward achieving a successful match.</p>
+                        <p>A virtual connection between the opposing parties is attained via a Numeric Key provided by ODR EXPRESS.</p>
+                        <p>Prior to implementation of an ACTUAL case, the Claim Variables below must be mutually agreed upon:</p>
                         <ul>
                             <li>Currency </li>
                             <li>Convey negotiable claim </li>
                             <li>Receive negotiable claim </li>
                             <li>Start Time calendared</li>
                         </ul>
-                        <p>Each party shall formulate their own internal guidelines to insure strict attention to Data Entry.</p>
+                        <p>Each party shall formulate their own internal guidelines to insure strict attention to their data entry.</p>
                     </section>
                 }
                 {/* {(this.state.stage === -1 && this.state.tab==="dataentry") && */}
                 {this.state.tab==="dataentry" &&
                     <section className={styles.actual}>
+                        
+                        <div className={styles.maintext}>
+                            <h4>Prerequisite</h4>
+                            <p>Each party shall have familiarization with the DEMO and the FAQ.</p>
+                            <p>Prior to implementation of an ACTUAL case, the Claim Variables must be agreed upon by the parties. </p>
+                            <p>Communication between opposing parties shall be via e-mail or text.</p>
+                            <p>The opposing parties shall be on this Data Entry page at their calendared Start Time.</p>
+                            <p>In the event of a hindrance, click <span style={{color:"red", cursor:"pointer"}}  onClick={()=>this.clearInput()}>DISCARD</span> to begin anew at a mutually convenient time.</p>
+                        </div>
+                        <hr/>
                         <div className={styles.topform}>
                             <div className={styles.toggle}>
                                 <p><b>For this case, I am the:</b></p>
@@ -416,22 +426,6 @@ class Actual extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <div className={styles.maintext}>
-                            <p>Each party shall have familiarization with the DEMO and the FAQ.</p>
-                            <p>All four Claim Variables below must be agreed upon by the opposing parties before a case is to BEGIN.</p>
-                            <p>Communication between opposing parties shall be via e-mail or text.</p>
-                            <p>The opposing parties shall be on this Data Entry page at their calendared Start Time.</p>
-                            <p>In the event of a hindrance, click <span style={{color:"red", cursor:"pointer"}}  onClick={()=>this.clearInput()}>DISCARD</span> to begin anew at a mutually convenient time.</p>
-                        </div>
-                        <hr/>
-                        <div className={styles.secondarytext}>
-                            <div>
-                                <h4>Claim Variables </h4>
-                                <p>As mentioned above:</p>
-                                <p>All four Claim Variables below must be agreed upon by the opposing parties before a case is to BEGIN</p>
-                            </div>
-                        </div>
-                        <hr/>
                         <div className={styles.bottomform}>
                         <form>
                             <div className={styles.formgroup}>
@@ -483,8 +477,9 @@ class Actual extends React.Component {
                                 <small><span className={classNames({[styles.red]:(this.state.missingfield.findIndex((field)=>field === "timed")>-1 &&  timed===false)})} >Requires Yes to proceed</span>, with consideration if needed for time zone differences.</small>
                             </div>
                             {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}
-                            <p>Within a reasonable time frame from one another, both parties shall <span className={styles.submit} onClick={()=>this.postCase()}>click HERE</span> to advance to the Numeric Key.</p>
-                            <b>If either party considers that the opposition is unrealistic with their claim, than neither party is obligated to continue.</b>
+                            {/* <p>Within a reasonable time frame from one another, both parties shall <span className={styles.submit} onClick={()=>this.postCase()}>click HERE</span> to advance to the Numeric Key.</p> */}
+                            <p>Within a reasonable time frame from one another, each Party shall proceed to Confrmation.</p>
+                            <b>If either party considers the opposition unrealistic with their claim, than neither party is obligated to continue.</b>
                         </form>
                         </div>
                     </section>
