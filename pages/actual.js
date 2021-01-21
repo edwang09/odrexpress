@@ -372,7 +372,7 @@ class Actual extends React.Component {
                         <p className={classNames({[styles.navlink]:true, [styles.disabled]:this.state.connection==="complete"})} onClick = {()=>{this.switchTab("dataentry")}} style={(this.state.tab ==="dataentry") ? {fontWeight: "bold"} : {}}>Data Entry</p>
                     </li>
                     <li>
-                        <p className={classNames({[styles.navlink]:true, [styles.forced]:this.state.connection==="complete"})} onClick = {()=>{this.switchTab("confirmation")}} style={(this.state.tab ==="confirmation") ? {fontWeight: "bold"} : {}}>Confimation</p>
+                        <p className={classNames({[styles.navlink]:true, [styles.forced]:this.state.connection==="complete"})} onClick = {()=>{this.switchTab("confirmation")}} style={(this.state.tab ==="confirmation") ? {fontWeight: "bold"} : {}}>Confirmation</p>
                     </li>
                 </ul>
                 {(this.state.tab==="introduction") &&
@@ -393,7 +393,7 @@ class Actual extends React.Component {
                             <li>Receive negotiable claim </li>
                             <li>Start Time calendared</li>
                         </ul>
-                        <p>Each party shall formulate their own internal guidelines to insure strict attention to their data entry.</p>
+                        <p>Each party shall formulate their own internal guidelines to ensure strict attention to their data entry.</p>
                     </section>
                 }
                 {/* {(this.state.stage === -1 && this.state.tab==="dataentry") && */}
@@ -478,8 +478,8 @@ class Actual extends React.Component {
                             </div>
                             {errors && errors.map((error)=>(<p className={styles.errorMessage}>{error}</p>))}
                             {/* <p>Within a reasonable time frame from one another, both parties shall <span className={styles.submit} onClick={()=>this.postCase()}>click HERE</span> to advance to the Numeric Key.</p> */}
-                            <p>Within a reasonable time frame from one another, each Party shall proceed to Confrmation.</p>
-                            <b>If either party considers the opposition unrealistic with their claim, than neither party is obligated to continue.</b>
+                            <p>Within a reasonable time frame from one another, each Party shall Click the Confirmation link.</p>
+                            <p>If either party considers the opposition unrealistic with their claim, than neither party is obligated to continue.</p>
                         </form>
                         </div>
                     </section>

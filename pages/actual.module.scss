@@ -74,8 +74,12 @@ ul.subnav{
         .toggle{   
             display: flex;
             flex-direction: column;
-            div{
+            .radiobutton{
                 margin: 5px 0;
+                
+                label{
+                    margin:0 10px 0 4px;
+                }
             }
             
         }
@@ -144,7 +148,7 @@ ul.subnav{
                         display: block;
                     }
                     label{
-                        margin-right:10px;
+                        margin:0 10px 0 3px;
                     }
                 }
             }
@@ -182,6 +186,10 @@ ul.subnav{
                     font-size: 1.05rem;
                     option{
                         padding: 0 0;
+                    }
+                    &:disabled{
+                        color: black;
+                        background-color: rgba(239, 239, 239, 0.3);
                     }
                 }
             }
