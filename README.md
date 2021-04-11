@@ -23,7 +23,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+[![Product Name Screen Shot][product-screenshot]](https://odrexpress.herokuapp.com/)
 
 This project is a web application for ODR Express Corporation. It include company infomation and an interactive negotiation tool for creating Non-Binding Recommendation for dispute resolution.
 
