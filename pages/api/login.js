@@ -2,7 +2,7 @@ import nextConnect from 'next-connect';
 import database from './database';
 const crypto = require('crypto');
 const handler = nextConnect();
-const salt = "rustylake"
+const salt = process.env.SALT;
 handler.use(database);
 
 

@@ -11,7 +11,7 @@ import CheckoutForm from '../components/checkoutform';
 import { withRouter  } from 'next/router'
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-const promise = loadStripe("pk_test_BYjXAXt4ejnuDFBNVS1odFYo00xwLnXO2g");
+const promise = loadStripe(process.env.STRIPE_PK);
 
 let ConfirmationInterval
 const APIendpoint = process.env.APIendpoint

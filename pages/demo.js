@@ -1,17 +1,11 @@
 
 import Head from 'next/head';
 import Layout, { siteTitle } from '../components/layout';
-import Considerationbox from '../components/considerationbox';
 import styles from './demo.module.scss'
 import classNames from 'classnames';
 import React from 'react';
 import axios from 'axios';
-import Matchtable from '../components/matchtable';
-import CheckoutForm from '../components/checkoutform';
 import { withRouter  } from 'next/router'
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
-const promise = loadStripe("pk_test_BYjXAXt4ejnuDFBNVS1odFYo00xwLnXO2g");
 
 let ConfirmationInterval
 const APIendpoint = process.env.APIendpoint

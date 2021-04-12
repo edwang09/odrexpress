@@ -1,10 +1,8 @@
 import nextConnect from 'next-connect';
 import database from './database';
-const crypto = require('crypto');
 const handler = nextConnect();
-const salt = "rustylake"
 handler.use(database);
-const stripe = require("stripe")("sk_test_pee3vhbLXgnd5OclFkzrThTO00ziDEf9KW");
+const stripe = require("stripe")(process.env.STRIPE_SK);
 
 
 const calculateOrderAmount = items => {
