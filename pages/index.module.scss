@@ -1,5 +1,5 @@
 .banner{
-    height: 300px;
+    height: 550px;
     img{
       object-fit: cover;
       height: 100%;
@@ -12,7 +12,7 @@
       flex-wrap: wrap;
       align-items: stretch;
       justify-content: space-between;
-      font-family: Montserrat;
+      font-family: 'Baskervville';
       text-align: left;
       div{
           max-width:320px;
@@ -25,13 +25,16 @@
               font-size:150%;
               margin:10px 0;
               color: rgb(48, 48, 121);
+              cursor: default;
           }
           p{
               margin-bottom: 10px;
+              cursor: default;
           }
           ul{
               padding-left:20px;
               li{
+                cursor: default;
                   margin-bottom:10px;
               }
           }

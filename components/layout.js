@@ -3,7 +3,7 @@ import style from './layout.module.scss'
 import Link from 'next/link'
 import Navbar from './navbar'
 
-export const siteTitle = "DRO Express"
+export const siteTitle = "ARO Remote"
 export default function Layout({ children, page }) {
 
   return (
@@ -15,6 +15,9 @@ export default function Layout({ children, page }) {
           content="The mediation App"
         />
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet"></link>
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true"/>
+        <link href="https://fonts.googleapis.com/css2?family=Baskervville&display=swap" rel="stylesheet"></link>
         <link href="/fontawesome/css/all.css" rel="styleheet"></link>
 
 
@@ -22,7 +25,7 @@ export default function Layout({ children, page }) {
       <header className={style.header}>
           <div className={style.logo}>
             <Link href="/">
-                <div className={style.main}>ODR <b>EXPRESS</b></div>
+                <div className={style.main}>ADR <b>REMOTE</b></div>
             </Link>
             <div className={style.secondary}>The Online Dispute Resolution App</div>
           </div>
@@ -39,7 +42,7 @@ export default function Layout({ children, page }) {
           </li>
           <li>
             <Link href="/contacts">
-              <a >contacts</a>
+              <a >Contacts</a>
             </Link>
           </li>
           <li>
@@ -57,7 +60,7 @@ export default function Layout({ children, page }) {
               <a >Admin</a>
             </Link>
           </li>
-          <li>&copy; 2020 ODR EXPRESS Corporation
+          <li>&copy; 2021-2022 ADR REMOTE Corporation
           </li>
         </ul>
       </footer>

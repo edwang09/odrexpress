@@ -13,38 +13,48 @@ export default function Home() {
         <img src="/images/banner.jpg" alt="banner"/>
       </section>
       <section className={styles.catches}>
-        <div className={styles.advantage}>
-          <h5>Advantages</h5>
-          <p>An exceedingly logical and user friendly methodology that provides:  Government Agencies  /  Individuals  / Business / with:</p>
+        <div className={styles.synopsis}>
+          <h5>Synopsis</h5>
+          <p>ADR REMOTE is a world wide provider of innovative and cost effective Online Dispute Resolution services for:</p>
+          <ul>
+            <li>
+            Businesses
+            </li>
+            <li>
+            Individuals
+            </li>
+            <li>
+            Government Agencies
+            </li>
+          </ul>
+        </div>
+        <div className={styles.advantages}>
+        <h5>Advantages</h5>
+          <p>ADR REMOTE is a highly logical and exceptionally easy to navigate system that provides participants with:  </p>
           <ul>
             <li>
             No Registration format
             </li>
             <li>
-            Very high degree of privacy
+            High degree of privacy
             </li>
             <li>
             Keyboard venue (anytime / anywhere)
             </li>
           </ul>
         </div>
-        <div className={styles.document}>
-        <h5>Document Reduction</h5>
-          <p>This system has been formatted to effectually minimize the requirement for paperwork frequently associated with dispute resolution.</p>
-          <p>Our Non-Binding Recommendation (NBR) is facilitated as a concluding resolution for each case.</p>
-        </div>
-        <div className={styles.expedition}>
-        <h5>Expeditious</h5>
-          <p>A procedure offering an efficient 3 step process. Results are obtained in less then one hour.</p>
+        <div className={styles.efficient}>
+        <h5>Efficient</h5>
+          <p>ADR REMOTE offers a three step User Friendly process that has the ability to provide results in less then one hour.</p>
           <ul>
             <li>
-              ENTER the numeric amount of the claims
+            ENTER the numeric value of the claims
             </li>
             <li>
-              CLICK through a display of generated sums
+            CLICK through a display of computer generated sums
             </li>
             <li>
-              VIEW the Application based recommendation
+            VIEW the Application based recommendation
             </li>
           </ul>
         </div>
