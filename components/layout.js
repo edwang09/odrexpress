@@ -3,7 +3,7 @@ import style from './layout.module.scss'
 import Link from 'next/link'
 import Navbar from './navbar'
 
-export const siteTitle = "ARO Remote"
+export const siteTitle = "ADR Remote"
 export default function Layout({ children, page }) {
 
   return (
@@ -27,7 +27,7 @@ export default function Layout({ children, page }) {
             <Link href="/">
                 <div className={style.main}>ADR <b>REMOTE</b></div>
             </Link>
-            <div className={style.secondary}>The Online Dispute Resolution App</div>
+            {/* <div className={style.secondary}>The Online Dispute Resolution App</div> */}
           </div>
           <Navbar/>
       </header>

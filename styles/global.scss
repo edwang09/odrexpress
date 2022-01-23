@@ -1,8 +1,29 @@
+@font-face {
+  font-family: Didot;
+  src: url(Didot_Regular.ttf);
+}
+@font-face {
+  font-family: Didot;
+  src: url(Didot_LT_Std_Bold.otf);
+  font-weight: bold;
+}
+@font-face {
+  font-family: Didot;
+  src: url(Didot_Bold_Italic.ttf);
+  font-weight: bold;
+  font-style: italic;
+}
+@font-face {
+  font-family: Didot;
+  src: url(Didot_LT_Std_Italic.otf);
+  font-style: italic;
+}
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Baskervville', sans-serif;
+  font-family: Didot, 'Baskervville', sans-serif;
   line-height: 1.6;
   font-size: 17px;
   text-align: justify;

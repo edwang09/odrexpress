@@ -42,6 +42,11 @@ function Navbar({router}){
                         <a className={style.navlink} style={(router.pathname ==="/faq") ? {fontWeight: "bold"} : {}}>FAQ</a>
                     </Link>
                 </li>
+                <li className={style.navlinkright}>
+                    <Link href="/free">
+                        <a className={style.navlink} style={(router.pathname ==="/free") ? {fontWeight: "bold"} : {}}>FREE</a>
+                    </Link>
+                </li>
             </ul>
         </nav>
         </div>
